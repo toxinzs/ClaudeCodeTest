@@ -1,5 +1,6 @@
 import { state, activeMon, firstHealthyIdx } from './state.js';
-import { currentMonDisplay, monSpriteHtml, statHpForLevel, xpNeededForLevel, evolveIfReady, rollWildEncounter } from './mon.js';
+import { currentMonDisplay, monSpriteHtml, computeStats, statsForMon, evolveIfReady, rollWildEncounter, xpNeededForLevel } from './mon.js';
+import { baseStatsFor } from './data/baseStats.js';
 import { STARTER_CHAINS } from './data/pokemon.js';
 import { TRAINER_LINEUP, RIVAL_DARIO, LEAGUE_LEADERS, DIRECTOR_VANCE, VERDANYX, moneyRewardFor } from './data/story.js';
 import { showScreen, openModal, closeModal } from './screens.js';
@@ -9,41 +10,57 @@ import { renderLeagueMap } from './ui/league.js';
 import { openParty } from './ui/party.js';
 import { showEnd } from './ui/end.js';
 
-// ================== TYPE EFFECTIVENESS ==================
+// ================== TYPE EFFECTIVENESS (full official 18-type chart) ==================
+const TYPE_CHART = {
+  Normal:   { Rock:0.5, Steel:0.5, Ghost:0 },
+  Fire:     { Grass:2, Ice:2, Bug:2, Steel:2, Fire:0.5, Water:0.5, Rock:0.5, Dragon:0.5 },
+  Water:    { Fire:2, Ground:2, Rock:2, Water:0.5, Grass:0.5, Dragon:0.5 },
+  Electric: { Water:2, Flying:2, Electric:0.5, Grass:0.5, Dragon:0.5, Ground:0 },
+  Grass:    { Water:2, Ground:2, Rock:2, Fire:0.5, Grass:0.5, Poison:0.5, Flying:0.5, Bug:0.5, Dragon:0.5, Steel:0.5 },
+  Ice:      { Grass:2, Ground:2, Flying:2, Dragon:2, Fire:0.5, Water:0.5, Ice:0.5, Steel:0.5 },
+  Fighting: { Normal:2, Ice:2, Rock:2, Dark:2, Steel:2, Poison:0.5, Flying:0.5, Psychic:0.5, Bug:0.5, Fairy:0.5, Ghost:0 },
+  Poison:   { Grass:2, Fairy:2, Poison:0.5, Ground:0.5, Rock:0.5, Ghost:0.5, Steel:0 },
+  Ground:   { Fire:2, Electric:2, Poison:2, Rock:2, Steel:2, Grass:0.5, Bug:0.5, Flying:0 },
+  Flying:   { Grass:2, Fighting:2, Bug:2, Electric:0.5, Rock:0.5, Steel:0.5 },
+  Psychic:  { Fighting:2, Poison:2, Psychic:0.5, Steel:0.5, Dark:0 },
+  Bug:      { Grass:2, Psychic:2, Dark:2, Fire:0.5, Fighting:0.5, Poison:0.5, Flying:0.5, Ghost:0.5, Steel:0.5, Fairy:0.5 },
+  Rock:     { Fire:2, Ice:2, Flying:2, Bug:2, Fighting:0.5, Ground:0.5, Steel:0.5 },
+  Ghost:    { Psychic:2, Ghost:2, Dark:0.5, Normal:0 },
+  Dragon:   { Dragon:2, Steel:0.5, Fairy:0 },
+  Dark:     { Psychic:2, Ghost:2, Fighting:0.5, Dark:0.5, Fairy:0.5 },
+  Steel:    { Ice:2, Rock:2, Fairy:2, Fire:0.5, Water:0.5, Electric:0.5, Steel:0.5 },
+  Fairy:    { Fighting:2, Dragon:2, Dark:2, Fire:0.5, Poison:0.5, Steel:0.5 }
+};
+
 export function typeMultiplier(atkType, defType) {
-  const STRONG = {
-    Water:["Fire","Ground","Rock"], Fire:["Grass","Bug","Steel","Ice"], Grass:["Water","Ground","Rock"],
-    Electric:["Water","Flying"], Ground:["Fire","Electric","Poison","Rock","Steel"], Rock:["Fire","Flying","Bug","Ice"],
-    Flying:["Grass","Fighting","Bug"], Bug:["Grass","Psychic","Dark"], Psychic:["Fighting","Poison"],
-    Dark:["Psychic","Ghost"], Ghost:["Psychic","Ghost"], Fighting:["Normal","Rock","Dark","Ice","Steel"],
-    Ice:["Grass","Ground","Flying","Dragon"], Steel:["Rock","Ice","Fairy"], Dragon:["Dragon"], Fairy:["Fighting","Dragon","Dark"],
-    Poison:["Grass","Fairy"], Normal:[]
-  };
-  const WEAK = {
-    Water:["Water","Grass","Dragon"], Fire:["Fire","Water","Rock","Dragon"], Grass:["Grass","Fire","Poison","Flying","Bug"],
-    Electric:["Electric","Grass","Dragon"], Ground:["Grass","Bug"], Rock:["Fighting","Ground","Steel"],
-    Flying:["Electric","Rock","Steel"], Bug:["Fire","Fighting","Poison","Flying","Ghost","Steel"], Psychic:["Psychic","Steel"],
-    Dark:["Fighting","Dark","Fairy"], Ghost:["Dark"], Fighting:["Flying","Poison","Psychic","Bug","Fairy"],
-    Ice:["Fire","Water","Ice","Steel"], Steel:["Fire","Water","Electric","Steel"], Dragon:["Steel"], Fairy:["Fire","Poison","Steel"],
-    Poison:["Poison","Ground","Rock","Ghost"], Normal:["Rock","Steel"]
-  };
   const defTypes = defType.split("/");
   let mult = 1;
   defTypes.forEach(dt => {
-    if ((STRONG[atkType]||[]).includes(dt)) mult *= 1.5;
-    if ((WEAK[atkType]||[]).includes(dt)) mult *= 0.6;
+    const m = TYPE_CHART[atkType]?.[dt];
+    mult *= (m === undefined ? 1 : m);
   });
   return mult;
 }
 
-export function calcDamage(move, level, defType) {
+// ================== DAMAGE ==================
+export function calcDamage(move, attacker, defender) {
   if (move.power === 0) return 0;
-  const mult = typeMultiplier(move.type, defType);
-  const variance = 0.85 + Math.random()*0.3;
-  return Math.max(1, Math.round(move.power * (1 + level*0.06) * mult * variance));
+  const mult = typeMultiplier(move.type, defender.type);
+  if (mult === 0) return 0;
+  const atkStat = move.category === 'Special' ? attacker.spAtk : attacker.atk;
+  const defStat = move.category === 'Special' ? defender.spDef : defender.def;
+  const base = Math.floor(Math.floor(Math.floor(2*attacker.level/5 + 2) * move.power * atkStat/defStat) / 50 + 2);
+  const stab = attacker.type.split("/").includes(move.type) ? 1.5 : 1;
+  const variance = 0.85 + Math.random()*0.15;
+  return Math.max(1, Math.round(base * stab * mult * variance));
 }
 
 // ================== BATTLE SETUP ==================
+function buildBattleMon(speciesName, emoji, type, level, moves) {
+  const stats = computeStats(baseStatsFor(speciesName), level);
+  return { isWild: false, speciesName, emoji, type, level, hp: stats.maxHp, ...stats, moves: moves.map(m => ({...m})) };
+}
+
 export function startTrainerBattle(ctx) {
   let enemyTeam, enemyName;
   if (ctx === 'lineup') { enemyTeam = TRAINER_LINEUP[state.trainerIndex].team; enemyName = TRAINER_LINEUP[state.trainerIndex].name; }
@@ -52,11 +69,7 @@ export function startTrainerBattle(ctx) {
   if (ctx === 'vance') { enemyTeam = DIRECTOR_VANCE.team; enemyName = DIRECTOR_VANCE.name; }
   if (ctx === 'verdanyx') { enemyTeam = VERDANYX.team; enemyName = VERDANYX.name; }
 
-  const enemyMons = enemyTeam.map(t => ({
-    isWild: false, speciesName: t.speciesName, emoji: t.emoji, type: t.type,
-    level: t.level, hp: statHpForLevel(t.level), maxHp: statHpForLevel(t.level),
-    moves: t.moves.map(m => ({...m}))
-  }));
+  const enemyMons = enemyTeam.map(t => buildBattleMon(t.speciesName, t.emoji, t.type, t.level, t.moves));
 
   state.battle = { ctx, enemyName, enemyMons, enemyIdx: 0, isWild: false, moneyReward: moneyRewardFor(ctx) };
   showScreen('battle');
@@ -111,6 +124,32 @@ function setHpBar(id, hp, maxHp) {
 }
 
 // ================== TURNS ==================
+// Mechanical, attacker/defender-agnostic: resolves one move, mutates HP,
+// renders the result, and reports whether the defender fainted. Does not
+// decide win/lose routing — callers own that, since "the enemy fainted" and
+// "the player fainted" are genuinely different flows (next-enemy-mon/win vs
+// switch-prompt/lose).
+function executeMove(attacker, defender, move) {
+  const attackerName = currentMonDisplay(attacker).name;
+  if (move.power === 0) {
+    renderBattle(`${attackerName} used ${move.name}! It had no direct effect this turn.`);
+    return { fainted: false };
+  }
+  const mult = typeMultiplier(move.type, defender.type);
+  const dmg = calcDamage(move, attacker, defender);
+  defender.hp = Math.max(0, defender.hp - dmg);
+  let msg = `${attackerName} used ${move.name}!`;
+  if (mult === 0) msg += " It has no effect...";
+  else if (mult > 1) msg += " It's super effective!";
+  else if (mult < 1) msg += " It's not very effective...";
+  renderBattle(msg);
+  return { fainted: defender.hp <= 0 };
+}
+
+// Orchestrates a full turn: picks the enemy's move, resolves Speed-based
+// order (tie -> coin flip), and sequences both attacks — skipping the
+// slower mon's move if the faster one's hit already ended the battle.
+// Still the function bound to each move button's onclick.
 export function playerUseMove(idx) {
   const p = activeMon();
   const e = currentEnemy();
@@ -120,48 +159,36 @@ export function playerUseMove(idx) {
   // already moved past this enemy — currentEnemy() can be undefined here.
   if (!e || e.hp <= 0) return;
   const move = p.moves[idx];
+  const enemyMove = e.moves[Math.floor(Math.random() * e.moves.length)];
 
-  if (move.power === 0) {
-    renderBattle(`${currentMonDisplay(p).name} used ${move.name}! It had no direct effect this turn.`);
-    setTimeout(() => enemyTurn(), 700);
+  const playerFirst = p.spe > e.spe || (p.spe === e.spe && Math.random() < 0.5);
+  const [first, firstMove, firstIsPlayer, second, secondMove] = playerFirst
+    ? [p, move, true, e, enemyMove]
+    : [e, enemyMove, false, p, move];
+
+  const firstResult = executeMove(first, second, firstMove);
+  if (firstResult.fainted) {
+    setTimeout(() => firstIsPlayer ? handleEnemyFainted() : handlePlayerFainted(), 500);
     return;
   }
-
-  const dmg = calcDamage(move, p.level, e.type);
-  e.hp = Math.max(0, e.hp - dmg);
-  const mult = typeMultiplier(move.type, e.type);
-  let msg = `${currentMonDisplay(p).name} used ${move.name}!`;
-  if (mult > 1) msg += " It's super effective!";
-  if (mult < 1) msg += " It's not very effective...";
-  renderBattle(msg);
-
-  if (e.hp <= 0) {
-    setTimeout(() => handleEnemyFainted(), 500);
-    return;
-  }
-  setTimeout(() => enemyTurn(), 700);
+  setTimeout(() => {
+    const secondResult = executeMove(second, first, secondMove);
+    if (secondResult.fainted) {
+      setTimeout(() => firstIsPlayer ? handlePlayerFainted() : handleEnemyFainted(), 500);
+    }
+  }, 700);
 }
 
+// A single unanswered enemy move — used when the player's turn was spent
+// switching (voluntary or forced) instead of attacking, so there's no
+// player move to sequence against it.
 export function enemyTurn() {
   const p = activeMon();
   const e = currentEnemy();
-  const move = e.moves[Math.floor(Math.random()*e.moves.length)];
-
-  if (move.power === 0) {
-    renderBattle(`${e.speciesName} used ${move.name}! It had no direct effect this turn.`);
-    return;
-  }
-
-  const dmg = calcDamage(move, e.level, p.type);
-  p.hp = Math.max(0, p.hp - dmg);
-  const mult = typeMultiplier(move.type, p.type);
-  let msg = `${e.speciesName} used ${move.name}!`;
-  if (mult > 1) msg += " It's super effective!";
-  if (mult < 1) msg += " It's not very effective...";
-  renderBattle(msg);
-
-  if (p.hp <= 0) {
-    p.fainted = true;
+  if (!e || e.hp <= 0 || !p || p.hp <= 0) return;
+  const move = e.moves[Math.floor(Math.random() * e.moves.length)];
+  const result = executeMove(e, p, move);
+  if (result.fainted) {
     setTimeout(() => handlePlayerFainted(), 600);
   }
 }
@@ -203,23 +230,33 @@ export function gainXp(mon, amount) {
 
 function levelUpMon(mon) {
   mon.level++;
-  const newMax = statHpForLevel(mon.level);
-  const gained = newMax - mon.maxHp;
-  mon.maxHp = newMax;
+  if (mon.key) evolveIfReady(mon);
+
+  // Recompute stats for the current (possibly post-evolution) species/level.
+  // HP preserves the delta gained rather than healing to full; the other
+  // stats have no "current" value to preserve and are flatly overwritten.
+  const newStats = statsForMon(mon);
+  const gained = newStats.maxHp - mon.maxHp;
+  mon.maxHp = newStats.maxHp;
   mon.hp = Math.min(mon.maxHp, mon.hp + gained);
+  mon.atk = newStats.atk;
+  mon.def = newStats.def;
+  mon.spAtk = newStats.spAtk;
+  mon.spDef = newStats.spDef;
+  mon.spe = newStats.spe;
   mon.xpNext = xpNeededForLevel(mon.level);
 
   if (mon.key) {
     const chain = STARTER_CHAINS[mon.key];
-    evolveIfReady(mon);
-    const newMoveEntry = chain.learnset.find(e => e.lvl === mon.level);
-    if (newMoveEntry) {
-      const already = mon.moves.some(m => m.name === newMoveEntry.name);
+    const learned = chain.learnset.find(e => e.lvl === mon.level);
+    if (learned) {
+      const { lvl, ...moveData } = learned;
+      const already = mon.moves.some(m => m.name === moveData.name);
       if (!already) {
         if (mon.moves.length < 4) {
-          mon.moves.push({name:newMoveEntry.name, type:newMoveEntry.type, power:newMoveEntry.power});
+          mon.moves.push(moveData);
         } else {
-          queueMoveLearnPrompt(mon, newMoveEntry);
+          queueMoveLearnPrompt(mon, moveData);
         }
       }
     }
@@ -239,7 +276,7 @@ function queueMoveLearnPrompt(mon, newMove) {
   `);
 }
 export function confirmForgetMove(idx) {
-  pendingMoveLearn.mon.moves[idx] = {name:pendingMoveLearn.newMove.name, type:pendingMoveLearn.newMove.type, power:pendingMoveLearn.newMove.power};
+  pendingMoveLearn.mon.moves[idx] = {...pendingMoveLearn.newMove};
   closeModal();
   pendingMoveLearn = null;
   renderBattle();
@@ -266,7 +303,8 @@ export function throwPokeBall() {
     if (Math.random() < catchChance) {
       const caughtMon = {
         speciesName: e.speciesName, emoji: e.emoji, type: e.type, level: e.level,
-        xp: 0, xpNext: xpNeededForLevel(e.level), hp: e.hp, maxHp: e.maxHp,
+        xp: 0, xpNext: xpNeededForLevel(e.level),
+        hp: e.hp, maxHp: e.maxHp, atk: e.atk, def: e.def, spAtk: e.spAtk, spDef: e.spDef, spe: e.spe,
         moves: e.moves.map(m => ({...m})), nickname: e.speciesName, fainted: false, isWild: false
       };
       state.party.push(caughtMon);
