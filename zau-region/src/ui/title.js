@@ -2,6 +2,27 @@ import { state } from '../state.js';
 import { CUTSCENE_SLIDES } from '../data/story.js';
 import { showScreen } from '../screens.js';
 import { skipToCharCreate } from './charCreate.js';
+import { hasSave, loadGame } from '../save.js';
+import { initHomeMap, initTownMap } from '../map.js';
+
+// Re-checked at boot and whenever the title screen is returned to (e.g.
+// after finishing a run), since a save can appear mid-session via autosave
+// without a full page reload.
+export function refreshContinueVisibility() {
+  document.getElementById('continue-menu-item').style.display = hasSave() ? 'flex' : 'none';
+}
+
+export function continueGame() {
+  if (!loadGame()) return;
+  if (state.party.length === 0) {
+    showScreen('home');
+    initHomeMap();
+  } else {
+    showScreen('map');
+    initTownMap();
+  }
+  document.getElementById('header-sub').textContent = `Welcome back, ${state.player.name}.`;
+}
 
 let titleTypeStarted = false;
 export function startTitleTypewriter() {

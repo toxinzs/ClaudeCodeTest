@@ -1,5 +1,6 @@
 import { state } from '../state.js';
 import { openModal } from '../screens.js';
+import { saveGame } from '../save.js';
 
 export function openMart() {
   openModal(`
@@ -24,5 +25,6 @@ export function buyItem(key, cost) {
   if (state.money < cost) return;
   state.money -= cost;
   state.items[key]++;
+  saveGame(); // buying doesn't change screens, so it needs an explicit checkpoint
   openMart();
 }

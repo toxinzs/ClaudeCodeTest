@@ -4,6 +4,7 @@ import { movesKnownAtLevel, makeStarterMon, monSpriteHtml } from '../mon.js';
 import { spriteUrlFor } from '../sprites.js';
 import { showScreen, openModal, closeModal } from '../screens.js';
 import { initTownMap } from '../map.js';
+import { saveGame } from '../save.js';
 
 export function enterLab() {
   showScreen('lab');
@@ -55,4 +56,5 @@ export function confirmStarterChoice() {
   document.getElementById('lab-dialogue-text').textContent = `${nickname} chose you right back. Take care of each other out there — the Wild Zone trail starts just past town.`;
   document.getElementById('lab-starter-picker').style.display = 'none';
   document.getElementById('lab-continue-wrap').style.display = 'block';
+  saveGame(); // getting a starter doesn't change screens, so it needs an explicit checkpoint
 }
