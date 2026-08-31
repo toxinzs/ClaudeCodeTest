@@ -1,9 +1,12 @@
 import { state } from './state.js';
-import { HOME_MAP, TOWN_MAP } from './data/maps.js';
+import { HOME_MAP, TOWN_MAP, TRAIL_MAP } from './data/maps.js';
 import { showScreen } from './screens.js';
 import { startWildEncounter } from './battle.js';
 import { enterLab } from './ui/lab.js';
-import { enterTrail } from './ui/trail.js';
+import { enterTrail, handleTrailStep } from './ui/trail.js';
+
+const GRID_ID = { home: 'home-grid', town: 'town-grid', trail: 'trail-grid' };
+const MAP_DEF = { home: HOME_MAP, town: TOWN_MAP, trail: TRAIL_MAP };
 
 export function tileSize() { return window.innerWidth < 480 ? 42 : 52; }
 
@@ -49,14 +52,14 @@ export function initTownMap() {
 }
 
 export function tryMove(which, dx, dy) {
-  const mapDef = which === 'home' ? HOME_MAP : TOWN_MAP;
+  const mapDef = MAP_DEF[which];
   const pos = state.pos[which];
   const nx = pos.x + dx, ny = pos.y + dy;
   if (nx < 0 || ny < 0 || nx >= mapDef.w || ny >= mapDef.h) return;
   if (mapDef.layout[ny][nx] === 1) return;
   pos.x = nx; pos.y = ny;
   const ts = tileSize();
-  const p = document.getElementById((which==='home'?'home-grid':'town-grid') + '-player');
+  const p = document.getElementById(GRID_ID[which] + '-player');
   p.style.left = (nx*ts)+"px"; p.style.top = (ny*ts)+"px";
 
   if (which === 'home') {
@@ -80,6 +83,10 @@ export function tryMove(which, dx, dy) {
       }
     }
   }
+  if (which === 'trail') {
+    document.getElementById('trail-toast').textContent = "";
+    handleTrailStep(nx, ny);
+  }
 }
 
 // keyboard controls
@@ -88,6 +95,7 @@ document.addEventListener('keydown', (e) => {
   let which = null;
   if (activeId === 'screen-home') which = 'home';
   if (activeId === 'screen-map') which = 'town';
+  if (activeId === 'screen-trail') which = 'trail';
   if (!which) return;
   if (e.key === 'ArrowUp') tryMove(which,0,-1);
   if (e.key === 'ArrowDown') tryMove(which,0,1);

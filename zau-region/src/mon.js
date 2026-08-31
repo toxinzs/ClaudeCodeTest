@@ -90,7 +90,11 @@ export function statsForMon(mon) {
 export function monSpriteHtml(display, className) {
   const emojiSpan = `<span class="${className} emoji-fallback"${display.sprite ? ' style="display:none"' : ''}>${display.emoji}</span>`;
   if (!display.sprite) return emojiSpan;
-  const img = `<img src="${display.sprite}" alt="${display.species}" class="${className} sprite-img" onerror="this.style.display='none';this.nextElementSibling.style.display='';">`;
+  // A rapid re-render (e.g. several renderBattle() calls in one turn) can
+  // replace this element's parent's innerHTML while this <img> is still
+  // loading over a slow/flaky connection — by the time a late onerror fires,
+  // this img is detached and nextElementSibling is null. Guard it.
+  const img = `<img src="${display.sprite}" alt="${display.species}" class="${className} sprite-img" onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='';">`;
   return img + emojiSpan;
 }
 

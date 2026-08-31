@@ -17,6 +17,27 @@ export const HOME_MAP = {
   ]
 };
 
+// Wild Zone Trail — a straight walkable corridor (walls at x=0/4) the 5
+// lineup trainers stand along; see ui/trail.js for placement/progression.
+export const TRAIL_MAP = {
+  w: 5, h: 12,
+  bg: "#141b2c",
+  layout: [
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1]
+  ]
+};
+
 export const TOWN_MAP = {
   w: 7, h: 7,
   bg: "#101a30",
