@@ -1,6 +1,6 @@
 import { closeModal } from './screens.js';
 import { tryMove, headOutside } from './map.js';
-import { startCutscene, nextCutsceneSlide, startTitleTypewriter } from './ui/title.js';
+import { startCutscene, nextCutsceneSlide, startTitleTypewriter, continueGame, refreshContinueVisibility } from './ui/title.js';
 import { skipToCharCreate, pickAvatar, confirmCharCreate } from './ui/charCreate.js';
 import { openDex, confirmStarterChoice, leaveLab } from './ui/lab.js';
 import { openParty, switchToMon } from './ui/party.js';
@@ -24,7 +24,7 @@ Object.assign(window, {
   // map.js
   tryMove, headOutside,
   // ui/title.js
-  startCutscene, nextCutsceneSlide,
+  startCutscene, nextCutsceneSlide, continueGame,
   // ui/charCreate.js
   skipToCharCreate, pickAvatar, confirmCharCreate,
   // ui/lab.js
@@ -48,4 +48,5 @@ Object.assign(window, {
 // screen-title already carries class="screen active" in the markup itself, so
 // there's no explicit showScreen('title') call here — matches original boot order.
 document.getElementById('main-wrap').classList.add('on-title-screen');
+refreshContinueVisibility();
 startTitleTypewriter();

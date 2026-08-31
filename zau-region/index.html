@@ -52,7 +52,12 @@
       </div>
 
       <div class="menu" id="titleMenu">
-        <div class="menu-item primary" onclick="startCutscene()">
+        <div class="menu-item" id="continue-menu-item" style="display:none;" onclick="continueGame()">
+          <span class="menu-bolt">⚡</span>
+          <span class="menu-label">Continue</span>
+          <span class="menu-sub">Resume your saved game</span>
+        </div>
+        <div class="menu-item" onclick="startCutscene()">
           <span class="menu-bolt">⚡</span>
           <span class="menu-label">Begin Journey</span>
         </div>
