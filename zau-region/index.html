@@ -156,10 +156,15 @@
     </div>
   </div>
 
-  <!-- ============ WILD ZONE / LEAGUE MAP (trainer trail) ============ -->
+  <!-- ============ WILD ZONE TRAIL (walkable, Act 1 trainers) ============ -->
   <div class="screen" id="screen-trail">
-    <div class="card">
-      <div id="trail-list"></div>
+    <div class="map-frame">
+      <div class="map-grid" id="trail-grid"></div>
+    </div>
+    <div class="dpad">
+      <div class="empty"></div><button onclick="tryMove('trail',0,-1)">▲</button><div class="empty"></div>
+      <button onclick="tryMove('trail',-1,0)">◀</button><div class="empty"></div><button onclick="tryMove('trail',1,0)">▶</button>
+      <div class="empty"></div><button onclick="tryMove('trail',0,1)">▼</button><div class="empty"></div>
     </div>
     <p class="toast" id="trail-toast"></p>
     <div class="map-actions">

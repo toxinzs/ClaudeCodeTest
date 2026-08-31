@@ -5,7 +5,7 @@ import { STARTER_CHAINS } from './data/pokemon.js';
 import { TRAINER_LINEUP, RIVAL_DARIO, LEAGUE_LEADERS, DIRECTOR_VANCE, VERDANYX, moneyRewardFor } from './data/story.js';
 import { showScreen, openModal, closeModal } from './screens.js';
 import { initTownMap } from './map.js';
-import { renderTrail } from './ui/trail.js';
+import { renderTrailMap } from './ui/trail.js';
 import { renderLeagueMap } from './ui/league.js';
 import { openParty } from './ui/party.js';
 import { showEnd } from './ui/end.js';
@@ -341,14 +341,14 @@ export function winBattle(caughtNotDefeated) {
   if (ctx === 'lineup') {
     state.trainerIndex++;
     showScreen('trail');
-    renderTrail();
+    renderTrailMap();
     document.getElementById('trail-toast').textContent = `Beat ${state.battle.enemyName}! +₽${moneyRewardFor('lineup')}`;
     return;
   }
   if (ctx === 'dario') {
     state.darioBeaten = true;
     showScreen('trail');
-    renderTrail();
+    renderTrailMap();
     document.getElementById('trail-toast').textContent = `You beat Dario Voss! The Zau League is open.`;
     return;
   }
@@ -382,7 +382,7 @@ export function loseBattle() {
   state.party.forEach(m => { if (m.fainted) { m.fainted = false; m.hp = Math.floor(m.maxHp*0.4); } });
   state.activeIdx = firstHealthyIdx() === -1 ? 0 : firstHealthyIdx();
   if (ctx === 'wild') { returnToPreviousScreen(`Your team pulled back to safety.`); return; }
-  if (ctx === 'lineup' || ctx === 'dario') { showScreen('trail'); renderTrail(); document.getElementById('trail-toast').textContent = `Your team was outmatched. Regroup and try again.`; return; }
+  if (ctx === 'lineup' || ctx === 'dario') { showScreen('trail'); renderTrailMap(); document.getElementById('trail-toast').textContent = `Your team was outmatched. Regroup and try again.`; return; }
   if (ctx === 'league' || ctx === 'vance' || ctx === 'verdanyx') { showScreen('league-map'); renderLeagueMap(); document.getElementById('league-toast').textContent = `Your team was outmatched. Regroup and try again.`; return; }
 }
 
