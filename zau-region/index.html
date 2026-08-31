@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zau Region — Wild Zone Trial</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="wrap" id="main-wrap">
+  <h1 id="header-title">ZAU REGION</h1>
+  <p class="sub" id="header-sub">Build your trainer, meet the professor, and take on the Wild Zone</p>
+
+  <!-- ============ TITLE (storm theme) ============ -->
+  <div class="screen active" id="screen-title">
+    <div class="stage">
+      <div class="storm-layer">
+        <div class="cloud-band b1"></div>
+        <div class="cloud-band b2"></div>
+      </div>
+
+      <svg class="bolt-svg" viewBox="0 0 1000 700" preserveAspectRatio="none">
+        <path class="bolt strike" d="M 180 0 L 210 140 L 160 150 L 230 320 L 190 330 L 260 520" />
+        <path class="bolt strike2" d="M 830 0 L 800 110 L 850 120 L 780 260 L 820 270 L 760 430" />
+        <path class="bolt strike3" d="M 520 0 L 540 90 L 500 100 L 560 240" />
+      </svg>
+
+      <div class="flash-overlay f1"></div>
+      <div class="flash-overlay f2"></div>
+      <div class="flash-overlay f3"></div>
+
+      <div class="horizon">
+        <svg viewBox="0 0 1000 200" preserveAspectRatio="none">
+          <polygon points="0,200 0,120 80,60 150,110 240,40 320,100 410,55 500,115 590,45 680,105 770,50 860,100 940,60 1000,110 1000,200" fill="#08090f"/>
+        </svg>
+      </div>
+
+      <div class="title-block">
+        <div class="eyebrow">A Pokémon Fan Story</div>
+        <div class="logo">POKÉMON: <span class="zau">ZAU</span></div>
+        <div class="logo-underline"></div>
+        <div class="subtitle">Where The Storm Chooses You</div>
+      </div>
+
+      <div class="intro-box">
+        <div class="intro-label">Prologue</div>
+        <div class="intro-text" id="titleTypedText"><span class="title-cursor" id="titleCursor"></span></div>
+      </div>
+
+      <div class="menu" id="titleMenu">
+        <div class="menu-item primary" onclick="startCutscene()">
+          <span class="menu-bolt">⚡</span>
+          <span class="menu-label">Begin Journey</span>
+        </div>
+        <div class="menu-item" onclick="skipToCharCreate()">
+          <span class="menu-bolt">⚡</span>
+          <span class="menu-label">Skip Intro</span>
+          <span class="menu-sub">Straight to Trainer Setup</span>
+        </div>
+      </div>
+
+      <div class="title-footer">
+        <span class="dot"></span>
+        <span>Verdanyx Awaits</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ CUTSCENE ============ -->
+  <div class="screen" id="screen-cutscene">
+    <div class="slide" id="cutscene-slide">
+      <div class="slide-text" id="cutscene-text"></div>
+    </div>
+    <div class="cutscene-nav">
+      <button onclick="skipToCharCreate()">Skip</button>
+      <div class="cutscene-dots" id="cutscene-dots"></div>
+      <button class="btn-accent2" onclick="nextCutsceneSlide()" id="cutscene-next-btn">Next</button>
+    </div>
+  </div>
+
+  <!-- ============ CHARACTER CREATION ============ -->
+  <div class="screen" id="screen-create">
+    <div class="card">
+      <div class="field">
+        <label>Trainer Name</label>
+        <input type="text" id="input-name" maxlength="14" placeholder="Enter your name">
+      </div>
+      <div class="field">
+        <label>Choose Your Look</label>
+        <div class="avatar-grid" id="avatar-grid"></div>
+      </div>
+      <button class="btn-primary" style="width:100%" onclick="confirmCharCreate()">Confirm</button>
+    </div>
+  </div>
+
+  <!-- ============ HOME INTERIOR ============ -->
+  <div class="screen" id="screen-home">
+    <div class="map-frame">
+      <div class="map-grid" id="home-grid"></div>
+    </div>
+    <div class="dpad">
+      <div class="empty"></div><button onclick="tryMove('home',0,-1)">▲</button><div class="empty"></div>
+      <button onclick="tryMove('home',-1,0)">◀</button><div class="empty"></div><button onclick="tryMove('home',1,0)">▶</button>
+      <div class="empty"></div><button onclick="tryMove('home',0,1)">▼</button><div class="empty"></div>
+    </div>
+    <div class="dialogue-box" id="home-dialogue" style="display:none;">
+      <div class="dialogue-name">Home</div>
+      <div id="home-dialogue-text"></div>
+    </div>
+    <div class="map-actions">
+      <button class="btn-primary" onclick="headOutside()">Head Outside</button>
+    </div>
+  </div>
+
+  <!-- ============ TOWN MAP (ACT 1) ============ -->
+  <div class="screen" id="screen-map">
+    <div class="map-frame">
+      <div class="map-grid" id="town-grid"></div>
+    </div>
+    <div class="dpad">
+      <div class="empty"></div><button onclick="tryMove('town',0,-1)">▲</button><div class="empty"></div>
+      <button onclick="tryMove('town',-1,0)">◀</button><div class="empty"></div><button onclick="tryMove('town',1,0)">▶</button>
+      <div class="empty"></div><button onclick="tryMove('town',0,1)">▼</button><div class="empty"></div>
+    </div>
+    <p class="toast" id="map-toast"></p>
+    <div class="map-actions">
+      <button onclick="openParty()">🎒 Party</button>
+      <button onclick="openMart()">🏪 Mart</button>
+      <button onclick="openDexBook()">📖 Pokédex</button>
+    </div>
+  </div>
+
+  <!-- ============ LAB INTERIOR ============ -->
+  <div class="screen" id="screen-lab">
+    <div class="card" style="background:linear-gradient(180deg,#1a2440,#12192e); text-align:center;">
+      <div style="font-size:48px; margin-bottom:6px;">🔬</div>
+      <div style="font-size:12px; color:var(--muted);">📚 🧪 🖥️ — Professor Mabosso's Lab</div>
+    </div>
+    <div class="dialogue-box">
+      <div class="dialogue-name">Professor Mabosso</div>
+      <div id="lab-dialogue-text"></div>
+    </div>
+    <div id="lab-starter-picker" style="margin-top:14px; display:none;">
+      <div class="grid-2" style="grid-template-columns:1fr 1fr 1fr;">
+        <button onclick="openDex('sprigatito')">🐱 Sprigatito</button>
+        <button onclick="openDex('fuecoco')">🐊 Fuecoco</button>
+        <button onclick="openDex('quaxly')">🦆 Quaxly</button>
+      </div>
+    </div>
+    <div class="map-actions" id="lab-continue-wrap" style="display:none;">
+      <button class="btn-primary" onclick="leaveLab()">Head to the Wild Zone</button>
+    </div>
+  </div>
+
+  <!-- ============ WILD ZONE / LEAGUE MAP (trainer trail) ============ -->
+  <div class="screen" id="screen-trail">
+    <div class="card">
+      <div id="trail-list"></div>
+    </div>
+    <p class="toast" id="trail-toast"></p>
+    <div class="map-actions">
+      <button onclick="openParty()">🎒 Party</button>
+      <button onclick="openMart()">🏪 Mart</button>
+    </div>
+  </div>
+
+  <!-- ============ LEAGUE MAP (Act 2) ============ -->
+  <div class="screen" id="screen-league-map">
+    <div class="card">
+      <div id="league-list"></div>
+    </div>
+    <p class="toast" id="league-toast"></p>
+    <div class="map-actions">
+      <button onclick="openParty()">🎒 Party</button>
+      <button onclick="openMart()">🏪 Mart</button>
+    </div>
+  </div>
+
+  <!-- ============ BATTLE ============ -->
+  <div class="screen" id="screen-battle">
+    <div class="battle-stage">
+      <div class="mon-row">
+        <div class="mon-card">
+          <div class="mon-name" id="battle-enemy-name">—</div>
+          <div class="mon-lvl" id="battle-enemy-lvl">Lv. 1</div>
+          <div class="hp-bar-bg"><div class="hp-bar-fill" id="battle-enemy-hp"></div></div>
+        </div>
+      </div>
+      <div class="mon-emoji" id="battle-enemy-emoji">❓</div>
+      <div class="mon-emoji" id="battle-player-emoji">❓</div>
+      <div class="mon-row">
+        <div class="mon-card">
+          <div class="mon-name" id="battle-player-name">—</div>
+          <div class="mon-lvl" id="battle-player-lvl">Lv. 1</div>
+          <div class="hp-bar-bg"><div class="hp-bar-fill" id="battle-player-hp"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="battle-log" id="battle-log">What will you do?</div>
+    <div class="move-grid" id="battle-moves"></div>
+    <div class="battle-actions-row">
+      <button onclick="openParty(true)">🎒 Switch</button>
+      <button id="battle-catch-btn" onclick="throwPokeBall()" style="display:none;">🔴 Throw Poké Ball</button>
+      <button onclick="tryFlee()" id="battle-flee-btn">Flee</button>
+    </div>
+  </div>
+
+  <!-- ============ END SCREEN ============ -->
+  <div class="screen" id="screen-end">
+    <div class="card" style="text-align:center;">
+      <div style="font-size:56px;" id="end-emoji">🏆</div>
+      <h2 id="end-title">Victory!</h2>
+      <p class="sub" id="end-sub"></p>
+      <button class="btn-primary" onclick="restartGame()">Back to Title</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-box" id="modal-box"></div>
+</div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
