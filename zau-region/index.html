@@ -180,8 +180,13 @@
 
   <!-- ============ LEAGUE MAP (Act 2) ============ -->
   <div class="screen" id="screen-league-map">
-    <div class="card">
-      <div id="league-list"></div>
+    <div class="map-frame">
+      <div class="map-grid" id="league-grid"></div>
+    </div>
+    <div class="dpad">
+      <div class="empty"></div><button onclick="tryMove('league',0,-1)">▲</button><div class="empty"></div>
+      <button onclick="tryMove('league',-1,0)">◀</button><div class="empty"></div><button onclick="tryMove('league',1,0)">▶</button>
+      <div class="empty"></div><button onclick="tryMove('league',0,1)">▼</button><div class="empty"></div>
     </div>
     <p class="toast" id="league-toast"></p>
     <div class="map-actions">

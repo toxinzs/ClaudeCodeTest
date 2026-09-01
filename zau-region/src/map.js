@@ -1,12 +1,13 @@
 import { state } from './state.js';
-import { HOME_MAP, TOWN_MAP, TRAIL_MAP } from './data/maps.js';
+import { HOME_MAP, TOWN_MAP, TRAIL_MAP, LEAGUE_MAP } from './data/maps.js';
 import { showScreen } from './screens.js';
 import { startWildEncounter } from './battle.js';
 import { enterLab } from './ui/lab.js';
 import { enterTrail, handleTrailStep } from './ui/trail.js';
+import { handleLeagueStep } from './ui/league.js';
 
-const GRID_ID = { home: 'home-grid', town: 'town-grid', trail: 'trail-grid' };
-const MAP_DEF = { home: HOME_MAP, town: TOWN_MAP, trail: TRAIL_MAP };
+const GRID_ID = { home: 'home-grid', town: 'town-grid', trail: 'trail-grid', league: 'league-grid' };
+const MAP_DEF = { home: HOME_MAP, town: TOWN_MAP, trail: TRAIL_MAP, league: LEAGUE_MAP };
 
 export function tileSize() { return window.innerWidth < 480 ? 42 : 52; }
 
@@ -87,6 +88,10 @@ export function tryMove(which, dx, dy) {
     document.getElementById('trail-toast').textContent = "";
     handleTrailStep(nx, ny);
   }
+  if (which === 'league') {
+    document.getElementById('league-toast').textContent = "";
+    handleLeagueStep(nx, ny);
+  }
 }
 
 // keyboard controls
@@ -96,6 +101,7 @@ document.addEventListener('keydown', (e) => {
   if (activeId === 'screen-home') which = 'home';
   if (activeId === 'screen-map') which = 'town';
   if (activeId === 'screen-trail') which = 'trail';
+  if (activeId === 'screen-league-map') which = 'league';
   if (!which) return;
   if (e.key === 'ArrowUp') tryMove(which,0,-1);
   if (e.key === 'ArrowDown') tryMove(which,0,1);

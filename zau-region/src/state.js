@@ -5,7 +5,7 @@ export const state = {
   activeIdx: 0,
   money: 300,
   items: { pokeball: 5, potion: 3 },
-  pos: { home: {x:1,y:2}, town: {x:1,y:5}, trail: {x:2,y:11} },
+  pos: { home: {x:1,y:2}, town: {x:1,y:5}, trail: {x:2,y:11}, league: {x:3,y:6} },
   trainerIndex: 0,
   darioBeaten: false,
   currentLeagueIdx: 0,

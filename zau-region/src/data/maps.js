@@ -38,6 +38,23 @@ export const TRAIL_MAP = {
   ]
 };
 
+// Zau League — a hub map (same wall shape as TOWN_MAP) with the 5 leaders
+// placed around a locked central tower; unlike the Trail, leaders can be
+// challenged in any order. See ui/league.js for placement/progression.
+export const LEAGUE_MAP = {
+  w: 7, h: 7,
+  bg: "#171224",
+  layout: [
+    [1,1,1,1,1,1,1],
+    [1,0,0,0,0,0,1],
+    [1,0,1,0,1,0,1],
+    [1,0,0,0,0,0,1],
+    [1,1,0,0,0,1,1],
+    [1,0,0,0,0,0,1],
+    [1,1,1,0,1,1,1]
+  ]
+};
+
 export const TOWN_MAP = {
   w: 7, h: 7,
   bg: "#101a30",
