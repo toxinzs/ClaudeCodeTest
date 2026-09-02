@@ -5,11 +5,12 @@ import { skipToCharCreate, pickAvatar, confirmCharCreate } from './ui/charCreate
 import { openDex, confirmStarterChoice, leaveLab } from './ui/lab.js';
 import { openParty, switchToMon } from './ui/party.js';
 import { openMart, buyItem } from './ui/mart.js';
+import { openBag, useItem, applyItem } from './ui/bag.js';
 import { openDexBook } from './ui/dexBook.js';
 import { enterLeagueMap, selectLeagueLeader } from './ui/league.js';
 import { restartGame } from './ui/end.js';
 import {
-  playerUseMove, throwPokeBall, tryFlee, startTrainerBattle,
+  playerUseMove, tryFlee, startTrainerBattle,
   confirmForgetMove, skipMoveLearn
 } from './battle.js';
 
@@ -33,6 +34,8 @@ Object.assign(window, {
   openParty, switchToMon,
   // ui/mart.js
   openMart, buyItem,
+  // ui/bag.js
+  openBag, useItem, applyItem,
   // ui/dexBook.js
   openDexBook,
   // ui/league.js
@@ -40,7 +43,7 @@ Object.assign(window, {
   // ui/end.js
   restartGame,
   // battle.js
-  playerUseMove, throwPokeBall, tryFlee, startTrainerBattle,
+  playerUseMove, tryFlee, startTrainerBattle,
   confirmForgetMove, skipMoveLearn
 });
 

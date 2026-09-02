@@ -1,6 +1,7 @@
 import { state, activeMon, firstHealthyIdx } from './state.js';
 import { currentMonDisplay, monSpriteHtml, computeStats, statsForMon, evolveIfReady, rollWildEncounter, xpNeededForLevel } from './mon.js';
 import { baseStatsFor } from './data/baseStats.js';
+import { ITEMS } from './data/items.js';
 import { STARTER_CHAINS } from './data/pokemon.js';
 import { TRAINER_LINEUP, RIVAL_DARIO, LEAGUE_LEADERS, DIRECTOR_VANCE, VERDANYX, moneyRewardFor } from './data/story.js';
 import { showScreen, openModal, closeModal } from './screens.js';
@@ -73,7 +74,6 @@ export function startTrainerBattle(ctx) {
 
   state.battle = { ctx, enemyName, enemyMons, enemyIdx: 0, isWild: false, moneyReward: moneyRewardFor(ctx) };
   showScreen('battle');
-  document.getElementById('battle-catch-btn').style.display = 'none';
   document.getElementById('battle-flee-btn').style.display = 'inline-block';
   renderBattle(`${enemyName} wants to battle!`);
 }
@@ -82,7 +82,6 @@ export function startWildEncounter(zoneKey) {
   const wild = rollWildEncounter(zoneKey);
   state.battle = { ctx: 'wild', enemyName: wild.speciesName, enemyMons: [wild], enemyIdx: 0, isWild: true, moneyReward: 0 };
   showScreen('battle');
-  document.getElementById('battle-catch-btn').style.display = 'inline-block';
   document.getElementById('battle-flee-btn').style.display = 'inline-block';
   renderBattle(`A wild ${wild.speciesName} appeared!`);
 }
@@ -288,17 +287,17 @@ export function skipMoveLearn() {
 }
 
 // ================== CATCHING / FLEEING ==================
-export function throwPokeBall() {
-  if (state.items.pokeball <= 0) {
-    document.getElementById('battle-log').textContent = "You're out of Poké Balls! Grab more at the Mart.";
+export function throwPokeBall(ballKey = 'pokeball') {
+  if (!state.items[ballKey] || state.items[ballKey] <= 0) {
+    document.getElementById('battle-log').textContent = "You don't have any of those! Grab more at the Mart.";
     return;
   }
   const e = currentEnemy();
   if (!e || e.hp <= 0) return;
-  state.items.pokeball--;
+  state.items[ballKey]--;
   const hpPct = e.hp / e.maxHp;
-  const catchChance = Math.min(0.95, 0.9 - hpPct*0.7);
-  document.getElementById('battle-log').textContent = "You throw a Poké Ball...";
+  const catchChance = Math.min(0.95, (0.9 - hpPct*0.7) * ITEMS[ballKey].catchMult);
+  document.getElementById('battle-log').textContent = `You throw a ${ITEMS[ballKey].name}...`;
   setTimeout(() => {
     if (Math.random() < catchChance) {
       const caughtMon = {
