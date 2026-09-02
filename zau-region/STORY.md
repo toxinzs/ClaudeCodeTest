@@ -2,6 +2,8 @@
 
 The load-bearing document. Everything else — district flavor, NPC dialogue, side hooks — should be checked against this rather than invented independently, so nothing contradicts the actual history once it surfaces. Living doc, same as WORLD.md: argue with it, don't treat it as locked.
 
+This is the plot machinery — who did what, when, and why it matters. For who these people actually *are* — personality, voice, the stuff that makes them read as people instead of backstory-shaped function — see [`CHARACTERS.md`](CHARACTERS.md).
+
 ## The premise, in one paragraph
 
 Zau's signature storms aren't weather. Years ago, Meridian Dynamics drilled into the pre-city tunnels beneath the Outskirts searching for a limitless power source, and found something instead — an ordinary wild Pokémon, transformed by whatever their excavation disturbed into something the company didn't understand and couldn't contain. They sealed the tunnels, buried the story, and called it a natural-disaster write-off. What they actually did was leave something alive down there, alone, growing for years, its instability bleeding upward through the city as thunder. Now Director Vance — who wasn't responsible for the original disaster, but has spent his career convinced he can finish it right — is reopening the excavation. The player's journey through Zau runs parallel to his, and ends at the same place: face to face with what Meridian made.
