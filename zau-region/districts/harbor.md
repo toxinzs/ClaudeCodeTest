@@ -23,7 +23,9 @@ Everywhere else in the city, you're either climbing or digging. The Harbor is fl
 
 ## Story hook
 
-Meridian Dynamics fenced off Cargo Row and the Ferry Terminal is "closed," but cargo keeps moving. If the boats aren't running, where's it actually going? This doesn't need an answer yet — it's a thread to leave visibly dangling here, one that can eventually tie back to whatever Director Vance and Meridian are actually doing near the Underlight. Harbor is a good place to plant it because it's the one district positioned to physically connect outward (water) and downward (Drowned Stair) at the same time.
+Meridian Dynamics fenced off Cargo Row and the Ferry Terminal is "closed," but cargo keeps moving. If the boats aren't running, where's it actually going?
+
+**Resolved in [`STORY.md`](../STORY.md), kept from the player for now:** it's not arriving by sea at all. Director Vance is quietly reopening the sealed excavation from eighteen years ago, and Cargo Row is one of the routes moving equipment and personnel toward it — down, via the Drowned Stair's connection to the Undercity, not out to open water. The dockworker NPC's suspicion is correct; she just doesn't have the full picture, and neither should the player yet. Harbor is a good place to plant this specific piece because it's the one district positioned to physically connect outward (water) and downward (Drowned Stair) at the same time — the perfect place for Meridian to move things without going through street-level Zau at all.
 
 ## Wild Pokémon
 

@@ -2,6 +2,8 @@
 
 Living reference doc for the region's geography. This is where a future "add a zone / trainer / area" ask should slot into, instead of getting invented fresh each time. Edit this whenever the vision changes — it's meant to be argued with, not treated as locked.
 
+Geography only — for the actual plot, history, and characters this world exists to serve, see [`STORY.md`](STORY.md). Any new district's story hook should be checked against that bible rather than invented independently.
+
 ## The concept
 
 Zau isn't a spread of separate towns connected by routes — it's **one city, built in stacked strata**, each layer constructed on top of (or dug beneath) the last. The intro already frames this: *"Wild Zones tangle beneath overpasses while glass towers climb into the fog above."* Going up the city means going up in wealth and control (Meridian Dynamics at the top); going down means going back in time, toward whatever the city was built over.
