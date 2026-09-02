@@ -18,7 +18,7 @@ Zau isn't a spread of separate towns connected by routes — it's **one city, bu
 | 6 | **Signal District** | Named only (Signal Tower, Leader Prism) | Comms/tech hub built up the side of the district — antennas, server farms. | Electric, Steel |
 | 5 | **Greenline Terraces** | Named only (Leader Thistle) | Literal stacked garden terraces — the city's one deliberate green layer, built to look like nature reclaimed the concrete. | Grass, Bug, Fairy |
 | 4 | **Ember Quarter** | Named only (Leader Ashgrave) | Old industrial/factory district, still running hot. | Fire, Rock, Steel |
-| 3 | **Harbor District** | Named only (Leader Coral) | Where the city meets water — docks, piers, the one place that opens outward instead of stacking. Natural home for eventual water travel/surfing. | Water, Flying |
+| 3 | **Harbor District** | **Fleshed out** — see [`districts/harbor.md`](districts/harbor.md) | Where the city meets water — docks, piers, the one place that opens outward instead of stacking. Natural home for eventual water travel/surfing. | Water, Flying |
 | 2 | **The Outskirts / Wild Zone** | **Fully built** — Zau Outskirts (start), Underpass Loop, Harbor Steps, Midblock Plaza, Rooftop District (Act 1 trail) | Street level, least developed, where wild Pokémon and unlicensed trainers cluster. Your starting point. | Whatever's currently in `WILD_SPECIES` — broad early-game mix |
 | 1 | **The Undercity** | Named only (Undercity Vault, Leader Obsidian) | Forgotten tunnels, old transit lines, sewers — the layer everyone built over and forgot about. Natural cave/tunnel network connecting down toward the Underlight. | Dark, Ghost, Poison, Ground |
 | 0 | **The Underlight** | Built (as a battle) | Pre-city ruins, whatever Zau was actually built on top of. Verdanyx's domain. Final dungeon. | Grass/Dragon (Verdanyx), otherwise unknown |
@@ -32,7 +32,8 @@ Zau isn't a spread of separate towns connected by routes — it's **one city, bu
 ## Built vs. named vs. new
 
 - **Fully built (walkable + battles)**: Outskirts/Wild Zone (Act 1), The Underlight (final battle only, not walkable yet).
-- **Named + has a gym battle, no walkable map yet**: Harbor District, Ember Quarter, Greenline Terraces, Signal District, Undercity, Meridian Tower. (The League hub map currently represents all 5 gyms as one shared space — eventually each could get its own real district map.)
+- **Fleshed out on paper, no walkable map yet**: Harbor District (see [`districts/harbor.md`](districts/harbor.md) — sub-locations, NPCs, wild Pokémon, a story hook).
+- **Named + has a gym battle, still just a name otherwise**: Ember Quarter, Greenline Terraces, Signal District, Undercity, Meridian Tower. (The League hub map currently represents all 5 gyms as one shared space — eventually each could get its own real district map.)
 - **Brand new, not in the game at all yet**: The Sprawl, The Skyline.
 
 ## Using this doc
