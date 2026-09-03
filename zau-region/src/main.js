@@ -6,6 +6,7 @@ import { openDex, confirmStarterChoice, leaveLab } from './ui/lab.js';
 import { openParty, switchToMon } from './ui/party.js';
 import { openMart, buyItem } from './ui/mart.js';
 import { openBag, useItem, applyItem } from './ui/bag.js';
+import { openHealCenter, healParty } from './ui/healCenter.js';
 import { openDexBook } from './ui/dexBook.js';
 import { enterLeagueMap, selectLeagueLeader } from './ui/league.js';
 import { restartGame } from './ui/end.js';
@@ -36,6 +37,8 @@ Object.assign(window, {
   openMart, buyItem,
   // ui/bag.js
   openBag, useItem, applyItem,
+  // ui/healCenter.js
+  openHealCenter, healParty,
   // ui/dexBook.js
   openDexBook,
   // ui/league.js
