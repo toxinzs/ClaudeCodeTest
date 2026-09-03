@@ -1,12 +1,11 @@
 import Phaser from 'phaser';
 import { loadGame } from './save.js';
 import { installTestBridge } from './testBridge.js';
+import { GAME_W, GAME_H } from './config.js';
 import HomeScene from './scenes/HomeScene.js';
+import BattleScene from './scenes/BattleScene.js';
 
 loadGame();
-
-const TILE = 52;
-const HOME_W = 5, HOME_H = 5;
 
 const game = new Phaser.Game({
   type: Phaser.AUTO,
@@ -14,10 +13,10 @@ const game = new Phaser.Game({
   backgroundColor: '#0a0e1a',
   scale: {
     mode: Phaser.Scale.NONE,
-    width: HOME_W * TILE,
-    height: HOME_H * TILE + 40
+    width: GAME_W,
+    height: GAME_H
   },
-  scene: [HomeScene]
+  scene: [HomeScene, BattleScene]
 });
 
 installTestBridge(game);
