@@ -2,7 +2,12 @@ import Phaser from 'phaser';
 import { loadGame } from './save.js';
 import { installTestBridge } from './testBridge.js';
 import { GAME_W, GAME_H } from './config.js';
+import BootScene from './scenes/BootScene.js';
 import HomeScene from './scenes/HomeScene.js';
+import TownScene from './scenes/TownScene.js';
+import LabScene from './scenes/LabScene.js';
+import TrailScene from './scenes/TrailScene.js';
+import LeagueScene from './scenes/LeagueScene.js';
 import BattleScene from './scenes/BattleScene.js';
 
 loadGame();
@@ -16,7 +21,7 @@ const game = new Phaser.Game({
     width: GAME_W,
     height: GAME_H
   },
-  scene: [HomeScene, BattleScene]
+  scene: [BootScene, HomeScene, TownScene, LabScene, TrailScene, LeagueScene, BattleScene]
 });
 
 installTestBridge(game);

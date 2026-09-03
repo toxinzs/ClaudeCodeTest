@@ -71,6 +71,6 @@ export const TOWN_MAP = {
   homeX: 1, homeY: 5,
   trailX: 3, trailY: 6,
   decor: [
-    {x:5,y:1,emoji:"🔬"}, {x:1,y:5,emoji:"🏠"}, {x:3,y:6,emoji:"🌲"}
+    {x:5,y:1,emoji:"🔬",tileKey:"window"}, {x:1,y:5,emoji:"🏠",tileKey:"door"}, {x:3,y:6,emoji:"🌲",tileKey:"tree"}
   ]
 };
