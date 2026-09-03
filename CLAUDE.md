@@ -20,12 +20,21 @@ A fan-made Pokémon RPG. Started as a single 1638-line HTML file; the user's sta
 - **`zau-region-phaser/`** — new project, migrating the game onto the Phaser 3 engine for a real 2D-game feel instead of a DOM/CSS website feel. Hand-scaffolded (Vite + `phaser` npm package — the official `create-phaser-game` CLI is interactive-only and can't be scripted). This is where new work happens going forward, per the approved migration plan.
 
 Full migration plan (context, decisions, phase breakdown) lives at `/root/.claude/plans/project-zau-region-enumerated-treehouse.md` in this environment — not checked into the repo. Key points if that file isn't available:
-- Phase 1 (in progress): scaffold `zau-region-phaser/`, port `data/*.js`/`state.js`/`save.js` verbatim, build one walkable placeholder scene with real grid movement tied to `state.pos`, a `window.__zauTest` bridge for Playwright testing, validate with a real Playwright pass (move + reload + persistence).
-- Phase 2: refactor `battle.js` to emit events instead of touching the DOM directly; build the Phaser battle scene.
-- Phase 3: source a real CC0 tileset (Kenney.nl) before porting the remaining maps; avoid derivative "Pokémon-style" rips.
+- Phase 1 (done): scaffolded `zau-region-phaser/`, ported `data/*.js`/`state.js`/`save.js` verbatim, one walkable scene tied to real `state.pos`, a `window.__zauTest` bridge for Playwright testing.
+- Phase 2 (done): `battleEngine.js` emits `render`/`end` events instead of touching the DOM; `BattleScene` consumes them.
+- Phase 3 (mostly done): a real CC0 tileset is in — `kenney.nl` itself is blocked by this environment's network policy, so the tiles were pulled from `github.com/ETdoFresh/kenney.nl` (a verified CC0 mirror of Kenney's actual "Roguelike/RPG pack") into `zau-region-phaser/public/tiles/`. `TownScene`/`LabScene`/`TrailScene`/`LeagueScene` are all built and Playwright-validated (real tiles, wild encounters, trainer battles, League gating). **Still remaining in Phase 3**: the title screen/cutscene/character-creation flow isn't ported yet — the game currently boots straight into Home with a blank player name.
 - Phase 4: port Bag/Mart/Pokémon Center/party/Pokédex/move-learn as Phaser scenes.
 - Phase 5: cutover — flip the production Pages deploy to the Phaser version once feature parity is reached; retire the DOM version.
 - No live preview deploy for `zau-region-phaser/` yet: `actions/deploy-pages` replaces the whole site per publish, so a second concurrent Pages workflow would race the production one. Verify locally (`npm run dev` + Playwright) until cutover.
+
+### Visual style + future mechanic (user direction, applies to all future work)
+
+- **Target look**: GBA/DS-era top-down JRPG, "up to Gen 5" as the explicit reference point. The current Kenney tileset is a pragmatic CC0 stand-in chosen because it's actually reachable from this sandboxed environment (flat-shaded, not true pixel-art dithering) — not a final style commitment. If a closer GBA-style CC0 pixel tileset becomes available later, swapping `public/tiles/*.png` is a contained change.
+- **Central battle gimmick: Mega Evolution.** Explicitly a future item, not yet designed or scoped — the user flagged it as the game's intended signature mechanic. When it comes up: it's a `battleEngine.js`/`data/items.js` concern (a held Mega Stone item, a manual trigger mid-battle, temporary stat/type/appearance change reverting after the battle), not a maps/tileset concern — needs its own design pass (which species get Mega forms, a real stat/type-change table, a battle UI affordance) before implementation.
+
+### A real bug found and fixed (2026-09-03)
+
+A mon's `.fainted` flag was never actually set to `true` when its HP hit 0, in **both** `zau-region/src/battle.js` and `zau-region-phaser/src/battleEngine.js` — so `loseBattle`'s 40%-HP recovery-on-loss silently never fired (checked in both places: `git log` for `"if (defender.hp <= 0) defender.fainted = true;"` if this needs re-verifying).
 
 ### World/story bible (source of truth for content work)
 

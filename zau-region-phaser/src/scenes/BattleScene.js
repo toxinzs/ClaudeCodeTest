@@ -79,7 +79,7 @@ export default class BattleScene extends Phaser.Scene {
     if (!started) {
       // No healthy party member — mirrors the DOM version's fainted-party
       // guard. Bounce straight back rather than showing an empty battle UI.
-      this.scene.start(this.returnTo);
+      this.scene.start(this.returnTo, { toastMsg: 'Your Pokémon need to recover before you can battle again!' });
     }
   }
 
@@ -116,6 +116,6 @@ export default class BattleScene extends Phaser.Scene {
     this.moveButtons.forEach(b => { b.bg.disableInteractive(); });
     this.runBtn.bg.disableInteractive();
     this.catchBtn.bg.disableInteractive();
-    this.time.delayedCall(1200, () => this.scene.start(this.returnTo));
+    this.time.delayedCall(1200, () => this.scene.start(this.returnTo, { toastMsg: payload.msg }));
   }
 }

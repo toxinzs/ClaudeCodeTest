@@ -142,6 +142,7 @@ function executeMove(attacker, defender, move) {
   const mult = typeMultiplier(move.type, defender.type);
   const dmg = calcDamage(move, attacker, defender);
   defender.hp = Math.max(0, defender.hp - dmg);
+  if (defender.hp <= 0) defender.fainted = true;
   let msg = `${attackerName} used ${move.name}!`;
   if (mult === 0) msg += " It has no effect...";
   else if (mult > 1) msg += " It's super effective!";
