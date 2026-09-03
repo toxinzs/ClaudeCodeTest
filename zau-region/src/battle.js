@@ -63,6 +63,10 @@ function buildBattleMon(speciesName, emoji, type, level, moves) {
 }
 
 export function startTrainerBattle(ctx) {
+  if (firstHealthyIdx() === -1) {
+    alert("Your Pokémon need to recover before you can battle again!");
+    return;
+  }
   let enemyTeam, enemyName;
   if (ctx === 'lineup') { enemyTeam = TRAINER_LINEUP[state.trainerIndex].team; enemyName = TRAINER_LINEUP[state.trainerIndex].name; }
   if (ctx === 'dario') { enemyTeam = RIVAL_DARIO.team; enemyName = RIVAL_DARIO.name; }
@@ -79,6 +83,7 @@ export function startTrainerBattle(ctx) {
 }
 
 export function startWildEncounter(zoneKey) {
+  if (firstHealthyIdx() === -1) return; // silent — this is a background random roll, not a deliberate action
   const wild = rollWildEncounter(zoneKey);
   state.battle = { ctx: 'wild', enemyName: wild.speciesName, enemyMons: [wild], enemyIdx: 0, isWild: true, moneyReward: 0 };
   showScreen('battle');
