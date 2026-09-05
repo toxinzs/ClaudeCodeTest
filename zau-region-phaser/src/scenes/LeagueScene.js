@@ -3,7 +3,7 @@ import { state } from '../state.js';
 import { LEAGUE_MAP } from '../data/maps.js';
 import { LEAGUE_LEADERS, DIRECTOR_VANCE } from '../data/story.js';
 import { TILE, GAME_W, GAME_H } from '../config.js';
-import { drawTiles, drawDecor, createWalker } from '../mapRenderer.js';
+import { drawTiles, drawDecor, createWalker, setupFollowCamera, setupHUD } from '../mapRenderer.js';
 import { addActionBar } from '../uiHelpers.js';
 import { goToScene, fadeIn } from '../transitions.js';
 
@@ -37,10 +37,10 @@ export default class LeagueScene extends Phaser.Scene {
     drawDecor(this, this.buildDecor(), { offsetX: this.offsetX, offsetY: this.offsetY });
     this.drawPlayer();
 
-    this.add.text(GAME_W / 2, 4, 'ZAU LEAGUE', { fontFamily: 'sans-serif', fontSize: '13px', color: '#8a8aa0' }).setOrigin(0.5, 0);
+    const header = this.add.text(GAME_W / 2, 4, 'ZAU LEAGUE', { fontFamily: 'sans-serif', fontSize: '13px', color: '#8a8aa0' }).setOrigin(0.5, 0);
     const clearedCount = state.leagueBeaten.filter(Boolean).length;
     const initialToast = this.pendingToast || (clearedCount < 5 ? `${clearedCount}/5 leaders cleared` : '');
-    this.toastText = this.add.text(GAME_W / 2, this.offsetY + LEAGUE_MAP.h * TILE + 12, initialToast, {
+    this.toastText = this.add.text(GAME_W / 2, GAME_H - 52, initialToast, {
       fontFamily: 'sans-serif', fontSize: '13px', color: '#e8e8f0', wordWrap: { width: GAME_W - 20 }, align: 'center'
     }).setOrigin(0.5, 0);
 
@@ -50,17 +50,17 @@ export default class LeagueScene extends Phaser.Scene {
       onStep: (nx, ny) => this.handleStep(nx, ny)
     });
 
-    this.input.keyboard.on('keydown-UP', () => this.walker.tryMove(0, -1));
-    this.input.keyboard.on('keydown-DOWN', () => this.walker.tryMove(0, 1));
-    this.input.keyboard.on('keydown-LEFT', () => this.walker.tryMove(-1, 0));
-    this.input.keyboard.on('keydown-RIGHT', () => this.walker.tryMove(1, 0));
+    setupFollowCamera(this, { mapDef: LEAGUE_MAP, offsetX: this.offsetX, offsetY: this.offsetY, player: this.player });
 
-    addActionBar(this, [
+    const bar = addActionBar(this, [
       { label: 'Party', onClick: () => this.scene.launch('Party') },
       { label: 'Mart', onClick: () => this.scene.launch('Mart') },
       { label: 'Bag', onClick: () => this.scene.launch('Bag') },
       { label: 'Center', onClick: () => this.scene.launch('Center') }
     ], GAME_H - 16);
+
+    const hudObjects = [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])];
+    setupHUD(this, hudObjects);
   }
 
   buildDecor() {

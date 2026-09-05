@@ -39,11 +39,6 @@ export default class HomeScene extends Phaser.Scene {
       onStep: () => { this.updateDialogue(); saveGame(); }
     });
 
-    this.input.keyboard.on('keydown-UP', () => this.walker.tryMove(0, -1));
-    this.input.keyboard.on('keydown-DOWN', () => this.walker.tryMove(0, 1));
-    this.input.keyboard.on('keydown-LEFT', () => this.walker.tryMove(-1, 0));
-    this.input.keyboard.on('keydown-RIGHT', () => this.walker.tryMove(1, 0));
-
     this.updateDialogue();
   }
 
