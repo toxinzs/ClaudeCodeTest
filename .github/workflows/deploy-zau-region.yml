@@ -3,7 +3,7 @@ name: Deploy Zau Region to GitHub Pages
 on:
   push:
     branches: [main]
-    paths: ["zau-region/**", ".github/workflows/deploy-zau-region.yml"]
+    paths: ["zau-region-phaser/**", ".github/workflows/deploy-zau-region.yml"]
   workflow_dispatch:
 
 permissions:
@@ -24,12 +24,12 @@ jobs:
         with:
           node-version: 20
       - run: npm install
-        working-directory: zau-region
+        working-directory: zau-region-phaser
       - run: npm run build
-        working-directory: zau-region
+        working-directory: zau-region-phaser
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: zau-region/dist
+          path: zau-region-phaser/dist
 
   deploy:
     needs: build
