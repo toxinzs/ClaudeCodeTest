@@ -4,6 +4,7 @@ import { saveGame } from '../save.js';
 import { makeStarterMon } from '../mon.js';
 import { STARTER_CHAINS } from '../data/pokemon.js';
 import { GAME_W, GAME_H } from '../config.js';
+import { goToScene, fadeIn } from '../transitions.js';
 
 const STARTER_KEYS = ['sprigatito', 'fuecoco', 'quaxly'];
 
@@ -16,6 +17,7 @@ export default class LabScene extends Phaser.Scene {
   }
 
   create() {
+    fadeIn(this);
     this.add.rectangle(GAME_W / 2, GAME_H / 2, GAME_W, GAME_H, 0x12192e);
     this.add.text(GAME_W / 2, 24, "Professor Mabosso's Lab", {
       fontFamily: 'sans-serif', fontSize: '16px', color: '#e8e8f0'
@@ -32,7 +34,7 @@ export default class LabScene extends Phaser.Scene {
     }).setOrigin(0.5, 0);
 
     if (hasStarter) {
-      this.makeButton(GAME_W / 2, GAME_H - 40, 220, 40, 'Head back to town', () => this.scene.start('Town'));
+      this.makeButton(GAME_W / 2, GAME_H - 40, 220, 40, 'Head back to town', () => goToScene(this, 'Town'));
     } else {
       STARTER_KEYS.forEach((key, i) => {
         const chain = STARTER_CHAINS[key];

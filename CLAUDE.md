@@ -16,16 +16,17 @@ A fan-made Pokémon RPG. Started as a single 1638-line HTML file; the user's sta
 
 ### Two parallel project directories
 
-- **`zau-region/`** — the original Vite + vanilla JS/DOM/CSS version. Fully playable, deployed live via GitHub Pages (`.github/workflows/deploy-zau-region.yml`, path-filtered to `zau-region/**`). **Now content-frozen**: bugfixes only, no new trainers/districts/balance work, since `zau-region-phaser/` is the active development target and the two must not silently diverge.
-- **`zau-region-phaser/`** — new project, migrating the game onto the Phaser 3 engine for a real 2D-game feel instead of a DOM/CSS website feel. Hand-scaffolded (Vite + `phaser` npm package — the official `create-phaser-game` CLI is interactive-only and can't be scripted). This is where new work happens going forward, per the approved migration plan.
+- **`zau-region-phaser/`** — the Phaser 3 version. **This is now the live production build** — `.github/workflows/deploy-zau-region.yml` builds and deploys it (path-filtered to `zau-region-phaser/**`) as of the Phase 5 cutover. This is where all new work happens.
+- **`zau-region/`** — the original Vite + vanilla JS/DOM/CSS version. Content-frozen, no longer deployed, but **not deleted** — still in the repo for reference (worldbuilding docs, real game data). Deleting it outright is a separate, more consequential decision than the cutover itself; don't do it without an explicit ask.
 
 Full migration plan (context, decisions, phase breakdown) lives at `/root/.claude/plans/project-zau-region-enumerated-treehouse.md` in this environment — not checked into the repo. Key points if that file isn't available:
 - Phase 1 (done): scaffolded `zau-region-phaser/`, ported `data/*.js`/`state.js`/`save.js` verbatim, one walkable scene tied to real `state.pos`, a `window.__zauTest` bridge for Playwright testing.
 - Phase 2 (done): `battleEngine.js` emits `render`/`end` events instead of touching the DOM; `BattleScene` consumes them.
 - Phase 3 (done): a real CC0 tileset is in — `kenney.nl` itself is blocked by this environment's network policy, so the tiles were pulled from `github.com/ETdoFresh/kenney.nl` (a verified CC0 mirror of Kenney's actual "Roguelike/RPG pack") into `zau-region-phaser/public/tiles/`. `TownScene`/`LabScene`/`TrailScene`/`LeagueScene` are all built and Playwright-validated (real tiles, wild encounters, trainer battles, League gating). `TitleScene`/`CutsceneScene`/`CharCreateScene` close out the phase — the game now boots into a real title screen (Continue/Begin Journey/Skip Intro) instead of straight into Home with a blank name.
 - Phase 4 (done): Party/Bag/Mart/Center/Pokédex/move-learn all built as overlay scenes (launched on top of the calling scene, never pausing it — closing is `scene.stop()`), wired into Town/Trail/League's action bars and Battle's Switch/Bag/Flee row. Playwright-validated including a mid-battle item use and a forced move-learn prompt.
-- Phase 5: cutover — flip the production Pages deploy to the Phaser version once feature parity is reached; retire the DOM version.
-- No live preview deploy for `zau-region-phaser/` yet: `actions/deploy-pages` replaces the whole site per publish, so a second concurrent Pages workflow would race the production one. Verify locally (`npm run dev` + Playwright) until cutover.
+- Phase 4.5 (done): real fade transitions (`transitions.js`'s `goToScene`/`fadeIn`) on every scene switch instead of hard jump cuts, plus a real loading screen (progress bar) in `BootScene` — infrastructure for when the asset list actually grows, not just decoration for today's near-instant load. The DOM version's animated storm/lightning title-screen effects are deliberately not rebuilt yet — that's tied up with the not-yet-picked real game title and the eventual GBA-style art pass, revisit together later.
+- Phase 5 (done): cutover — production Pages deploy now builds `zau-region-phaser/`. `zau-region/` stays in the repo, undeployed.
+- Going forward: keep using `npm run dev` + Playwright for iteration; a production build (`npm run build` + `vite preview`) is worth re-checking before any deploy-affecting change, since dev-server behavior and a real static build can diverge (asset paths, etc.).
 
 ### Visual style + future mechanic (user direction, applies to all future work)
 
@@ -46,7 +47,7 @@ A mon's `.fainted` flag was never actually set to `true` when its HP hit 0, in *
 - `zau-region/CHARACTERS.md` — character depth (Alma, Priya, Dario, Vance, Mabosso, flavor cast).
 - `zau-region/districts/harbor.md` — deep-dive template for a single district; more districts get this treatment as they're built out.
 
-### Game mechanics already implemented (in `zau-region/`, to be ported/rebuilt in Phaser)
+### Game mechanics already implemented (in `zau-region-phaser/`, all ported/rebuilt from the original `zau-region/`)
 
 - Real Pokémon base stats, real move data (`data/moves.js`), full 18-type effectiveness chart with immunities, Gen3+-style simplified stat/damage formulas (IV=0/EV=0/neutral nature), STAB, Speed-based turn order.
 - Real item roster (Poké/Great/Ultra Ball, Potion line, Revives) gated by League badge count, with a working Bag UI.

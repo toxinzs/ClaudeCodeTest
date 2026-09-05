@@ -5,6 +5,7 @@ import { TOWN_MAP } from '../data/maps.js';
 import { TILE, GAME_W, GAME_H } from '../config.js';
 import { drawTiles, drawDecor, createWalker } from '../mapRenderer.js';
 import { addActionBar } from '../uiHelpers.js';
+import { goToScene, fadeIn } from '../transitions.js';
 
 const WILD_ENCOUNTER_CHANCE = 0.12;
 
@@ -18,6 +19,7 @@ export default class TownScene extends Phaser.Scene {
   }
 
   create() {
+    fadeIn(this);
     this.offsetX = Math.floor((GAME_W - TOWN_MAP.w * TILE) / 2);
     this.offsetY = 20;
 
@@ -62,15 +64,15 @@ export default class TownScene extends Phaser.Scene {
     this.toastText.setText('');
     saveGame();
     if (nx === TOWN_MAP.labX && ny === TOWN_MAP.labY) {
-      this.scene.start('Lab');
+      goToScene(this, 'Lab');
       return;
     }
     if (nx === TOWN_MAP.trailX && ny === TOWN_MAP.trailY && state.party.length) {
-      this.scene.start('Trail');
+      goToScene(this, 'Trail');
       return;
     }
     if (state.party.length && Math.random() < WILD_ENCOUNTER_CHANCE) {
-      this.scene.start('Battle', { kind: 'wild', zoneKey: 'outskirts', returnTo: 'Town' });
+      goToScene(this, 'Battle', { kind: 'wild', zoneKey: 'outskirts', returnTo: 'Town' });
     }
   }
 }

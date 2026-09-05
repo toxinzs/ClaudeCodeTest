@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { state } from '../state.js';
 import { AVATAR_OPTIONS } from '../data/maps.js';
 import { GAME_W, GAME_H } from '../config.js';
+import { goToScene, fadeIn } from '../transitions.js';
 
 const COLS = 4;
 const CELL = 80;
@@ -15,6 +16,7 @@ export default class CharCreateScene extends Phaser.Scene {
   }
 
   create() {
+    fadeIn(this);
     this.selectedAvatar = AVATAR_OPTIONS[0];
     this.avatarBoxes = [];
 
@@ -64,6 +66,6 @@ export default class CharCreateScene extends Phaser.Scene {
     }
     state.player.name = name;
     state.player.avatar = this.selectedAvatar;
-    this.scene.start('Home');
+    goToScene(this, 'Home');
   }
 }

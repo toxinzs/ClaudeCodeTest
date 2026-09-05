@@ -5,6 +5,7 @@ import { LEAGUE_LEADERS, DIRECTOR_VANCE } from '../data/story.js';
 import { TILE, GAME_W, GAME_H } from '../config.js';
 import { drawTiles, drawDecor, createWalker } from '../mapRenderer.js';
 import { addActionBar } from '../uiHelpers.js';
+import { goToScene, fadeIn } from '../transitions.js';
 
 // Unlike the Trail, leaders can be challenged in any order, so they're
 // placed around a hub rather than along a corridor. The tower starts
@@ -28,6 +29,7 @@ export default class LeagueScene extends Phaser.Scene {
   }
 
   create() {
+    fadeIn(this);
     this.offsetX = Math.floor((GAME_W - LEAGUE_MAP.w * TILE) / 2);
     this.offsetY = 20;
 
@@ -91,7 +93,7 @@ export default class LeagueScene extends Phaser.Scene {
         this.toastText.setText(`You already beat ${LEAGUE_LEADERS[idx].name}.`);
       } else {
         state.currentLeagueIdx = idx;
-        this.scene.start('Battle', { kind: 'league', returnTo: 'League' });
+        goToScene(this, 'Battle', { kind: 'league', returnTo: 'League' });
       }
       return;
     }
@@ -100,9 +102,9 @@ export default class LeagueScene extends Phaser.Scene {
       if (clearedCount < 5) {
         this.toastText.setText('The tower is sealed until all 5 League Leaders are defeated.');
       } else if (!state.vanceBeaten) {
-        this.scene.start('Battle', { kind: 'vance', returnTo: 'League' });
+        goToScene(this, 'Battle', { kind: 'vance', returnTo: 'League' });
       } else if (!state.verdanyxBeaten) {
-        this.scene.start('Battle', { kind: 'verdanyx', returnTo: 'League' });
+        goToScene(this, 'Battle', { kind: 'verdanyx', returnTo: 'League' });
       } else {
         this.toastText.setText('Zau has no more challenges left for you. Legendary run.');
       }
