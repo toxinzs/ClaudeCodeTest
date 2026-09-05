@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { state } from '../state.js';
 import { hasSave, loadGame } from '../save.js';
 import { GAME_W, GAME_H } from '../config.js';
+import { goToScene, fadeIn } from '../transitions.js';
 
 const INTRO_TEXT = "Thunder does not fall on Zau by chance. It answers something in you — and tonight, it's answering back.";
 
@@ -15,6 +16,7 @@ export default class TitleScene extends Phaser.Scene {
   }
 
   create() {
+    fadeIn(this);
     this.add.text(GAME_W / 2, 40, 'POKÉMON: ZAU', {
       fontFamily: 'sans-serif', fontSize: '26px', fontStyle: 'bold', color: '#e8e8f0'
     }).setOrigin(0.5);
@@ -30,8 +32,8 @@ export default class TitleScene extends Phaser.Scene {
 
     const menu = [];
     if (hasSave()) menu.push({ label: 'Continue', onClick: () => this.continueGame() });
-    menu.push({ label: 'Begin Journey', onClick: () => this.scene.start('Cutscene') });
-    menu.push({ label: 'Skip Intro', onClick: () => this.scene.start('CharCreate') });
+    menu.push({ label: 'Begin Journey', onClick: () => goToScene(this, 'Cutscene') });
+    menu.push({ label: 'Skip Intro', onClick: () => goToScene(this, 'CharCreate') });
 
     menu.forEach((m, i) => {
       const y = 260 + i * 48;
@@ -55,6 +57,6 @@ export default class TitleScene extends Phaser.Scene {
 
   continueGame() {
     if (!loadGame()) return;
-    this.scene.start(state.party.length === 0 ? 'Home' : 'Town');
+    goToScene(this, state.party.length === 0 ? 'Home' : 'Town');
   }
 }

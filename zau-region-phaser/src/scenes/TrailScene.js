@@ -5,6 +5,7 @@ import { TRAINER_LINEUP, RIVAL_DARIO } from '../data/story.js';
 import { TILE, GAME_W, GAME_H } from '../config.js';
 import { drawTiles, drawDecor, createWalker } from '../mapRenderer.js';
 import { addActionBar } from '../uiHelpers.js';
+import { goToScene, fadeIn } from '../transitions.js';
 
 // Trainers are placed one per row up a straight corridor (x=2), closest
 // first; the corridor's far end (y=0) is Dario, then the league gate, once
@@ -23,6 +24,7 @@ export default class TrailScene extends Phaser.Scene {
   }
 
   create() {
+    fadeIn(this);
     this.offsetX = Math.floor((GAME_W - TRAIL_MAP.w * TILE) / 2);
     this.offsetY = 12;
 
@@ -92,7 +94,7 @@ export default class TrailScene extends Phaser.Scene {
       if (trainerIdx < state.trainerIndex) {
         this.toastText.setText(`You already beat ${TRAINER_LINEUP[trainerIdx].name}.`);
       } else if (trainerIdx === state.trainerIndex) {
-        this.scene.start('Battle', { kind: 'lineup', returnTo: 'Trail' });
+        goToScene(this, 'Battle', { kind: 'lineup', returnTo: 'Trail' });
       } else {
         this.toastText.setText('Beat the closer trainers first.');
       }
@@ -102,9 +104,9 @@ export default class TrailScene extends Phaser.Scene {
       if (state.trainerIndex < TRAINER_LINEUP.length) {
         this.toastText.setText("Something's blocking the way ahead...");
       } else if (!state.darioBeaten) {
-        this.scene.start('Battle', { kind: 'dario', returnTo: 'Trail' });
+        goToScene(this, 'Battle', { kind: 'dario', returnTo: 'Trail' });
       } else {
-        this.scene.start('League');
+        goToScene(this, 'League');
       }
     }
   }

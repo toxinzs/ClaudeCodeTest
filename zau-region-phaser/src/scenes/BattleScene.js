@@ -3,6 +3,7 @@ import { BattleEngine } from '../battleEngine.js';
 import { loadMonSprite } from '../spriteLoader.js';
 import { GAME_W } from '../config.js';
 import { addActionBar } from '../uiHelpers.js';
+import { goToScene, fadeIn } from '../transitions.js';
 
 const HP_BAR_W = 180;
 
@@ -52,6 +53,7 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   create() {
+    fadeIn(this);
     this.add.rectangle(GAME_W / 2, 230, GAME_W, 460, 0x10121c);
 
     this.enemyCard = new MonCard(this, GAME_W - HP_BAR_W - 24, 24, 110);
@@ -91,7 +93,7 @@ export default class BattleScene extends Phaser.Scene {
     if (!started) {
       // No healthy party member — mirrors the DOM version's fainted-party
       // guard. Bounce straight back rather than showing an empty battle UI.
-      this.scene.start(this.returnTo, { toastMsg: 'Your Pokémon need to recover before you can battle again!' });
+      goToScene(this, this.returnTo, { toastMsg: 'Your Pokémon need to recover before you can battle again!' });
     }
   }
 
@@ -130,6 +132,6 @@ export default class BattleScene extends Phaser.Scene {
     this.logText.setText(payload.msg || '');
     this.moveButtons.forEach(b => { b.bg.disableInteractive(); });
     this.actionButtons.forEach(b => { b.bg.disableInteractive(); });
-    this.time.delayedCall(1200, () => this.scene.start(this.returnTo, { toastMsg: payload.msg }));
+    this.time.delayedCall(1200, () => goToScene(this, this.returnTo, { toastMsg: payload.msg }));
   }
 }
