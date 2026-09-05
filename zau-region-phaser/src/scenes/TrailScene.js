@@ -4,6 +4,7 @@ import { TRAIL_MAP } from '../data/maps.js';
 import { TRAINER_LINEUP, RIVAL_DARIO } from '../data/story.js';
 import { TILE, GAME_W, GAME_H } from '../config.js';
 import { drawTiles, drawDecor, createWalker } from '../mapRenderer.js';
+import { addActionBar } from '../uiHelpers.js';
 
 // Trainers are placed one per row up a straight corridor (x=2), closest
 // first; the corridor's far end (y=0) is Dario, then the league gate, once
@@ -36,7 +37,7 @@ export default class TrailScene extends Phaser.Scene {
     this.cameras.main.startFollow(this.player, true, 0.15, 0.15);
 
     this.add.text(GAME_W / 2, 0, 'WILD ZONE TRAIL', { fontFamily: 'sans-serif', fontSize: '13px', color: '#8a8aa0' }).setOrigin(0.5, 0).setScrollFactor(0);
-    this.toastText = this.add.text(GAME_W / 2, GAME_H - 20, this.pendingToast, {
+    this.toastText = this.add.text(GAME_W / 2, GAME_H - 52, this.pendingToast, {
       fontFamily: 'sans-serif', fontSize: '13px', color: '#e8e8f0', wordWrap: { width: GAME_W - 20 }, align: 'center'
     }).setOrigin(0.5, 0).setScrollFactor(0);
 
@@ -50,6 +51,14 @@ export default class TrailScene extends Phaser.Scene {
     this.input.keyboard.on('keydown-DOWN', () => this.walker.tryMove(0, 1));
     this.input.keyboard.on('keydown-LEFT', () => this.walker.tryMove(-1, 0));
     this.input.keyboard.on('keydown-RIGHT', () => this.walker.tryMove(1, 0));
+
+    const bar = addActionBar(this, [
+      { label: 'Party', onClick: () => this.scene.launch('Party') },
+      { label: 'Mart', onClick: () => this.scene.launch('Mart') },
+      { label: 'Bag', onClick: () => this.scene.launch('Bag') },
+      { label: 'Center', onClick: () => this.scene.launch('Center') }
+    ], GAME_H - 16);
+    bar.forEach(({ bg, label }) => { bg.setScrollFactor(0); label.setScrollFactor(0); });
   }
 
   // Progress-dependent, so it's rebuilt fresh each time the scene starts

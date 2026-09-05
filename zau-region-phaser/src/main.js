@@ -9,6 +9,12 @@ import LabScene from './scenes/LabScene.js';
 import TrailScene from './scenes/TrailScene.js';
 import LeagueScene from './scenes/LeagueScene.js';
 import BattleScene from './scenes/BattleScene.js';
+import PartyScene from './scenes/PartyScene.js';
+import BagScene from './scenes/BagScene.js';
+import MartScene from './scenes/MartScene.js';
+import DexScene from './scenes/DexScene.js';
+import CenterScene from './scenes/CenterScene.js';
+import MoveLearnScene from './scenes/MoveLearnScene.js';
 
 loadGame();
 
@@ -21,7 +27,10 @@ const game = new Phaser.Game({
     width: GAME_W,
     height: GAME_H
   },
-  scene: [BootScene, HomeScene, TownScene, LabScene, TrailScene, LeagueScene, BattleScene]
+  scene: [
+    BootScene, HomeScene, TownScene, LabScene, TrailScene, LeagueScene, BattleScene,
+    PartyScene, BagScene, MartScene, DexScene, CenterScene, MoveLearnScene
+  ]
 });
 
 installTestBridge(game);

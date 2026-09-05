@@ -1,7 +1,8 @@
 import Phaser from 'phaser';
 import { BattleEngine } from '../battleEngine.js';
 import { loadMonSprite } from '../spriteLoader.js';
-import { GAME_W, GAME_H } from '../config.js';
+import { GAME_W } from '../config.js';
+import { addActionBar } from '../uiHelpers.js';
 
 const HP_BAR_W = 180;
 
@@ -51,26 +52,37 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   create() {
-    this.add.rectangle(GAME_W / 2, GAME_H / 2, GAME_W, GAME_H, 0x10121c);
+    this.add.rectangle(GAME_W / 2, 230, GAME_W, 460, 0x10121c);
 
     this.enemyCard = new MonCard(this, GAME_W - HP_BAR_W - 24, 24, 110);
-    this.playerCard = new MonCard(this, 24, GAME_H - 150, GAME_H - 210);
+    this.playerCard = new MonCard(this, 24, 258, 196);
 
-    this.logText = this.add.text(GAME_W / 2, GAME_H - 150, 'What will you do?', {
+    this.logText = this.add.text(GAME_W / 2, 296, 'What will you do?', {
       fontFamily: 'sans-serif', fontSize: '13px', color: '#c8c8d8',
       wordWrap: { width: GAME_W - 40 }, align: 'center'
     }).setOrigin(0.5, 0);
 
     this.moveButtons = [0, 1, 2, 3].map(i => this.makeButton(
-      24 + (i % 2) * 216, GAME_H - 108 + Math.floor(i / 2) * 48, 208, 40, '', () => this.engine.playerUseMove(i)
+      24 + (i % 2) * 216, 336 + Math.floor(i / 2) * 44, 208, 36, '', () => this.engine.playerUseMove(i)
     ));
 
-    this.runBtn = this.makeButton(GAME_W - 190, GAME_H - 30, 80, 26, 'Run', () => this.engine.tryFlee());
-    this.catchBtn = this.makeButton(GAME_W - 100, GAME_H - 30, 80, 26, 'Catch', () => this.engine.throwPokeBall('pokeball'));
+    // Switch/Bag/Flee are always visible — matches the DOM version, where
+    // tryFlee() itself refuses on a trainer battle rather than the button
+    // being hidden. Catching is now a Bag→ball-item flow, not a shortcut
+    // button, same as the DOM version.
+    const [switchBar, bagBar, fleeBar] = addActionBar(this, [
+      { label: 'Switch', onClick: () => this.openParty() },
+      { label: 'Bag', onClick: () => this.openBag() },
+      { label: 'Flee', onClick: () => this.engine.tryFlee() }
+    ], 428);
+    this.actionButtons = [switchBar, bagBar, fleeBar];
 
     this.engine = new BattleEngine();
     this.engine.on('render', (payload) => this.onRender(payload));
     this.engine.on('end', (payload) => this.onEnd(payload));
+    this.engine.on('moveLearnPrompt', (payload) => {
+      this.scene.launch('MoveLearn', { ...payload, engine: this.engine });
+    });
 
     const started = this.battleKind === 'wild'
       ? this.engine.startWildEncounter(this.zoneKey)
@@ -81,6 +93,14 @@ export default class BattleScene extends Phaser.Scene {
       // guard. Bounce straight back rather than showing an empty battle UI.
       this.scene.start(this.returnTo, { toastMsg: 'Your Pokémon need to recover before you can battle again!' });
     }
+  }
+
+  openParty() {
+    this.scene.launch('Party', { switchMode: true, engine: this.engine });
+  }
+
+  openBag() {
+    this.scene.launch('Bag', { engine: this.engine });
   }
 
   makeButton(x, y, w, h, label, onClick) {
@@ -104,18 +124,12 @@ export default class BattleScene extends Phaser.Scene {
       this.moveButtons[i].bg.setVisible(false);
       this.moveButtons[i].text.setVisible(false);
     }
-
-    this.runBtn.bg.setVisible(payload.isWild);
-    this.runBtn.text.setVisible(payload.isWild);
-    this.catchBtn.bg.setVisible(payload.isWild);
-    this.catchBtn.text.setVisible(payload.isWild);
   }
 
   onEnd(payload) {
     this.logText.setText(payload.msg || '');
     this.moveButtons.forEach(b => { b.bg.disableInteractive(); });
-    this.runBtn.bg.disableInteractive();
-    this.catchBtn.bg.disableInteractive();
+    this.actionButtons.forEach(b => { b.bg.disableInteractive(); });
     this.time.delayedCall(1200, () => this.scene.start(this.returnTo, { toastMsg: payload.msg }));
   }
 }
