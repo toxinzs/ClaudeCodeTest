@@ -23,8 +23,8 @@ Full migration plan (context, decisions, phase breakdown) lives at `/root/.claud
 - Phase 1 (done): scaffolded `zau-region-phaser/`, ported `data/*.js`/`state.js`/`save.js` verbatim, one walkable scene tied to real `state.pos`, a `window.__zauTest` bridge for Playwright testing.
 - Phase 2 (done): `battleEngine.js` emits `render`/`end` events instead of touching the DOM; `BattleScene` consumes them.
 - Phase 3 (mostly done): a real CC0 tileset is in — `kenney.nl` itself is blocked by this environment's network policy, so the tiles were pulled from `github.com/ETdoFresh/kenney.nl` (a verified CC0 mirror of Kenney's actual "Roguelike/RPG pack") into `zau-region-phaser/public/tiles/`. `TownScene`/`LabScene`/`TrailScene`/`LeagueScene` are all built and Playwright-validated (real tiles, wild encounters, trainer battles, League gating). **Still remaining in Phase 3**: the title screen/cutscene/character-creation flow isn't ported yet — the game currently boots straight into Home with a blank player name.
-- Phase 4: port Bag/Mart/Pokémon Center/party/Pokédex/move-learn as Phaser scenes.
-- Phase 5: cutover — flip the production Pages deploy to the Phaser version once feature parity is reached; retire the DOM version.
+- Phase 4 (done): Party/Bag/Mart/Center/Pokédex/move-learn all built as overlay scenes (launched on top of the calling scene, never pausing it — closing is `scene.stop()`), wired into Town/Trail/League's action bars and Battle's Switch/Bag/Flee row. Playwright-validated including a mid-battle item use and a forced move-learn prompt.
+- Phase 5: cutover — flip the production Pages deploy to the Phaser version once feature parity is reached; retire the DOM version. **Still open before parity**: title/cutscene/character-creation flow (deferred from Phase 3).
 - No live preview deploy for `zau-region-phaser/` yet: `actions/deploy-pages` replaces the whole site per publish, so a second concurrent Pages workflow would race the production one. Verify locally (`npm run dev` + Playwright) until cutover.
 
 ### Visual style + future mechanic (user direction, applies to all future work)
