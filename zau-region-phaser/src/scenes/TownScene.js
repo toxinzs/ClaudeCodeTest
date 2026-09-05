@@ -4,6 +4,7 @@ import { saveGame } from '../save.js';
 import { TOWN_MAP } from '../data/maps.js';
 import { TILE, GAME_W, GAME_H } from '../config.js';
 import { drawTiles, drawDecor, createWalker } from '../mapRenderer.js';
+import { addActionBar } from '../uiHelpers.js';
 
 const WILD_ENCOUNTER_CHANCE = 0.12;
 
@@ -39,6 +40,14 @@ export default class TownScene extends Phaser.Scene {
     this.input.keyboard.on('keydown-DOWN', () => this.walker.tryMove(0, 1));
     this.input.keyboard.on('keydown-LEFT', () => this.walker.tryMove(-1, 0));
     this.input.keyboard.on('keydown-RIGHT', () => this.walker.tryMove(1, 0));
+
+    addActionBar(this, [
+      { label: 'Party', onClick: () => this.scene.launch('Party') },
+      { label: 'Mart', onClick: () => this.scene.launch('Mart') },
+      { label: 'Bag', onClick: () => this.scene.launch('Bag') },
+      { label: 'Center', onClick: () => this.scene.launch('Center') },
+      { label: 'Pokédex', onClick: () => this.scene.launch('Dex') }
+    ], GAME_H - 16);
   }
 
   drawPlayer() {

@@ -4,6 +4,7 @@ import { LEAGUE_MAP } from '../data/maps.js';
 import { LEAGUE_LEADERS, DIRECTOR_VANCE } from '../data/story.js';
 import { TILE, GAME_W, GAME_H } from '../config.js';
 import { drawTiles, drawDecor, createWalker } from '../mapRenderer.js';
+import { addActionBar } from '../uiHelpers.js';
 
 // Unlike the Trail, leaders can be challenged in any order, so they're
 // placed around a hub rather than along a corridor. The tower starts
@@ -51,6 +52,13 @@ export default class LeagueScene extends Phaser.Scene {
     this.input.keyboard.on('keydown-DOWN', () => this.walker.tryMove(0, 1));
     this.input.keyboard.on('keydown-LEFT', () => this.walker.tryMove(-1, 0));
     this.input.keyboard.on('keydown-RIGHT', () => this.walker.tryMove(1, 0));
+
+    addActionBar(this, [
+      { label: 'Party', onClick: () => this.scene.launch('Party') },
+      { label: 'Mart', onClick: () => this.scene.launch('Mart') },
+      { label: 'Bag', onClick: () => this.scene.launch('Bag') },
+      { label: 'Center', onClick: () => this.scene.launch('Center') }
+    ], GAME_H - 16);
   }
 
   buildDecor() {

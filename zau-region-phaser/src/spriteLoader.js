@@ -14,3 +14,15 @@ export function loadMonSprite(scene, url, applyFn) {
   });
   scene.load.start();
 }
+
+// A small mon icon for list rows (Party/Bag-target-picker/Pokédex) — starts
+// as the emoji glyph, swaps to the real sprite if/when it loads.
+export function addMonIcon(scene, x, y, display, size = 28) {
+  const emojiText = scene.add.text(x, y, display.emoji, { fontSize: `${size}px` }).setOrigin(0.5);
+  loadMonSprite(scene, display.sprite, (key) => {
+    if (key) {
+      scene.add.image(x, y, key).setOrigin(0.5).setDisplaySize(size, size);
+      emojiText.destroy();
+    }
+  });
+}

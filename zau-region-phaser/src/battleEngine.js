@@ -99,6 +99,10 @@ export class BattleEngine extends Emitter {
   currentEnemy() { return state.battle.enemyMons[state.battle.enemyIdx]; }
 
   render(log) {
+    // A delayed caller (e.g. the move-learn prompt, which waits on a user
+    // choice) can fire after the battle has already advanced past its last
+    // enemy or ended outright — nothing useful to render at that point.
+    if (!state.battle || !this.currentEnemy()) return;
     const p = activeMon();
     const pd = currentMonDisplay(p);
     const e = this.currentEnemy();
@@ -229,11 +233,13 @@ export class BattleEngine extends Emitter {
       if (learned) {
         const { lvl, ...moveData } = learned;
         const already = mon.moves.some(m => m.name === moveData.name);
-        if (!already && mon.moves.length < 4) {
-          mon.moves.push(moveData);
+        if (!already) {
+          if (mon.moves.length < 4) {
+            mon.moves.push(moveData);
+          } else {
+            this.emit('moveLearnPrompt', { mon, newMove: moveData });
+          }
         }
-        // else: moveset is full — Phase 2 scope skips the forget-a-move
-        // prompt (no modal UI yet in Phaser); Phase 4's party UI restores it.
       }
     }
   }

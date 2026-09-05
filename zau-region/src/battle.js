@@ -95,6 +95,10 @@ export function currentEnemy() { return state.battle.enemyMons[state.battle.enem
 
 // ================== RENDERING ==================
 export function renderBattle(logMsg) {
+  // A delayed caller (e.g. the move-learn prompt, which waits on a user
+  // choice) can fire after the battle has already advanced past its last
+  // enemy or ended outright — nothing useful to render at that point.
+  if (!state.battle || !currentEnemy()) return;
   const p = activeMon();
   const pd = currentMonDisplay(p);
   const e = currentEnemy();
