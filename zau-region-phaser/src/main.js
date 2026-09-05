@@ -1,8 +1,10 @@
 import Phaser from 'phaser';
-import { loadGame } from './save.js';
 import { installTestBridge } from './testBridge.js';
 import { GAME_W, GAME_H } from './config.js';
 import BootScene from './scenes/BootScene.js';
+import TitleScene from './scenes/TitleScene.js';
+import CutsceneScene from './scenes/CutsceneScene.js';
+import CharCreateScene from './scenes/CharCreateScene.js';
 import HomeScene from './scenes/HomeScene.js';
 import TownScene from './scenes/TownScene.js';
 import LabScene from './scenes/LabScene.js';
@@ -16,7 +18,10 @@ import DexScene from './scenes/DexScene.js';
 import CenterScene from './scenes/CenterScene.js';
 import MoveLearnScene from './scenes/MoveLearnScene.js';
 
-loadGame();
+// loadGame() is NOT called here — Continue vs. a fresh game are genuinely
+// different starting points (matches the DOM version, where a save
+// existing doesn't auto-resume until the player picks Continue on the
+// title screen). TitleScene calls it when Continue is actually chosen.
 
 const game = new Phaser.Game({
   type: Phaser.AUTO,
@@ -27,8 +32,12 @@ const game = new Phaser.Game({
     width: GAME_W,
     height: GAME_H
   },
+  dom: {
+    createContainer: true
+  },
   scene: [
-    BootScene, HomeScene, TownScene, LabScene, TrailScene, LeagueScene, BattleScene,
+    BootScene, TitleScene, CutsceneScene, CharCreateScene,
+    HomeScene, TownScene, LabScene, TrailScene, LeagueScene, BattleScene,
     PartyScene, BagScene, MartScene, DexScene, CenterScene, MoveLearnScene
   ]
 });
