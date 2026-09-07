@@ -3,7 +3,7 @@ import { state } from '../state.js';
 import { saveGame } from '../save.js';
 import { TOWN_MAP } from '../data/maps.js';
 import { TILE, GAME_W, GAME_H } from '../config.js';
-import { drawTiles, drawDecor, createWalker } from '../mapRenderer.js';
+import { drawTiles, drawDecor, createWalker, setupFollowCamera, setupHUD } from '../mapRenderer.js';
 import { addActionBar } from '../uiHelpers.js';
 import { goToScene, fadeIn } from '../transitions.js';
 
@@ -27,8 +27,8 @@ export default class TownScene extends Phaser.Scene {
     drawDecor(this, TOWN_MAP.decor, { offsetX: this.offsetX, offsetY: this.offsetY });
     this.drawPlayer();
 
-    this.add.text(GAME_W / 2, 4, 'ZAU OUTSKIRTS', { fontFamily: 'sans-serif', fontSize: '13px', color: '#8a8aa0' }).setOrigin(0.5, 0);
-    this.toastText = this.add.text(GAME_W / 2, this.offsetY + TOWN_MAP.h * TILE + 12, this.pendingToast, {
+    const header = this.add.text(GAME_W / 2, 4, 'ZAU OUTSKIRTS', { fontFamily: 'sans-serif', fontSize: '13px', color: '#8a8aa0' }).setOrigin(0.5, 0);
+    this.toastText = this.add.text(GAME_W / 2, GAME_H - 52, this.pendingToast, {
       fontFamily: 'sans-serif', fontSize: '13px', color: '#e8e8f0', wordWrap: { width: GAME_W - 20 }, align: 'center'
     }).setOrigin(0.5, 0);
 
@@ -38,18 +38,18 @@ export default class TownScene extends Phaser.Scene {
       onStep: (nx, ny) => this.handleStep(nx, ny)
     });
 
-    this.input.keyboard.on('keydown-UP', () => this.walker.tryMove(0, -1));
-    this.input.keyboard.on('keydown-DOWN', () => this.walker.tryMove(0, 1));
-    this.input.keyboard.on('keydown-LEFT', () => this.walker.tryMove(-1, 0));
-    this.input.keyboard.on('keydown-RIGHT', () => this.walker.tryMove(1, 0));
+    setupFollowCamera(this, { mapDef: TOWN_MAP, offsetX: this.offsetX, offsetY: this.offsetY, player: this.player });
 
-    addActionBar(this, [
+    const bar = addActionBar(this, [
       { label: 'Party', onClick: () => this.scene.launch('Party') },
       { label: 'Mart', onClick: () => this.scene.launch('Mart') },
       { label: 'Bag', onClick: () => this.scene.launch('Bag') },
       { label: 'Center', onClick: () => this.scene.launch('Center') },
       { label: 'Pokédex', onClick: () => this.scene.launch('Dex') }
     ], GAME_H - 16);
+
+    const hudObjects = [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])];
+    setupHUD(this, hudObjects);
   }
 
   drawPlayer() {
