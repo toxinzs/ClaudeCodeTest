@@ -6,6 +6,7 @@ import { TILE, GAME_W, GAME_H } from '../config.js';
 import { drawTiles, drawDecor, createWalker, setupFollowCamera, setupHUD } from '../mapRenderer.js';
 import { addActionBar } from '../uiHelpers.js';
 import { goToScene, fadeIn } from '../transitions.js';
+import { preloadPlayerLayers, createPlayerSprite } from '../playerSprite.js';
 
 // Unlike the Trail, leaders can be challenged in any order, so they're
 // placed around a hub rather than along a corridor. The tower starts
@@ -28,6 +29,10 @@ export default class LeagueScene extends Phaser.Scene {
     this.pendingToast = data?.toastMsg || '';
   }
 
+  preload() {
+    preloadPlayerLayers(this, state.player.appearance);
+  }
+
   create() {
     fadeIn(this);
     this.offsetX = Math.floor((GAME_W - LEAGUE_MAP.w * TILE) / 2);
@@ -45,12 +50,12 @@ export default class LeagueScene extends Phaser.Scene {
     }).setOrigin(0.5, 0);
 
     this.walker = createWalker(this, {
-      mapDef: LEAGUE_MAP, posRef: state.pos.league, sprite: this.player,
+      mapDef: LEAGUE_MAP, posRef: state.pos.league, sprite: this.playerCtrl.container, playerCtrl: this.playerCtrl,
       offsetX: this.offsetX, offsetY: this.offsetY,
       onStep: (nx, ny) => this.handleStep(nx, ny)
     });
 
-    setupFollowCamera(this, { mapDef: LEAGUE_MAP, offsetX: this.offsetX, offsetY: this.offsetY, player: this.player });
+    setupFollowCamera(this, { mapDef: LEAGUE_MAP, offsetX: this.offsetX, offsetY: this.offsetY, player: this.playerCtrl.container });
 
     const bar = addActionBar(this, [
       { label: 'Party', onClick: () => this.scene.launch('Party') },
@@ -79,10 +84,11 @@ export default class LeagueScene extends Phaser.Scene {
 
   drawPlayer() {
     const pos = state.pos.league;
-    this.player = this.add.text(
+    this.playerCtrl = createPlayerSprite(
+      this,
       this.offsetX + pos.x * TILE + TILE * 0.5, this.offsetY + pos.y * TILE + TILE * 0.5,
-      state.player.avatar || '🧑🏾', { fontSize: '32px' }
-    ).setOrigin(0.5);
+      state.player.appearance
+    );
   }
 
   handleStep(nx, ny) {

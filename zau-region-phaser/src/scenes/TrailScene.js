@@ -6,6 +6,7 @@ import { TILE, GAME_W, GAME_H } from '../config.js';
 import { drawTiles, drawDecor, createWalker, setupFollowCamera, setupHUD } from '../mapRenderer.js';
 import { addActionBar } from '../uiHelpers.js';
 import { goToScene, fadeIn } from '../transitions.js';
+import { preloadPlayerLayers, createPlayerSprite } from '../playerSprite.js';
 
 // Trainers are placed one per row up a straight corridor (x=2), closest
 // first; the corridor's far end (y=0) is Dario, then the league gate, once
@@ -23,6 +24,10 @@ export default class TrailScene extends Phaser.Scene {
     this.pendingToast = data?.toastMsg || '';
   }
 
+  preload() {
+    preloadPlayerLayers(this, state.player.appearance);
+  }
+
   create() {
     fadeIn(this);
     this.offsetX = Math.floor((GAME_W - TRAIL_MAP.w * TILE) / 2);
@@ -38,14 +43,14 @@ export default class TrailScene extends Phaser.Scene {
     }).setOrigin(0.5, 0);
 
     this.walker = createWalker(this, {
-      mapDef: TRAIL_MAP, posRef: state.pos.trail, sprite: this.player,
+      mapDef: TRAIL_MAP, posRef: state.pos.trail, sprite: this.playerCtrl.container, playerCtrl: this.playerCtrl,
       offsetX: this.offsetX, offsetY: this.offsetY,
       onStep: (nx, ny) => this.handleStep(nx, ny)
     });
 
     // The corridor (12 rows) is taller than the canvas even before zooming
     // in, so this needs it more than any other map.
-    setupFollowCamera(this, { mapDef: TRAIL_MAP, offsetX: this.offsetX, offsetY: this.offsetY, player: this.player });
+    setupFollowCamera(this, { mapDef: TRAIL_MAP, offsetX: this.offsetX, offsetY: this.offsetY, player: this.playerCtrl.container });
 
     const bar = addActionBar(this, [
       { label: 'Party', onClick: () => this.scene.launch('Party') },
@@ -75,10 +80,11 @@ export default class TrailScene extends Phaser.Scene {
 
   drawPlayer() {
     const pos = state.pos.trail;
-    this.player = this.add.text(
+    this.playerCtrl = createPlayerSprite(
+      this,
       this.offsetX + pos.x * TILE + TILE * 0.5, this.offsetY + pos.y * TILE + TILE * 0.5,
-      state.player.avatar || '🧑🏾', { fontSize: '32px' }
-    ).setOrigin(0.5);
+      state.player.appearance
+    );
   }
 
   handleStep(nx, ny) {

@@ -1,5 +1,5 @@
 export const state = {
-  player: { name: "", avatar: "🧑🏾" },
+  player: { name: "", appearance: { skin: 'light', hair: 'buzzcut', hairColor: 'black', outfit: 'casual' } },
   starterKey: null,
   party: [],       // array of mon objects, [0] is not necessarily active
   activeIdx: 0,
