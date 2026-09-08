@@ -1,5 +1,3 @@
-export const AVATAR_OPTIONS = ["🧑🏾","🧑🏻","🧑🏼","🧑🏽","👩🏾","👨🏾","👩🏻","👨🏼","👩🏽","👨🏽","🧑🏿","👩🏿"];
-
 // 0 = floor/walkable, 1 = wall/blocked
 export const HOME_MAP = {
   w: 5, h: 5,

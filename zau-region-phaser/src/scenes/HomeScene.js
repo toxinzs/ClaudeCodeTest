@@ -5,6 +5,7 @@ import { HOME_MAP } from '../data/maps.js';
 import { TILE, GAME_W, GAME_H } from '../config.js';
 import { drawTiles, drawDecor, createWalker } from '../mapRenderer.js';
 import { goToScene, fadeIn } from '../transitions.js';
+import { preloadPlayerLayers, createPlayerSprite } from '../playerSprite.js';
 
 // The first walkable scene ported to Phaser. Grid movement is tied to the
 // real state.pos.home (not a scene-local throwaway) so save/load already
@@ -12,6 +13,10 @@ import { goToScene, fadeIn } from '../transitions.js';
 export default class HomeScene extends Phaser.Scene {
   constructor() {
     super('Home');
+  }
+
+  preload() {
+    preloadPlayerLayers(this, state.player.appearance);
   }
 
   create() {
@@ -34,7 +39,7 @@ export default class HomeScene extends Phaser.Scene {
     btn.on('pointerdown', () => goToScene(this, 'Town'));
 
     this.walker = createWalker(this, {
-      mapDef: HOME_MAP, posRef: state.pos.home, sprite: this.player,
+      mapDef: HOME_MAP, posRef: state.pos.home, sprite: this.playerCtrl.container, playerCtrl: this.playerCtrl,
       offsetX: this.offsetX, offsetY: this.offsetY,
       onStep: () => { this.updateDialogue(); saveGame(); }
     });
@@ -44,10 +49,11 @@ export default class HomeScene extends Phaser.Scene {
 
   drawPlayer() {
     const pos = state.pos.home;
-    this.player = this.add.text(
+    this.playerCtrl = createPlayerSprite(
+      this,
       this.offsetX + pos.x * TILE + TILE * 0.5, this.offsetY + pos.y * TILE + TILE * 0.5,
-      state.player.avatar || '🧑🏾', { fontSize: '32px' }
-    ).setOrigin(0.5);
+      state.player.appearance
+    );
   }
 
   updateDialogue() {

@@ -31,19 +31,21 @@ export function drawDecor(scene, decor, { offsetX, offsetY }) {
 }
 
 // Shared grid-walker: bounds/wall checks, a tween glide matching the DOM
-// version's feel, a small walk-bob so movement doesn't read as a sprite
-// sliding on rails, and continuous movement while a direction is held
-// (polled every frame) instead of one tile per keypress — the "arcade
-// button-mashing" feel came from needing to tap once per tile. A per-scene
-// onStep callback still handles step-specific logic (door dialogue, battle
-// triggers, screen transitions). Movement writes straight to
-// state.pos[mapKey], the same shared/save-relevant position every scene
-// and the save system read from.
-export function createWalker(scene, { mapDef, posRef, sprite, offsetX, offsetY, onStep }) {
+// version's feel, a real 4-direction walk-cycle animation (via playerCtrl,
+// see playerSprite.js) so movement doesn't read as a sprite sliding on
+// rails, and continuous movement while a direction is held (polled every
+// frame) instead of one tile per keypress — the "arcade button-mashing"
+// feel came from needing to tap once per tile. A per-scene onStep callback
+// still handles step-specific logic (door dialogue, battle triggers,
+// screen transitions). Movement writes straight to state.pos[mapKey], the
+// same shared/save-relevant position every scene and the save system
+// read from.
+export function createWalker(scene, { mapDef, posRef, sprite, playerCtrl, offsetX, offsetY, onStep }) {
   const MOVE_MS = 140;
   const walker = { moving: false };
 
-  walker.tryMove = (dx, dy) => {
+  walker.tryMove = (dx, dy, dir) => {
+    if (playerCtrl) playerCtrl.setDirection(dir);
     if (walker.moving) return;
     const nx = posRef.x + dx, ny = posRef.y + dy;
     if (nx < 0 || ny < 0 || nx >= mapDef.w || ny >= mapDef.h) return;
@@ -51,30 +53,28 @@ export function createWalker(scene, { mapDef, posRef, sprite, offsetX, offsetY, 
 
     posRef.x = nx; posRef.y = ny;
     walker.moving = true;
+    if (playerCtrl) playerCtrl.startWalk();
     scene.tweens.add({
       targets: sprite,
       x: offsetX + nx * TILE + TILE / 2,
       y: offsetY + ny * TILE + TILE / 2,
       duration: MOVE_MS,
-      onComplete: () => { walker.moving = false; }
-    });
-    // A faked walk-cycle (squash on the down-step) — no sprite frames to
-    // animate yet, but a static glyph gliding with zero body movement is
-    // what makes it read as "sliding" rather than "walking".
-    scene.tweens.add({
-      targets: sprite, scaleY: 0.82, scaleX: 1.08,
-      duration: MOVE_MS / 2, yoyo: true, ease: 'Sine.easeInOut'
+      onComplete: () => {
+        walker.moving = false;
+        if (playerCtrl) playerCtrl.stopWalk();
+      }
     });
     if (onStep) onStep(nx, ny);
   };
 
   const cursors = scene.input.keyboard.createCursorKeys();
-  const onUpdate = () => {
+  const onUpdate = (_time, delta) => {
+    if (playerCtrl) playerCtrl.step(delta);
     if (walker.moving) return;
-    if (cursors.up.isDown) walker.tryMove(0, -1);
-    else if (cursors.down.isDown) walker.tryMove(0, 1);
-    else if (cursors.left.isDown) walker.tryMove(-1, 0);
-    else if (cursors.right.isDown) walker.tryMove(1, 0);
+    if (cursors.up.isDown) walker.tryMove(0, -1, 'up');
+    else if (cursors.down.isDown) walker.tryMove(0, 1, 'down');
+    else if (cursors.left.isDown) walker.tryMove(-1, 0, 'left');
+    else if (cursors.right.isDown) walker.tryMove(1, 0, 'right');
   };
   scene.events.on('update', onUpdate);
   scene.events.once('shutdown', () => scene.events.off('update', onUpdate));

@@ -6,6 +6,7 @@ import { TILE, GAME_W, GAME_H } from '../config.js';
 import { drawTiles, drawDecor, createWalker, setupFollowCamera, setupHUD } from '../mapRenderer.js';
 import { addActionBar } from '../uiHelpers.js';
 import { goToScene, fadeIn } from '../transitions.js';
+import { preloadPlayerLayers, createPlayerSprite } from '../playerSprite.js';
 
 const WILD_ENCOUNTER_CHANCE = 0.12;
 
@@ -16,6 +17,10 @@ export default class TownScene extends Phaser.Scene {
 
   init(data) {
     this.pendingToast = data?.toastMsg || '';
+  }
+
+  preload() {
+    preloadPlayerLayers(this, state.player.appearance);
   }
 
   create() {
@@ -33,12 +38,12 @@ export default class TownScene extends Phaser.Scene {
     }).setOrigin(0.5, 0);
 
     this.walker = createWalker(this, {
-      mapDef: TOWN_MAP, posRef: state.pos.town, sprite: this.player,
+      mapDef: TOWN_MAP, posRef: state.pos.town, sprite: this.playerCtrl.container, playerCtrl: this.playerCtrl,
       offsetX: this.offsetX, offsetY: this.offsetY,
       onStep: (nx, ny) => this.handleStep(nx, ny)
     });
 
-    setupFollowCamera(this, { mapDef: TOWN_MAP, offsetX: this.offsetX, offsetY: this.offsetY, player: this.player });
+    setupFollowCamera(this, { mapDef: TOWN_MAP, offsetX: this.offsetX, offsetY: this.offsetY, player: this.playerCtrl.container });
 
     const bar = addActionBar(this, [
       { label: 'Party', onClick: () => this.scene.launch('Party') },
@@ -54,10 +59,11 @@ export default class TownScene extends Phaser.Scene {
 
   drawPlayer() {
     const pos = state.pos.town;
-    this.player = this.add.text(
+    this.playerCtrl = createPlayerSprite(
+      this,
       this.offsetX + pos.x * TILE + TILE * 0.5, this.offsetY + pos.y * TILE + TILE * 0.5,
-      state.player.avatar || '🧑🏾', { fontSize: '32px' }
-    ).setOrigin(0.5);
+      state.player.appearance
+    );
   }
 
   handleStep(nx, ny) {
