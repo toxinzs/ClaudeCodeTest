@@ -1,4 +1,4 @@
-import { state, activeMon, firstHealthyIdx } from './state.js';
+import { state, activeMon, firstHealthyIdx, MAX_PARTY } from './state.js';
 import { currentMonDisplay, computeStats, statsForMon, evolveIfReady, rollWildEncounter, xpNeededForLevel } from './mon.js';
 import { baseStatsFor } from './data/baseStats.js';
 import { ITEMS } from './data/items.js';
@@ -47,13 +47,38 @@ export function calcDamage(move, attacker, defender) {
   const defStat = move.category === 'Special' ? defender.spDef : defender.def;
   const base = Math.floor(Math.floor(Math.floor(2*attacker.level/5 + 2) * move.power * atkStat/defStat) / 50 + 2);
   const stab = attacker.type.split("/").includes(move.type) ? 1.5 : 1;
+  const burnPenalty = (attacker.status === 'burn' && move.category === 'Physical') ? 0.5 : 1;
   const variance = 0.85 + Math.random()*0.15;
-  return Math.max(1, Math.round(base * stab * mult * variance));
+  return Math.max(1, Math.round(base * stab * mult * burnPenalty * variance));
+}
+
+// ================== STATUS CONDITIONS (burn/poison/paralyze/sleep) ==================
+// Simplified to the four conditions actually reachable from data/moves.js
+// today (no move in the current roster has a real freeze/confuse chance) —
+// same "real mechanics, simplified formula" precedent as the stat/damage
+// formulas. A mon can only hold one major status at a time, matching the
+// real games.
+const STATUS_MSG = {
+  burn: (name) => `${name} was burned!`,
+  poison: (name) => `${name} was poisoned!`,
+  paralyze: (name) => `${name} was paralyzed! It may be unable to move!`,
+  sleep: (name) => `${name} fell asleep!`
+};
+
+function applyStatus(mon, status) {
+  mon.status = status;
+  if (status === 'sleep') mon.sleepTurns = 1 + Math.floor(Math.random() * 3);
+}
+
+// Speed used for turn-order only — paralysis halves it in the real games
+// without touching the mon's actual spe stat.
+function effectiveSpeed(mon) {
+  return mon.status === 'paralyze' ? mon.spe * 0.5 : mon.spe;
 }
 
 function buildBattleMon(speciesName, emoji, type, level, moves) {
   const stats = computeStats(baseStatsFor(speciesName), level);
-  return { isWild: false, speciesName, emoji, type, level, hp: stats.maxHp, ...stats, moves: moves.map(m => ({...m})) };
+  return { isWild: false, speciesName, emoji, type, level, hp: stats.maxHp, ...stats, moves: moves.map(m => ({...m})), status: null };
 }
 
 // Minimal dependency-free emitter — battleEngine has no DOM/Phaser coupling
@@ -110,35 +135,116 @@ export class BattleEngine extends Emitter {
     this.emit('render', {
       log,
       isWild: state.battle.isWild,
-      player: { name: pd.name, level: p.level, hp: p.hp, maxHp: p.maxHp, sprite: pd.sprite, emoji: pd.emoji, moves: p.moves },
-      enemy: { name: e.speciesName, level: e.level, hp: e.hp, maxHp: e.maxHp, sprite: ed.sprite, emoji: ed.emoji }
+      player: { name: pd.name, level: p.level, hp: p.hp, maxHp: p.maxHp, sprite: pd.sprite, emoji: pd.emoji, moves: p.moves, status: p.status },
+      enemy: { name: e.speciesName, level: e.level, hp: e.hp, maxHp: e.maxHp, sprite: ed.sprite, emoji: ed.emoji, status: e.status }
     });
   }
 
   // Mechanical, attacker/defender-agnostic: resolves one move, mutates HP,
   // renders the result, and reports whether the defender fainted. Does not
-  // decide win/lose routing — callers own that.
+  // decide win/lose routing — callers own that. A move's status/statusChance
+  // (data/moves.js) can inflict a condition on the defender, whether or not
+  // the move itself deals damage — real games' status moves (Hypnosis) and
+  // damaging moves with a secondary chance (Ember, Thunder Shock) both work
+  // this way.
   executeMove(attacker, defender, move) {
     const attackerName = currentMonDisplay(attacker).name;
+    let msg = `${attackerName} used ${move.name}!`;
+
     if (move.power === 0) {
-      this.render(`${attackerName} used ${move.name}! It had no direct effect this turn.`);
+      msg += this.rollStatus(defender, move) || ' It had no direct effect this turn.';
+      this.render(msg);
       return { fainted: false };
     }
+
     const mult = typeMultiplier(move.type, defender.type);
     const dmg = calcDamage(move, attacker, defender);
     defender.hp = Math.max(0, defender.hp - dmg);
-    if (defender.hp <= 0) defender.fainted = true;
-    let msg = `${attackerName} used ${move.name}!`;
+    if (defender.hp <= 0) { defender.fainted = true; defender.status = null; }
     if (mult === 0) msg += " It has no effect...";
     else if (mult > 1) msg += " It's super effective!";
     else if (mult < 1) msg += " It's not very effective...";
+    if (defender.hp > 0) msg += this.rollStatus(defender, move) || '';
     this.render(msg);
     return { fainted: defender.hp <= 0 };
   }
 
+  // Rolls a move's secondary/primary status chance against the defender.
+  // Returns the " <Name> was burned!"-style message on success, or '' if
+  // nothing happened (already statused, or the roll/move has no status).
+  rollStatus(defender, move) {
+    if (!move.status || defender.status) return '';
+    if (Math.random() >= (move.statusChance ?? 1)) return '';
+    applyStatus(defender, move.status);
+    return ` ${STATUS_MSG[move.status](currentMonDisplay(defender).name)}`;
+  }
+
+  // Sleep/paralysis can stop a mon from acting at all this turn. Sleep's
+  // turn counter ticks down here — hitting 0 wakes the mon up in time to
+  // still act this turn, matching the real games.
+  canAct(mon) {
+    if (mon.status === 'sleep') {
+      mon.sleepTurns--;
+      if (mon.sleepTurns <= 0) { mon.status = null; return { can: true }; }
+      return { can: false, msg: `${currentMonDisplay(mon).name} is fast asleep.` };
+    }
+    if (mon.status === 'paralyze' && Math.random() < 0.25) {
+      return { can: false, msg: `${currentMonDisplay(mon).name} is paralyzed! It can't move!` };
+    }
+    return { can: true };
+  }
+
+  // End-of-turn burn/poison damage — real games' fractional-maxHP chip
+  // damage, applied after both sides have acted (or tried to).
+  tickStatus(mon) {
+    if (!mon.status || mon.hp <= 0) return { fainted: false, msg: null };
+    if (mon.status !== 'burn' && mon.status !== 'poison') return { fainted: false, msg: null };
+    const frac = mon.status === 'burn' ? 1 / 16 : 1 / 8;
+    const dmg = Math.max(1, Math.floor(mon.maxHp * frac));
+    const label = mon.status === 'burn' ? 'burn' : 'poison';
+    mon.hp = Math.max(0, mon.hp - dmg);
+    if (mon.hp <= 0) { mon.fainted = true; mon.status = null; }
+    return { fainted: mon.hp <= 0, msg: `${currentMonDisplay(mon).name} is hurt by its ${label}!` };
+  }
+
+  // Runs one mon's action (can-act gate, then executeMove) and either
+  // diverts to faint-handling or continues via onDone. Shared by both
+  // halves of a full turn.
+  runMove(attacker, defender, move, attackerIsPlayer, onDone) {
+    const gate = this.canAct(attacker);
+    if (!gate.can) {
+      this.render(gate.msg);
+      onDone();
+      return;
+    }
+    const result = this.executeMove(attacker, defender, move);
+    if (result.fainted) {
+      setTimeout(() => attackerIsPlayer ? this.handleEnemyFainted() : this.handlePlayerFainted(), 500);
+      return;
+    }
+    onDone();
+  }
+
+  // End-of-turn status ticks, run once both sides have acted (or a single
+  // side acted, for enemyTurnOnly's after-a-failed-catch case).
+  endOfTurn() {
+    const p = activeMon();
+    const e = this.currentEnemy();
+    if (!e) return;
+    const msgs = [];
+    const pTick = this.tickStatus(p);
+    if (pTick.msg) msgs.push(pTick.msg);
+    const eTick = this.tickStatus(e);
+    if (eTick.msg) msgs.push(eTick.msg);
+    if (msgs.length) this.render(msgs.join(' '));
+    if (pTick.fainted) { setTimeout(() => this.handlePlayerFainted(), 600); return; }
+    if (eTick.fainted) { setTimeout(() => this.handleEnemyFainted(), 600); return; }
+  }
+
   // Orchestrates a full turn: picks the enemy's move, resolves Speed-based
-  // order (tie -> coin flip), and sequences both attacks — skipping the
-  // slower mon's move if the faster one's hit already ended the battle.
+  // order (paralysis halves effective speed; tie -> coin flip), sequences
+  // both attacks — skipping the slower mon's move if the faster one's hit
+  // already ended the battle — then ticks end-of-turn status damage.
   playerUseMove(idx) {
     const p = activeMon();
     const e = this.currentEnemy();
@@ -146,22 +252,20 @@ export class BattleEngine extends Emitter {
     const move = p.moves[idx];
     const enemyMove = e.moves[Math.floor(Math.random() * e.moves.length)];
 
-    const playerFirst = p.spe > e.spe || (p.spe === e.spe && Math.random() < 0.5);
+    const playerFirst = effectiveSpeed(p) > effectiveSpeed(e) || (effectiveSpeed(p) === effectiveSpeed(e) && Math.random() < 0.5);
     const [first, firstMove, firstIsPlayer, second, secondMove] = playerFirst
       ? [p, move, true, e, enemyMove]
       : [e, enemyMove, false, p, move];
 
-    const firstResult = this.executeMove(first, second, firstMove);
-    if (firstResult.fainted) {
-      setTimeout(() => firstIsPlayer ? this.handleEnemyFainted() : this.handlePlayerFainted(), 500);
-      return;
-    }
-    setTimeout(() => {
-      const secondResult = this.executeMove(second, first, secondMove);
-      if (secondResult.fainted) {
-        setTimeout(() => firstIsPlayer ? this.handlePlayerFainted() : this.handleEnemyFainted(), 500);
-      }
-    }, 700);
+    this.runMove(first, second, firstMove, firstIsPlayer, () => {
+      if (first.hp <= 0 || second.hp <= 0) return;
+      setTimeout(() => {
+        this.runMove(second, first, secondMove, !firstIsPlayer, () => {
+          if (first.hp <= 0 || second.hp <= 0) return;
+          setTimeout(() => this.endOfTurn(), 500);
+        });
+      }, 700);
+    });
   }
 
   // A single unanswered enemy move — used after a failed catch attempt,
@@ -171,8 +275,10 @@ export class BattleEngine extends Emitter {
     const e = this.currentEnemy();
     if (!e || e.hp <= 0 || !p || p.hp <= 0) return;
     const move = e.moves[Math.floor(Math.random() * e.moves.length)];
-    const result = this.executeMove(e, p, move);
-    if (result.fainted) setTimeout(() => this.handlePlayerFainted(), 600);
+    this.runMove(e, p, move, false, () => {
+      if (p.hp <= 0 || e.hp <= 0) return;
+      setTimeout(() => this.endOfTurn(), 600);
+    });
   }
 
   handlePlayerFainted() {
@@ -254,7 +360,11 @@ export class BattleEngine extends Emitter {
     if (!e || e.hp <= 0) return;
     state.items[ballKey]--;
     const hpPct = e.hp / e.maxHp;
-    const catchChance = Math.min(0.95, (0.9 - hpPct*0.7) * ITEMS[ballKey].catchMult);
+    // Real games boost catch odds against a statused target — sleep/freeze
+    // more than the others; we only have the four conditions below, so
+    // sleep gets the bigger bonus and burn/poison/paralyze share the lesser one.
+    const statusMult = e.status === 'sleep' ? 2 : e.status ? 1.5 : 1;
+    const catchChance = Math.min(0.95, (0.9 - hpPct*0.7) * ITEMS[ballKey].catchMult * statusMult);
     this.render(`You throw a ${ITEMS[ballKey].name}...`);
     setTimeout(() => {
       if (Math.random() < catchChance) {
@@ -262,10 +372,19 @@ export class BattleEngine extends Emitter {
           speciesName: e.speciesName, emoji: e.emoji, type: e.type, level: e.level,
           xp: 0, xpNext: xpNeededForLevel(e.level),
           hp: e.hp, maxHp: e.maxHp, atk: e.atk, def: e.def, spAtk: e.spAtk, spDef: e.spDef, spe: e.spe,
-          moves: e.moves.map(m => ({...m})), nickname: e.speciesName, fainted: false, isWild: false
+          moves: e.moves.map(m => ({...m})), nickname: e.speciesName, fainted: false,
+          isWild: false, status: e.status || null, sleepTurns: e.sleepTurns
         };
-        state.party.push(caughtMon);
-        this.render(`Gotcha! ${e.speciesName} was caught!`);
+        // Real games keep a full party at 6 and send anything caught past
+        // that straight to the PC — the player picks it up from the Box
+        // overlay rather than losing the catch or being forced to swap.
+        if (state.party.length < MAX_PARTY) {
+          state.party.push(caughtMon);
+          this.render(`Gotcha! ${e.speciesName} was caught!`);
+        } else {
+          state.box.push(caughtMon);
+          this.render(`Gotcha! ${e.speciesName} was caught and sent to your PC Box (party's full).`);
+        }
         setTimeout(() => this.winBattle(true), 1300);
       } else {
         this.render(`${e.speciesName} broke free!`);
@@ -315,7 +434,9 @@ export class BattleEngine extends Emitter {
 
   loseBattle() {
     const ctx = state.battle.ctx;
-    state.party.forEach(m => { if (m.fainted) { m.fainted = false; m.hp = Math.floor(m.maxHp*0.4); } });
+    // Fainting itself clears status (matches the real games) — a party
+    // member that just survived the loss keeps whatever status it had.
+    state.party.forEach(m => { if (m.fainted) { m.fainted = false; m.hp = Math.floor(m.maxHp*0.4); m.status = null; } });
     state.activeIdx = firstHealthyIdx() === -1 ? 0 : firstHealthyIdx();
     saveGame();
     this.emit('end', { outcome: 'lose', ctx, msg: 'Your team was outmatched. Regroup and try again.' });

@@ -1,7 +1,10 @@
+export const MAX_PARTY = 6;
+
 export const state = {
   player: { name: "", appearance: { skin: 'light', hair: 'buzzcut', hairColor: 'black', outfit: 'casual' } },
   starterKey: null,
-  party: [],       // array of mon objects, [0] is not necessarily active
+  party: [],       // array of mon objects, [0] is not necessarily active, capped at MAX_PARTY
+  box: [],         // overflow storage (PC Box) — unlimited, mons caught while party is full land here
   activeIdx: 0,
   money: 300,
   items: { pokeball: 5, potion: 3 },
