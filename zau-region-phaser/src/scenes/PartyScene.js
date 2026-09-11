@@ -5,10 +5,11 @@ import { saveGame } from '../save.js';
 import { GAME_W, GAME_H } from '../config.js';
 import { drawModalBackdrop, addCloseButton } from '../uiHelpers.js';
 import { addMonIcon } from '../spriteLoader.js';
+import { ITEMS } from '../data/items.js';
 
 const STATUS_LABEL = { burn: 'BRN', poison: 'PSN', paralyze: 'PAR', sleep: 'SLP' };
 const ROWS_PER_PAGE = 6;
-const ROW_H = 40;
+const ROW_H = 48;
 const LIST_TOP = 56;
 
 // Launched on top of whatever scene opened it (a map scene, or BattleScene
@@ -76,32 +77,43 @@ export default class PartyScene extends Phaser.Scene {
 
     addMonIcon(this, 36, y, d, 24);
     const label = `${d.name}${isFainted ? ' (Fainted)' : ''}${statusTag}${isActive ? ' ★' : ''}`;
-    this.add.text(64, y - 10, label, { fontFamily: 'sans-serif', fontSize: '13px', color: isFainted ? '#e57373' : '#e8e8f0' });
-    this.add.text(64, y + 7, `Lv.${m.level} · ${d.type} · ${m.hp}/${m.maxHp} HP`, { fontFamily: 'sans-serif', fontSize: '11px', color: '#8a8aa0' });
+    this.add.text(64, y - 16, label, { fontFamily: 'sans-serif', fontSize: '13px', color: isFainted ? '#e57373' : '#e8e8f0' });
+    this.add.text(64, y + 1, `Lv.${m.level} · ${d.type} · ${m.hp}/${m.maxHp} HP`, { fontFamily: 'sans-serif', fontSize: '11px', color: '#8a8aa0' });
+    const heldLabel = m.heldItem ? ` · @ ${ITEMS[m.heldItem].name}` : '';
+    this.add.text(64, y + 15, `${m.ability.name}${heldLabel}`, { fontFamily: 'sans-serif', fontSize: '10px', color: '#6a6a80' });
 
     if (this.switchMode) {
       const clickable = !isFainted && idx !== state.activeIdx;
       if (clickable) {
-        this.add.rectangle(GAME_W / 2, y, GAME_W - 48, 34, 0xffffff, 0.001)
+        this.add.rectangle(GAME_W / 2, y, GAME_W - 48, 42, 0xffffff, 0.001)
           .setInteractive({ useHandCursor: true })
           .on('pointerdown', () => this.switchToMon(idx));
       }
       return;
     }
 
-    if (this.tab === 'party' && state.party.length > 1) {
-      this.drawRowButton(y, 'Box', () => this.depositToBox(idx));
+    if (this.tab === 'party') {
+      if (state.party.length > 1) this.drawRowButton(y - 12, 'Box', () => this.depositToBox(idx));
+      if (m.heldItem) this.drawRowButton(y + 12, 'Take', () => this.takeItem(idx));
     } else if (this.tab === 'box' && state.party.length < MAX_PARTY) {
       this.drawRowButton(y, 'Withdraw', () => this.withdrawFromBox(idx));
     }
   }
 
   drawRowButton(y, label, onClick) {
-    const bw = 64, bh = 24;
+    const bw = 64, bh = 22;
     const bx = GAME_W - 24 - bw / 2 - 12;
     const bg = this.add.rectangle(bx, y, bw, bh, 0x232640).setStrokeStyle(1, 0x3a3d5c).setInteractive({ useHandCursor: true });
     this.add.text(bx, y, label, { fontFamily: 'sans-serif', fontSize: '11px', color: '#e8e8f0' }).setOrigin(0.5);
     bg.on('pointerdown', onClick);
+  }
+
+  takeItem(idx) {
+    const mon = state.party[idx];
+    state.items[mon.heldItem] = (state.items[mon.heldItem] || 0) + 1;
+    mon.heldItem = null;
+    saveGame();
+    this.render();
   }
 
   drawPager(total) {

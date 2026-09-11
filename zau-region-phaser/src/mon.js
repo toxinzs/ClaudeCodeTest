@@ -1,5 +1,6 @@
 import { STARTER_CHAINS, WILD_ZONE_TABLE, WILD_SPECIES, EVOLVE_LEVEL_1, EVOLVE_LEVEL_2 } from './data/pokemon.js';
 import { baseStatsFor } from './data/baseStats.js';
+import { abilityFor } from './data/abilities.js';
 import { spriteUrlFor } from './sprites.js';
 
 export function xpNeededForLevel(lvl) { return 20 + lvl * 12; }
@@ -39,7 +40,9 @@ export function makeStarterMon(key) {
     ...stats,
     moves: movesKnownAtLevel(chain.learnset, level),
     fainted: false,
-    status: null
+    status: null,
+    heldItem: null,
+    ability: abilityFor(chain.stages[0].name)
   };
 }
 
@@ -55,7 +58,9 @@ export function buildWildMon(species, lvl) {
     ...stats,
     moves: species.moves.map(m => ({...m})),
     caughtId: null,
-    status: null
+    status: null,
+    heldItem: null,
+    ability: abilityFor(species.name)
   };
 }
 
@@ -93,4 +98,8 @@ export function evolveIfReady(mon) {
   if (!mon.key) return;
   if (mon.stageIdx === 0 && mon.level >= EVOLVE_LEVEL_1) { mon.stageIdx = 1; }
   if (mon.stageIdx === 1 && mon.level >= EVOLVE_LEVEL_2) { mon.stageIdx = 2; }
+  // Every starter line keeps the same ability across all 3 stages today,
+  // but resolving it fresh off the current species (rather than assuming
+  // that) is what actually keeps this correct if that ever changes.
+  mon.ability = abilityFor(currentMonDisplay(mon).species);
 }

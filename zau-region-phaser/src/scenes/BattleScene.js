@@ -16,6 +16,7 @@ class MonCard {
   constructor(scene, x, y, spriteY) {
     this.scene = scene;
     this.nameText = scene.add.text(x, y, '', { fontFamily: 'sans-serif', fontSize: '15px', color: '#e8e8f0' });
+    this.abilityText = scene.add.text(x, y + 30, '', { fontFamily: 'sans-serif', fontSize: '10px', color: '#6a6a80' });
     this.statusText = scene.add.text(x + HP_BAR_W, y, '', { fontFamily: 'sans-serif', fontSize: '10px', fontStyle: 'bold' }).setOrigin(1, 0);
     this.hpBg = scene.add.rectangle(x, y + 22, HP_BAR_W, 10, 0x222430).setOrigin(0, 0.5);
     this.hpFill = scene.add.rectangle(x, y + 22, HP_BAR_W, 10, 0x4caf50).setOrigin(0, 0.5);
@@ -26,6 +27,7 @@ class MonCard {
 
   update(mon) {
     this.nameText.setText(`${mon.name}  Lv.${mon.level}`);
+    this.abilityText.setText(mon.ability || '');
     const badge = STATUS_BADGE[mon.status];
     if (badge) { this.statusText.setText(badge[0]).setColor(badge[1]); } else { this.statusText.setText(''); }
     const pct = Math.max(0, Math.min(1, mon.hp / mon.maxHp));

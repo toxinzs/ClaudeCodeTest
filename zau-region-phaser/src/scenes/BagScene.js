@@ -37,6 +37,7 @@ export default class BagScene extends Phaser.Scene {
     owned.forEach((key, i) => {
       const item = ITEMS[key];
       const isBall = item.category === 'ball';
+      const isHeld = item.category === 'held';
       const canUseBall = isBall && inBattle && state.battle.isWild;
       const canUseHere = isBall ? canUseBall : true;
       const note = isBall && inBattle && !state.battle.isWild ? ' (wild only)' : '';
@@ -44,7 +45,7 @@ export default class BagScene extends Phaser.Scene {
         emoji: itemIcon(key),
         title: item.name + note,
         subtitle: `Have: ${state.items[key]}`,
-        buttonLabel: canUseHere ? 'Use' : null,
+        buttonLabel: canUseHere ? (isHeld ? 'Give' : 'Use') : null,
         onButton: canUseHere ? () => this.useItem(key) : null
       });
     });
@@ -57,7 +58,46 @@ export default class BagScene extends Phaser.Scene {
       this.engine.throwPokeBall(key);
       return;
     }
+    if (item.category === 'held') {
+      this.renderGivePicker(key);
+      return;
+    }
     this.renderTargetPicker(key);
+  }
+
+  // Held items equip onto a party mon rather than being consumed outright —
+  // giving one to a mon that already holds something swaps it (the old
+  // item returns to the Bag), matching the real games' give/take flow.
+  renderGivePicker(key) {
+    this.children.removeAll(true);
+    const item = ITEMS[key];
+    drawModalBackdrop(this, `Give ${item.name} to...`);
+    addCloseButton(this, () => this.scene.stop());
+    if (!state.party.length) {
+      this.add.text(GAME_W / 2, GAME_H / 2, "You don't have any Pokémon yet.", { fontFamily: 'sans-serif', fontSize: '13px', color: '#8a8aa0' }).setOrigin(0.5);
+      return;
+    }
+    state.party.forEach((m, i) => {
+      const y = 56 + i * 40;
+      const d = currentMonDisplay(m);
+      addMonIcon(this, 36, y, d, 22);
+      this.add.text(64, y - 10, d.name, { fontFamily: 'sans-serif', fontSize: '13px', color: '#e8e8f0' });
+      const heldLabel = m.heldItem ? `Holding: ${ITEMS[m.heldItem].name}` : 'Holding: nothing';
+      this.add.text(64, y + 7, heldLabel, { fontFamily: 'sans-serif', fontSize: '11px', color: '#8a8aa0' });
+      this.add.rectangle(GAME_W / 2, y, GAME_W - 48, 34, 0xffffff, 0.001)
+        .setInteractive({ useHandCursor: true })
+        .on('pointerdown', () => this.giveItem(key, i));
+    });
+  }
+
+  giveItem(key, idx) {
+    const mon = state.party[idx];
+    const previous = mon.heldItem;
+    mon.heldItem = key;
+    state.items[key]--;
+    if (previous) state.items[previous] = (state.items[previous] || 0) + 1;
+    saveGame();
+    this.scene.stop();
   }
 
   renderTargetPicker(key) {
