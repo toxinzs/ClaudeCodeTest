@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { state, activeMon } from '../state.js';
-import { currentMonDisplay } from '../mon.js';
+import { currentMonDisplay, evolveWithItem } from '../mon.js';
+import { evolutionFor } from '../data/evolutions.js';
 import { saveGame } from '../save.js';
 import { ITEMS, itemIcon } from '../data/items.js';
 import { GAME_W, GAME_H } from '../config.js';
@@ -62,7 +63,59 @@ export default class BagScene extends Phaser.Scene {
       this.renderGivePicker(key);
       return;
     }
+    if (item.category === 'evolution') {
+      this.renderEvolvePicker(key);
+      return;
+    }
     this.renderTargetPicker(key);
+  }
+
+  // Evolution items (Linking Cord) only apply to a mon whose real
+  // evolution is triggered by that specific item — data/evolutions.js is
+  // the source of truth for which mon/item pairs are eligible.
+  renderEvolvePicker(key) {
+    this.children.removeAll(true);
+    const item = ITEMS[key];
+    drawModalBackdrop(this, `Use ${item.name} on...`);
+    addCloseButton(this, () => this.scene.stop());
+    const eligible = (mon) => {
+      const evo = evolutionFor(mon.speciesName);
+      return evo && evo.method === 'item' && evo.item === key;
+    };
+    const anyEligible = state.party.some(eligible);
+    if (!anyEligible) {
+      this.add.text(GAME_W / 2, GAME_H / 2, "None of your Pokémon can use that right now.", {
+        fontFamily: 'sans-serif', fontSize: '13px', color: '#8a8aa0', wordWrap: { width: GAME_W - 60 }, align: 'center'
+      }).setOrigin(0.5);
+      return;
+    }
+    state.party.forEach((m, i) => {
+      const y = 56 + i * 40;
+      const can = eligible(m);
+      const d = currentMonDisplay(m);
+      addMonIcon(this, 36, y, d, 22);
+      this.add.text(64, y - 10, d.name, { fontFamily: 'sans-serif', fontSize: '13px', color: can ? '#e8e8f0' : '#5a5a6a' });
+      this.add.text(64, y + 7, `Lv.${m.level} · ${d.type}`, { fontFamily: 'sans-serif', fontSize: '11px', color: '#8a8aa0' });
+      if (can) {
+        this.add.rectangle(GAME_W / 2, y, GAME_W - 48, 34, 0xffffff, 0.001)
+          .setInteractive({ useHandCursor: true })
+          .on('pointerdown', () => this.applyEvolveItem(key, i));
+      }
+    });
+  }
+
+  applyEvolveItem(key, idx) {
+    const mon = state.party[idx];
+    const before = currentMonDisplay(mon).name;
+    const evolvedTo = evolveWithItem(mon, key);
+    state.items[key]--;
+    saveGame();
+    this.children.removeAll(true);
+    drawModalBackdrop(this, 'Evolution!');
+    addCloseButton(this, () => this.scene.stop());
+    this.add.text(GAME_W / 2, GAME_H / 2, `${before} evolved into ${evolvedTo}!`, {
+      fontFamily: 'sans-serif', fontSize: '14px', color: '#e8e8f0', wordWrap: { width: GAME_W - 60 }, align: 'center'
+    }).setOrigin(0.5);
   }
 
   // Held items equip onto a party mon rather than being consumed outright —

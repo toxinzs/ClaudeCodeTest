@@ -40,6 +40,17 @@ export const SPRITE_IDS = {
   bronzor: 436,
   cutiefly: 742,
   bagon: 371,
+  riolu: 447,
+  gible: 443,
+  absol: 359,
+
+  // Evolutions of existing roster species (data/evolutions.js)
+  gyarados: 130,
+  alakazam: 65,
+  gengar: 94,
+  lucario: 448,
+  gabite: 444,
+  garchomp: 445,
 
   // Trainers, rival, league leaders, Director Vance
   kadabra: 64,

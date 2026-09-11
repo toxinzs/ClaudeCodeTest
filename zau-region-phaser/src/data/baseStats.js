@@ -41,6 +41,18 @@ const BASE_STATS = {
   bronzor:      { hp: 57, atk: 24,  def: 86,  spAtk: 24,  spDef: 86,  spe: 23 },
   cutiefly:     { hp: 40, atk: 45,  def: 40,  spAtk: 55,  spDef: 40,  spe: 84 },
   bagon:        { hp: 45, atk: 75,  def: 60,  spAtk: 40,  spDef: 30,  spe: 50 },
+  riolu:        { hp: 40, atk: 70,  def: 40,  spAtk: 35,  spDef: 40,  spe: 60 },
+  gible:        { hp: 58, atk: 70,  def: 45,  spAtk: 40,  spDef: 45,  spe: 42 },
+  absol:        { hp: 65, atk: 130, def: 60,  spAtk: 75,  spDef: 60,  spe: 75 },
+
+  // Evolutions of existing roster species (data/evolutions.js) — each
+  // picked because it's a real Mega-Evolution-eligible species.
+  gyarados:     { hp: 95, atk: 125, def: 79,  spAtk: 60,  spDef: 100, spe: 81 },
+  alakazam:     { hp: 55, atk: 50,  def: 45,  spAtk: 135, spDef: 95,  spe: 120 },
+  gengar:       { hp: 60, atk: 65,  def: 60,  spAtk: 130, spDef: 75,  spe: 110 },
+  lucario:      { hp: 70, atk: 110, def: 70,  spAtk: 115, spDef: 70,  spe: 90 },
+  gabite:       { hp: 68, atk: 90,  def: 65,  spAtk: 50,  spDef: 55,  spe: 82 },
+  garchomp:     { hp: 108,atk: 130, def: 95,  spAtk: 80,  spDef: 85,  spe: 102 },
 
   // Trainers, rival, league leaders, Director Vance
   kadabra:      { hp: 40, atk: 35,  def: 30,  spAtk: 120, spDef: 70,  spe: 105 },
