@@ -9,6 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Push to GitHub (`origin`) after committing, so work is backed up remotely, not just local.
 - Before any destructive git operation (reset --hard, checkout that discards changes, force-push), check `git status` first and confirm with the user.
 - Feature work happens on `claude/zau-region-restructure-pv5c8n`, PR'd into `main`. If that branch's PR has already merged, restart it from latest `main` before starting new work rather than stacking on merged history.
+- Once a chunk of work is committed and pushed, **open the PR and merge it automatically** — don't wait for the user to say "pr n merge" each time. Still verify `mergeable_state` is clean before merging, and confirm the deploy workflow succeeds afterward, same as always.
 
 ## Project: Zau Region
 
