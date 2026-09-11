@@ -118,12 +118,22 @@ export const WILD_SPECIES = [
   { name: "Cutiefly", emoji: "🧚", type: "Bug/Fairy", baseLvl: [15,23],
     moves: [moveFor("Fairy Wind"), moveFor("Bug Bite")] },
   { name: "Bagon", emoji: "🐉", type: "Dragon", baseLvl: [18,26],
-    moves: [moveFor("Ember"), moveFor("Bite")] }
+    moves: [moveFor("Ember"), moveFor("Bite")] },
+
+  // Rarer mid-tier finds — each picked specifically because its final
+  // evolution is a real Mega-Evolution-eligible species (see
+  // data/evolutions.js), seeding a real Mega roster for later.
+  { name: "Riolu", emoji: "🐾", type: "Fighting", baseLvl: [14,20],
+    moves: [moveFor("Close Combat"), moveFor("Quick Attack")] },
+  { name: "Gible", emoji: "🦖", type: "Dragon/Ground", baseLvl: [16,22],
+    moves: [moveFor("Rock Throw"), moveFor("Bite")] },
+  { name: "Absol", emoji: "🐺", type: "Dark", baseLvl: [18,25],
+    moves: [moveFor("Night Slash"), moveFor("Bite")] }
 ];
 
 // Wild encounter tables per zone (by index in WILD_SPECIES)
 export const WILD_ZONE_TABLE = {
-  outskirts: [0,1,2,3,4,5,6,7],
+  outskirts: [0,1,2,3,4,5,6,7,23,24,25],
   underpass: [8,9,10,13],
   harbor: [7,13,17,3],
   district: [11,12,14,15,16,18,19,20,21,22]

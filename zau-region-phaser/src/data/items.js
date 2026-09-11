@@ -24,7 +24,13 @@ export const ITEMS = {
   magnet:       { name: "Magnet",       price: 1000, category: "held", effect: "type_boost", boostType: "Electric" },
   blackbelt:    { name: "Black Belt",   price: 1000, category: "held", effect: "type_boost", boostType: "Fighting" },
   lumberry:     { name: "Lum Berry",    price: 800,  category: "held", effect: "cure_status" },
-  leftovers:    { name: "Leftovers",    price: 2000, category: "held", effect: "leftovers" }
+  leftovers:    { name: "Leftovers",    price: 2000, category: "held", effect: "leftovers" },
+
+  // Evolution item — real item from Pokémon Legends: Arceus/Scarlet &
+  // Violet, letting a real trade-evolution species (Kadabra->Alakazam,
+  // Haunter->Gengar; see data/evolutions.js) evolve without an actual
+  // trade partner. Used from the Bag, not equipped like a held item.
+  linkingcord: { name: "Linking Cord", price: 3000, category: "evolution" }
 };
 
 // Which items the Mart carries at a given League badge count — same shape
@@ -33,7 +39,7 @@ const MART_TIERS = [
   { minBadges: 0, items: ["pokeball", "potion"] },
   { minBadges: 1, items: ["greatball", "superpotion"] },
   { minBadges: 3, items: ["ultraball", "hyperpotion", "revive", "charcoal", "mysticwater", "miracleseed", "magnet", "blackbelt", "lumberry"] },
-  { minBadges: 5, items: ["maxpotion", "maxrevive", "leftovers"] }
+  { minBadges: 5, items: ["maxpotion", "maxrevive", "leftovers", "linkingcord"] }
 ];
 
 export function availableItems(badgeCount) {
@@ -46,6 +52,7 @@ export function itemIcon(key) {
   const item = ITEMS[key];
   if (item.category === 'ball') return '🔴';
   if (item.category === 'held') return item.effect === 'cure_status' ? '🍒' : '💠';
+  if (item.category === 'evolution') return '🔗';
   if (item.revive) return '✨';
   return '💊';
 }

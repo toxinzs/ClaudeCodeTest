@@ -45,6 +45,20 @@ const ABILITIES = {
   bronzor: { name: 'Levitate', effect: 'levitate' },
   cutiefly: { name: 'Honey Gather', effect: null },
   bagon: { name: 'Rock Head', effect: null },
+  riolu: { name: 'Steadfast', effect: null },
+  gible: { name: 'Rough Skin', effect: null },
+  absol: { name: 'Pressure', effect: null },
+
+  // Evolutions of existing roster species (data/evolutions.js) — each
+  // keeps a real ability option from its own species, not inherited
+  // wholesale from the pre-evolution (Gyarados' real list is genuinely
+  // different from Magikarp's, for instance).
+  gyarados: { name: 'Intimidate', effect: null },
+  alakazam: { name: 'Synchronize', effect: 'synchronize' },
+  gengar: { name: 'Levitate', effect: 'levitate' },
+  lucario: { name: 'Steadfast', effect: null },
+  gabite: { name: 'Rough Skin', effect: null },
+  garchomp: { name: 'Rough Skin', effect: null },
 
   // Trainers / rival / league leaders / Director Vance
   kadabra: { name: 'Synchronize', effect: 'synchronize' },

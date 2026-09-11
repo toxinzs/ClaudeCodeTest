@@ -435,7 +435,7 @@ export class BattleEngine extends Emitter {
 
   levelUpMon(mon) {
     mon.level++;
-    if (mon.key) evolveIfReady(mon);
+    evolveIfReady(mon);
 
     const newStats = statsForMon(mon);
     const gained = newStats.maxHp - mon.maxHp;

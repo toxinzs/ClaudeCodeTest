@@ -1,6 +1,7 @@
 import { STARTER_CHAINS, WILD_ZONE_TABLE, WILD_SPECIES, EVOLVE_LEVEL_1, EVOLVE_LEVEL_2 } from './data/pokemon.js';
 import { baseStatsFor } from './data/baseStats.js';
 import { abilityFor } from './data/abilities.js';
+import { evolutionFor } from './data/evolutions.js';
 import { spriteUrlFor } from './sprites.js';
 
 export function xpNeededForLevel(lvl) { return 20 + lvl * 12; }
@@ -94,12 +95,44 @@ export function statsForMon(mon) {
   return computeStats(baseStatsFor(currentMonDisplay(mon).species), mon.level);
 }
 
+// Mutates a non-starter mon into its evolved species in place — species
+// name, type, emoji, ability all move together, and the nickname updates
+// too since a caught mon's "nickname" is always just a snapshot of its
+// species name (there's no custom-nickname feature to preserve here).
+function applyEvolution(mon, evo) {
+  mon.speciesName = evo.evolvesTo;
+  mon.nickname = evo.evolvesTo;
+  mon.type = evo.type;
+  mon.emoji = evo.emoji;
+  mon.ability = abilityFor(evo.evolvesTo);
+}
+
 export function evolveIfReady(mon) {
-  if (!mon.key) return;
-  if (mon.stageIdx === 0 && mon.level >= EVOLVE_LEVEL_1) { mon.stageIdx = 1; }
-  if (mon.stageIdx === 1 && mon.level >= EVOLVE_LEVEL_2) { mon.stageIdx = 2; }
-  // Every starter line keeps the same ability across all 3 stages today,
-  // but resolving it fresh off the current species (rather than assuming
-  // that) is what actually keeps this correct if that ever changes.
-  mon.ability = abilityFor(currentMonDisplay(mon).species);
+  if (mon.key) {
+    if (mon.stageIdx === 0 && mon.level >= EVOLVE_LEVEL_1) { mon.stageIdx = 1; }
+    if (mon.stageIdx === 1 && mon.level >= EVOLVE_LEVEL_2) { mon.stageIdx = 2; }
+    // Every starter line keeps the same ability across all 3 stages today,
+    // but resolving it fresh off the current species (rather than assuming
+    // that) is what actually keeps this correct if that ever changes.
+    mon.ability = abilityFor(currentMonDisplay(mon).species);
+    return;
+  }
+  // Non-starter species evolve via data/evolutions.js — only the
+  // level-triggered ones happen automatically here; item-triggered ones
+  // (real trade evolutions, e.g. Kadabra->Alakazam) are player-initiated
+  // from the Bag, see evolveWithItem below.
+  const evo = evolutionFor(mon.speciesName);
+  if (evo && evo.method === 'level' && mon.level >= evo.level) applyEvolution(mon, evo);
+}
+
+// Item-triggered evolution (a Linking Cord used from the Bag). Returns the
+// evolved-to species name on success, or null if this mon/item don't
+// match a real evolution (caller shouldn't be able to reach this case
+// from the UI, but it's a plain function, not a UI assertion).
+export function evolveWithItem(mon, itemKey) {
+  if (mon.key) return null;
+  const evo = evolutionFor(mon.speciesName);
+  if (!evo || evo.method !== 'item' || evo.item !== itemKey) return null;
+  applyEvolution(mon, evo);
+  return evo.evolvesTo;
 }
