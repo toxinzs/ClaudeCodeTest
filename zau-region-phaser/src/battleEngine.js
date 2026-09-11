@@ -1,6 +1,7 @@
 import { state, activeMon, firstHealthyIdx, MAX_PARTY } from './state.js';
 import { currentMonDisplay, computeStats, statsForMon, evolveIfReady, rollWildEncounter, xpNeededForLevel } from './mon.js';
 import { baseStatsFor } from './data/baseStats.js';
+import { abilityFor } from './data/abilities.js';
 import { ITEMS } from './data/items.js';
 import { STARTER_CHAINS } from './data/pokemon.js';
 import { TRAINER_LINEUP, RIVAL_DARIO, LEAGUE_LEADERS, DIRECTOR_VANCE, VERDANYX, moneyRewardFor } from './data/story.js';
@@ -47,9 +48,25 @@ export function calcDamage(move, attacker, defender) {
   const defStat = move.category === 'Special' ? defender.spDef : defender.def;
   const base = Math.floor(Math.floor(Math.floor(2*attacker.level/5 + 2) * move.power * atkStat/defStat) / 50 + 2);
   const stab = attacker.type.split("/").includes(move.type) ? 1.5 : 1;
-  const burnPenalty = (attacker.status === 'burn' && move.category === 'Physical') ? 0.5 : 1;
+  const hasGuts = attacker.ability?.effect === 'guts';
+  const burnPenalty = (attacker.status === 'burn' && move.category === 'Physical' && !hasGuts) ? 0.5 : 1;
+  const guts = hasGuts && attacker.status ? 1.5 : 1;
+  const lowHpBoost = abilityLowHpBoost(attacker, move);
+  const heldBoost = attacker.heldItem && ITEMS[attacker.heldItem]?.effect === 'type_boost' && ITEMS[attacker.heldItem].boostType === move.type ? 1.2 : 1;
+  const flashFireBoost = attacker.flashFireActive && move.type === 'Fire' ? 1.5 : 1;
   const variance = 0.85 + Math.random()*0.15;
-  return Math.max(1, Math.round(base * stab * mult * burnPenalty * variance));
+  return Math.max(1, Math.round(base * stab * mult * burnPenalty * guts * lowHpBoost * heldBoost * flashFireBoost * variance));
+}
+
+// Overgrow/Blaze/Torrent/Swarm (1.5x at 1/3 max HP or below) and Verdanyx's
+// custom Verdant Surge (always-on, no HP condition) — same shape, different
+// trigger, so one helper covers both.
+function abilityLowHpBoost(attacker, move) {
+  const ability = attacker.ability;
+  if (!ability || ability.boostType !== move.type) return 1;
+  if (ability.effect === 'low_hp_boost') return attacker.hp <= attacker.maxHp / 3 ? 1.5 : 1;
+  if (ability.effect === 'verdant_surge') return 1.5;
+  return 1;
 }
 
 // ================== STATUS CONDITIONS (burn/poison/paralyze/sleep) ==================
@@ -70,6 +87,19 @@ function applyStatus(mon, status) {
   if (status === 'sleep') mon.sleepTurns = 1 + Math.floor(Math.random() * 3);
 }
 
+// Every status-inflicting path (a move's rollStatus, Static/Flame Body's
+// on-contact roll) goes through here rather than applyStatus directly, so
+// Lum Berry's "cures the instant one lands" real-game behavior is one
+// choke point instead of duplicated at each call site.
+function inflictStatus(mon, status) {
+  if (mon.heldItem === 'lumberry') {
+    mon.heldItem = null;
+    return { applied: false, curedByBerry: true };
+  }
+  applyStatus(mon, status);
+  return { applied: true, curedByBerry: false };
+}
+
 // Speed used for turn-order only — paralysis halves it in the real games
 // without touching the mon's actual spe stat.
 function effectiveSpeed(mon) {
@@ -78,7 +108,7 @@ function effectiveSpeed(mon) {
 
 function buildBattleMon(speciesName, emoji, type, level, moves) {
   const stats = computeStats(baseStatsFor(speciesName), level);
-  return { isWild: false, speciesName, emoji, type, level, hp: stats.maxHp, ...stats, moves: moves.map(m => ({...m})), status: null };
+  return { isWild: false, speciesName, emoji, type, level, hp: stats.maxHp, ...stats, moves: moves.map(m => ({...m})), status: null, heldItem: null, ability: abilityFor(speciesName) };
 }
 
 // Minimal dependency-free emitter — battleEngine has no DOM/Phaser coupling
@@ -98,8 +128,16 @@ class Emitter {
 // 'end' (battle over — scene should transition out) instead of writing to
 // the DOM directly.
 export class BattleEngine extends Emitter {
+  // Flash Fire's boost is a real "for the rest of this battle" flag, not a
+  // permanent one — party mons persist across battles via save, so it has
+  // to be cleared at the start of every new one or it'd leak forward.
+  resetBattleFlags() {
+    state.party.forEach(m => { m.flashFireActive = false; });
+  }
+
   startTrainerBattle(ctx) {
     if (firstHealthyIdx() === -1) return false;
+    this.resetBattleFlags();
     let enemyTeam, enemyName;
     if (ctx === 'lineup') { enemyTeam = TRAINER_LINEUP[state.trainerIndex].team; enemyName = TRAINER_LINEUP[state.trainerIndex].name; }
     if (ctx === 'dario') { enemyTeam = RIVAL_DARIO.team; enemyName = RIVAL_DARIO.name; }
@@ -115,6 +153,7 @@ export class BattleEngine extends Emitter {
 
   startWildEncounter(zoneKey) {
     if (firstHealthyIdx() === -1) return false;
+    this.resetBattleFlags();
     const wild = rollWildEncounter(zoneKey);
     state.battle = { ctx: 'wild', enemyName: wild.speciesName, enemyMons: [wild], enemyIdx: 0, isWild: true, moneyReward: 0 };
     this.render(`A wild ${wild.speciesName} appeared!`);
@@ -135,8 +174,8 @@ export class BattleEngine extends Emitter {
     this.emit('render', {
       log,
       isWild: state.battle.isWild,
-      player: { name: pd.name, level: p.level, hp: p.hp, maxHp: p.maxHp, sprite: pd.sprite, emoji: pd.emoji, moves: p.moves, status: p.status },
-      enemy: { name: e.speciesName, level: e.level, hp: e.hp, maxHp: e.maxHp, sprite: ed.sprite, emoji: ed.emoji, status: e.status }
+      player: { name: pd.name, level: p.level, hp: p.hp, maxHp: p.maxHp, sprite: pd.sprite, emoji: pd.emoji, moves: p.moves, status: p.status, ability: p.ability?.name },
+      enemy: { name: e.speciesName, level: e.level, hp: e.hp, maxHp: e.maxHp, sprite: ed.sprite, emoji: ed.emoji, status: e.status, ability: e.ability?.name }
     });
   }
 
@@ -149,34 +188,90 @@ export class BattleEngine extends Emitter {
   // this way.
   executeMove(attacker, defender, move) {
     const attackerName = currentMonDisplay(attacker).name;
+    const defenderName = currentMonDisplay(defender).name;
+
+    // Flash Fire / Levitate: real full-immunity abilities, checked before
+    // anything else — a Fire/Ground move against them never lands at all,
+    // damage or status.
+    if (move.type === 'Fire' && defender.ability?.effect === 'flash_fire') {
+      defender.flashFireActive = true;
+      this.render(`${attackerName} used ${move.name}! ${defenderName}'s Flash Fire absorbed it!`);
+      return { fainted: false };
+    }
+    if (move.type === 'Ground' && defender.ability?.effect === 'levitate' && move.power > 0) {
+      this.render(`${attackerName} used ${move.name}! It doesn't affect ${defenderName} (Levitate)!`);
+      return { fainted: false };
+    }
+
     let msg = `${attackerName} used ${move.name}!`;
 
     if (move.power === 0) {
-      msg += this.rollStatus(defender, move) || ' It had no direct effect this turn.';
+      const result = this.rollStatus(defender, move);
+      msg += result.msg || ' It had no direct effect this turn.';
+      msg += this.applySynchronize(attacker, defender, result.status);
       this.render(msg);
       return { fainted: false };
     }
 
     const mult = typeMultiplier(move.type, defender.type);
-    const dmg = calcDamage(move, attacker, defender);
+    let dmg = calcDamage(move, attacker, defender);
+    // Sturdy: survive a hit that would otherwise KO from full HP, matching
+    // the real ability exactly (not a percentage chance).
+    let sturdyTriggered = false;
+    if (defender.ability?.effect === 'sturdy' && defender.hp === defender.maxHp && dmg >= defender.hp) {
+      dmg = defender.hp - 1;
+      sturdyTriggered = true;
+    }
     defender.hp = Math.max(0, defender.hp - dmg);
     if (defender.hp <= 0) { defender.fainted = true; defender.status = null; }
     if (mult === 0) msg += " It has no effect...";
     else if (mult > 1) msg += " It's super effective!";
     else if (mult < 1) msg += " It's not very effective...";
-    if (defender.hp > 0) msg += this.rollStatus(defender, move) || '';
+    if (sturdyTriggered) msg += ` ${defenderName} hung on with Sturdy!`;
+    if (defender.hp > 0) {
+      const result = this.rollStatus(defender, move);
+      msg += result.msg;
+      msg += this.applySynchronize(attacker, defender, result.status);
+      msg += this.rollContactAbility(attacker, defender, move);
+    }
     this.render(msg);
     return { fainted: defender.hp <= 0 };
   }
 
   // Rolls a move's secondary/primary status chance against the defender.
-  // Returns the " <Name> was burned!"-style message on success, or '' if
-  // nothing happened (already statused, or the roll/move has no status).
+  // Lum Berry cures the status the instant it lands (real games), which is
+  // why this goes through inflictStatus rather than setting mon.status
+  // directly — status/msg reflect what actually stuck, not what was rolled.
   rollStatus(defender, move) {
-    if (!move.status || defender.status) return '';
-    if (Math.random() >= (move.statusChance ?? 1)) return '';
-    applyStatus(defender, move.status);
-    return ` ${STATUS_MSG[move.status](currentMonDisplay(defender).name)}`;
+    if (!move.status || defender.status) return { msg: '', status: null };
+    if (Math.random() >= (move.statusChance ?? 1)) return { msg: '', status: null };
+    const result = inflictStatus(defender, move.status);
+    const name = currentMonDisplay(defender).name;
+    if (result.curedByBerry) return { msg: ` ${name}'s Lum Berry cured the ${move.status}!`, status: null };
+    return { msg: ` ${STATUS_MSG[move.status](name)}`, status: move.status };
+  }
+
+  // Synchronize: if the mon that just got statused (burn/poison/paralyze —
+  // real games exclude sleep) has it, the status passes back to whoever
+  // caused it, unless they're already statused themselves.
+  applySynchronize(attacker, defender, status) {
+    if (!status || status === 'sleep') return '';
+    if (defender.ability?.effect !== 'synchronize' || attacker.status) return '';
+    const result = inflictStatus(attacker, status);
+    return result.applied ? ` ${currentMonDisplay(attacker).name}'s Synchronize passed it back!` : '';
+  }
+
+  // Static/Flame Body: a Physical hit against them has a real 30% chance
+  // of statusing the attacker on contact.
+  rollContactAbility(attacker, defender, move) {
+    if (move.category !== 'Physical' || attacker.status) return '';
+    const effect = defender.ability?.effect;
+    const statusToApply = effect === 'static' ? 'paralyze' : effect === 'flame_body' ? 'burn' : null;
+    if (!statusToApply || Math.random() >= 0.3) return '';
+    const result = inflictStatus(attacker, statusToApply);
+    if (!result.applied) return '';
+    const abilityName = defender.ability.name;
+    return ` ${currentMonDisplay(attacker).name} was ${statusToApply === 'burn' ? 'burned' : 'paralyzed'} by ${abilityName}!`;
   }
 
   // Sleep/paralysis can stop a mon from acting at all this turn. Sleep's
@@ -236,9 +331,29 @@ export class BattleEngine extends Emitter {
     if (pTick.msg) msgs.push(pTick.msg);
     const eTick = this.tickStatus(e);
     if (eTick.msg) msgs.push(eTick.msg);
+    if (!pTick.fainted) { const m = this.rollShedSkin(p); if (m) msgs.push(m); }
+    if (!eTick.fainted) { const m = this.rollShedSkin(e); if (m) msgs.push(m); }
+    if (!pTick.fainted) { const m = this.tickLeftovers(p); if (m) msgs.push(m); }
+    if (!eTick.fainted) { const m = this.tickLeftovers(e); if (m) msgs.push(m); }
     if (msgs.length) this.render(msgs.join(' '));
     if (pTick.fainted) { setTimeout(() => this.handlePlayerFainted(), 600); return; }
     if (eTick.fainted) { setTimeout(() => this.handleEnemyFainted(), 600); return; }
+  }
+
+  // Shed Skin: a real 1-in-3 chance per turn to shake off any status.
+  rollShedSkin(mon) {
+    if (!mon.status || mon.hp <= 0 || mon.ability?.effect !== 'shed_skin') return null;
+    if (Math.random() >= 1 / 3) return null;
+    mon.status = null;
+    return `${currentMonDisplay(mon).name}'s Shed Skin cured its status!`;
+  }
+
+  // Leftovers: real 1/16-max-HP heal every turn, held rather than an
+  // ability — same end-of-turn checkpoint as status ticks/Shed Skin.
+  tickLeftovers(mon) {
+    if (mon.heldItem !== 'leftovers' || mon.hp <= 0 || mon.hp >= mon.maxHp) return null;
+    mon.hp = Math.min(mon.maxHp, mon.hp + Math.max(1, Math.floor(mon.maxHp / 16)));
+    return `${currentMonDisplay(mon).name} restored a little HP with its Leftovers!`;
   }
 
   // Orchestrates a full turn: picks the enemy's move, resolves Speed-based
@@ -373,7 +488,8 @@ export class BattleEngine extends Emitter {
           xp: 0, xpNext: xpNeededForLevel(e.level),
           hp: e.hp, maxHp: e.maxHp, atk: e.atk, def: e.def, spAtk: e.spAtk, spDef: e.spDef, spe: e.spe,
           moves: e.moves.map(m => ({...m})), nickname: e.speciesName, fainted: false,
-          isWild: false, status: e.status || null, sleepTurns: e.sleepTurns
+          isWild: false, status: e.status || null, sleepTurns: e.sleepTurns,
+          heldItem: null, ability: e.ability
         };
         // Real games keep a full party at 6 and send anything caught past
         // that straight to the PC — the player picks it up from the Box

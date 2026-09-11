@@ -31,7 +31,7 @@ export default class DexScene extends Phaser.Scene {
       const d = currentMonDisplay(m);
       addMonIcon(this, 36, y, d, 24);
       this.add.text(64, y - 10, d.name, { fontFamily: 'sans-serif', fontSize: '13px', color: '#e8e8f0' });
-      this.add.text(64, y + 7, `Lv.${m.level} · ${d.type} · ${m.moves.length} moves known${boxed ? ' · In Box' : ''}`, { fontFamily: 'sans-serif', fontSize: '11px', color: '#8a8aa0' });
+      this.add.text(64, y + 7, `Lv.${m.level} · ${d.type} · ${m.ability.name}${boxed ? ' · In Box' : ''}`, { fontFamily: 'sans-serif', fontSize: '11px', color: '#8a8aa0' });
     });
   }
 }
