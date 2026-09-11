@@ -2,6 +2,14 @@
 // Single source of truth so a balance change (or a fix like the Tackle
 // power drift this replaced) happens in one place instead of N duplicated
 // move literals scattered across species/trainer data.
+//
+// status/statusChance mirror each move's real secondary/primary status
+// effect (burn/poison/paralyze/sleep — the four conditions the battle
+// engine implements; statusChance omitted means "always", matching a pure
+// status move like Hypnosis). Moves whose real effect is a stat-stage
+// change (Growl, Sand Attack, String Shot, Mud Slap) or a non-implemented
+// condition (flinch, confusion) are left without one — that's a separate,
+// not-yet-built system, not a data gap.
 const MOVES = {
   tackle:        { type: "Normal",   power: 40,  category: "Physical" },
   growl:         { type: "Normal",   power: 0,   category: "Status" },
@@ -12,9 +20,9 @@ const MOVES = {
   "night slash": { type: "Dark",     power: 70,  category: "Physical" },
   "flower trick":{ type: "Grass",    power: 70,  category: "Physical" },
   "leaf storm":  { type: "Grass",    power: 130, category: "Special" },
-  ember:         { type: "Fire",     power: 40,  category: "Special" },
+  ember:         { type: "Fire",     power: 40,  category: "Special",   status: "burn",    statusChance: 0.1 },
   "flame charge":{ type: "Fire",     power: 50,  category: "Physical" },
-  flamethrower:  { type: "Fire",     power: 90,  category: "Special" },
+  flamethrower:  { type: "Fire",     power: 90,  category: "Special",   status: "burn",    statusChance: 0.1 },
   crunch:        { type: "Dark",     power: 80,  category: "Physical" },
   "torch song":  { type: "Fire",     power: 80,  category: "Special" },
   "flare blitz": { type: "Fire",     power: 120, category: "Physical" },
@@ -32,19 +40,19 @@ const MOVES = {
   splash:        { type: "Normal",   power: 0,   category: "Status" },
   "rock throw":  { type: "Rock",     power: 50,  category: "Physical" },
   lick:          { type: "Ghost",    power: 30,  category: "Physical" },
-  hypnosis:      { type: "Psychic",  power: 0,   category: "Status" },
+  hypnosis:      { type: "Psychic",  power: 0,   category: "Status",    status: "sleep" },
   "bug bite":    { type: "Bug",      power: 60,  category: "Physical" },
   confusion:     { type: "Psychic",  power: 50,  category: "Special" },
   teleport:      { type: "Psychic",  power: 0,   category: "Status" },
   scratch:       { type: "Normal",   power: 40,  category: "Physical" },
   peck:          { type: "Flying",   power: 35,  category: "Physical" },
-  "thunder shock":{ type: "Electric",power: 40,  category: "Special" },
-  "poison sting":{ type: "Poison",   power: 15,  category: "Physical" },
+  "thunder shock":{ type: "Electric",power: 40,  category: "Special",   status: "paralyze", statusChance: 0.1 },
+  "poison sting":{ type: "Poison",   power: 15,  category: "Physical",  status: "poison",  statusChance: 0.3 },
   "mud slap":    { type: "Ground",   power: 20,  category: "Special" },
   "ice shard":   { type: "Ice",      power: 40,  category: "Physical" },
   "metal claw":  { type: "Steel",    power: 50,  category: "Physical" },
   "fairy wind":  { type: "Fairy",    power: 40,  category: "Special" },
-  "dragon breath":{ type: "Dragon",  power: 60,  category: "Special" }
+  "dragon breath":{ type: "Dragon",  power: 60,  category: "Special",   status: "paralyze", statusChance: 0.3 }
 };
 
 export function moveFor(name) {

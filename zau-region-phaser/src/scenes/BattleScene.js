@@ -6,6 +6,7 @@ import { addActionBar } from '../uiHelpers.js';
 import { goToScene, fadeIn } from '../transitions.js';
 
 const HP_BAR_W = 180;
+const STATUS_BADGE = { burn: ['BRN', '#e57373'], poison: ['PSN', '#ba68c8'], paralyze: ['PAR', '#ffca28'], sleep: ['SLP', '#90a4ae'] };
 
 // A "how do I show this mon" visual: sprite image (loaded at runtime from
 // the PokeAPI artwork URL) with an emoji-text fallback, a name/level label,
@@ -15,6 +16,7 @@ class MonCard {
   constructor(scene, x, y, spriteY) {
     this.scene = scene;
     this.nameText = scene.add.text(x, y, '', { fontFamily: 'sans-serif', fontSize: '15px', color: '#e8e8f0' });
+    this.statusText = scene.add.text(x + HP_BAR_W, y, '', { fontFamily: 'sans-serif', fontSize: '10px', fontStyle: 'bold' }).setOrigin(1, 0);
     this.hpBg = scene.add.rectangle(x, y + 22, HP_BAR_W, 10, 0x222430).setOrigin(0, 0.5);
     this.hpFill = scene.add.rectangle(x, y + 22, HP_BAR_W, 10, 0x4caf50).setOrigin(0, 0.5);
     this.emojiText = scene.add.text(x + HP_BAR_W / 2, spriteY, '❓', { fontSize: '64px' }).setOrigin(0.5);
@@ -24,6 +26,8 @@ class MonCard {
 
   update(mon) {
     this.nameText.setText(`${mon.name}  Lv.${mon.level}`);
+    const badge = STATUS_BADGE[mon.status];
+    if (badge) { this.statusText.setText(badge[0]).setColor(badge[1]); } else { this.statusText.setText(''); }
     const pct = Math.max(0, Math.min(1, mon.hp / mon.maxHp));
     this.hpFill.width = HP_BAR_W * pct;
     this.hpFill.fillColor = pct <= 0.2 ? 0xe53935 : pct <= 0.5 ? 0xffb300 : 0x4caf50;

@@ -19,7 +19,7 @@ export default class CenterScene extends Phaser.Scene {
     this.children.removeAll(true);
     drawModalBackdrop(this, 'Zau Pokémon Center');
     addCloseButton(this, () => this.scene.stop());
-    const needsHealing = state.party.some(m => m.hp < m.maxHp || m.fainted);
+    const needsHealing = state.party.some(m => m.hp < m.maxHp || m.fainted || m.status);
     this.add.text(GAME_W / 2, 60, needsHealing
       ? "Your Pokémon look tired. Want me to patch them up? No charge."
       : "Your team's already in great shape — nothing to heal right now.",
@@ -34,7 +34,7 @@ export default class CenterScene extends Phaser.Scene {
   }
 
   healParty() {
-    state.party.forEach(m => { m.hp = m.maxHp; m.fainted = false; });
+    state.party.forEach(m => { m.hp = m.maxHp; m.fainted = false; m.status = null; });
     saveGame();
     this.children.removeAll(true);
     drawModalBackdrop(this, 'Zau Pokémon Center');

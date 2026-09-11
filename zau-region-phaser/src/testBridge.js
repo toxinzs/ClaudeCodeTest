@@ -12,6 +12,10 @@ export function installTestBridge(game) {
       const scene = game.scene.getScene(key);
       if (!scene) return null;
       return { key, active: game.scene.isActive(key) };
-    }
+    },
+    // Test-only: mutates the live state object directly (not a clone), so
+    // Playwright can set up scenarios — a full party + boxed catches, an
+    // inflicted status — without grinding real encounters for each one.
+    mutateState: (fn) => { fn(state); }
   };
 }

@@ -38,7 +38,8 @@ export function makeStarterMon(key) {
     hp: stats.maxHp,
     ...stats,
     moves: movesKnownAtLevel(chain.learnset, level),
-    fainted: false
+    fainted: false,
+    status: null
   };
 }
 
@@ -53,7 +54,8 @@ export function buildWildMon(species, lvl) {
     hp: stats.maxHp,
     ...stats,
     moves: species.moves.map(m => ({...m})),
-    caughtId: null
+    caughtId: null,
+    status: null
   };
 }
 
