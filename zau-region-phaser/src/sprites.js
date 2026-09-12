@@ -9,3 +9,9 @@ export function spriteUrlFor(speciesName) {
   const id = spriteIdFor(speciesName);
   return id ? `${ARTWORK_BASE}/${id}.png` : null;
 }
+
+// For alternate forms that aren't a plain species lookup — Mega forms use
+// PokeAPI's own form IDs (10037+), see data/megas.js.
+export function spriteUrlForId(id) {
+  return id ? `${ARTWORK_BASE}/${id}.png` : null;
+}

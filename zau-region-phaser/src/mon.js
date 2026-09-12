@@ -2,7 +2,8 @@ import { STARTER_CHAINS, WILD_ZONE_TABLE, WILD_SPECIES, EVOLVE_LEVEL_1, EVOLVE_L
 import { baseStatsFor } from './data/baseStats.js';
 import { abilityFor } from './data/abilities.js';
 import { evolutionFor } from './data/evolutions.js';
-import { spriteUrlFor } from './sprites.js';
+import { megaFor } from './data/megas.js';
+import { spriteUrlFor, spriteUrlForId } from './sprites.js';
 
 export function xpNeededForLevel(lvl) { return 20 + lvl * 12; }
 
@@ -79,20 +80,59 @@ export function rollWildEncounter(zoneKey) {
 // Also the canonical place to resolve a mon's CURRENT species name, since a
 // starter's species changes across evolution stages.
 export function currentMonDisplay(mon) {
+  let d;
   if (mon.key) {
     const chain = STARTER_CHAINS[mon.key];
     const stage = chain.stages[mon.stageIdx];
-    return { name: mon.nickname, species: stage.name, emoji: stage.emoji, type: chain.type, sprite: spriteUrlFor(stage.name) };
+    d = { name: mon.nickname, species: stage.name, emoji: stage.emoji, type: chain.type, sprite: spriteUrlFor(stage.name) };
+  } else {
+    d = { name: mon.speciesName, species: mon.speciesName, emoji: mon.emoji, type: mon.type, sprite: spriteUrlFor(mon.speciesName) };
   }
-  return { name: mon.speciesName, species: mon.speciesName, emoji: mon.emoji, type: mon.type, sprite: spriteUrlFor(mon.speciesName) };
+  // While Mega Evolved, the mon shows its Mega name/type/art — `species`
+  // deliberately stays the base species so baseStats/ability lookups
+  // keyed on it keep working.
+  if (mon.megaActive) {
+    const mega = megaFor(d.species);
+    if (mega) { d.name = mega.megaName; d.type = mega.type; d.sprite = spriteUrlForId(mega.spriteId); }
+  }
+  return d;
 }
 
 // Recomputes a mon's atk/def/spAtk/spDef/spe/maxHp for its current species
-// (post-evolution, if any) and level. Callers that need to preserve damage
-// taken across a level-up must handle the HP delta themselves — this always
-// returns the full fresh maxHp.
+// (post-evolution, if any) and level — Mega base stats while Mega Evolved.
+// Callers that need to preserve damage taken across a level-up must handle
+// the HP delta themselves — this always returns the full fresh maxHp.
 export function statsForMon(mon) {
-  return computeStats(baseStatsFor(currentMonDisplay(mon).species), mon.level);
+  const species = currentMonDisplay(mon).species;
+  const mega = mon.megaActive ? megaFor(species) : null;
+  return computeStats(mega ? mega.baseStats : baseStatsFor(species), mon.level);
+}
+
+// Mega Evolution transform/revert. HP is untouched (a Mega form's HP base
+// stat is always identical to the base form's in the real games), so only
+// the other five stats, type, and ability change. Battle-scoped: the
+// engine reverts at battle end and on faint.
+export function applyMega(mon) {
+  const mega = megaFor(currentMonDisplay(mon).species);
+  if (!mega || mon.megaActive) return null;
+  mon.megaRestore = { type: mon.type, ability: mon.ability };
+  mon.megaActive = true;
+  mon.type = mega.type;
+  mon.ability = mega.ability;
+  Object.assign(mon, pickBattleStats(statsForMon(mon)));
+  return mega;
+}
+
+export function revertMega(mon) {
+  if (!mon.megaActive) return;
+  mon.megaActive = false;
+  if (mon.megaRestore) { mon.type = mon.megaRestore.type; mon.ability = mon.megaRestore.ability; }
+  delete mon.megaRestore;
+  Object.assign(mon, pickBattleStats(statsForMon(mon)));
+}
+
+function pickBattleStats(s) {
+  return { atk: s.atk, def: s.def, spAtk: s.spAtk, spDef: s.spDef, spe: s.spe };
 }
 
 // Mutates a non-starter mon into its evolved species in place — species

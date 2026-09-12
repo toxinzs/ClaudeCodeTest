@@ -1,5 +1,5 @@
 import { state, activeMon, firstHealthyIdx, MAX_PARTY } from './state.js';
-import { currentMonDisplay, computeStats, statsForMon, evolveIfReady, rollWildEncounter, xpNeededForLevel } from './mon.js';
+import { currentMonDisplay, computeStats, statsForMon, evolveIfReady, rollWildEncounter, xpNeededForLevel, applyMega, revertMega } from './mon.js';
 import { baseStatsFor } from './data/baseStats.js';
 import { abilityFor } from './data/abilities.js';
 import { ITEMS } from './data/items.js';
@@ -47,7 +47,8 @@ export function calcDamage(move, attacker, defender) {
   const atkStat = move.category === 'Special' ? attacker.spAtk : attacker.atk;
   const defStat = move.category === 'Special' ? defender.spDef : defender.def;
   const base = Math.floor(Math.floor(Math.floor(2*attacker.level/5 + 2) * move.power * atkStat/defStat) / 50 + 2);
-  const stab = attacker.type.split("/").includes(move.type) ? 1.5 : 1;
+  // Adaptability (Mega Lucario) is the real 2x STAB instead of 1.5x.
+  const stab = attacker.type.split("/").includes(move.type) ? (attacker.ability?.effect === 'adaptability' ? 2 : 1.5) : 1;
   const hasGuts = attacker.ability?.effect === 'guts';
   const burnPenalty = (attacker.status === 'burn' && move.category === 'Physical' && !hasGuts) ? 0.5 : 1;
   const guts = hasGuts && attacker.status ? 1.5 : 1;
@@ -132,7 +133,34 @@ export class BattleEngine extends Emitter {
   // permanent one — party mons persist across battles via save, so it has
   // to be cleared at the start of every new one or it'd leak forward.
   resetBattleFlags() {
-    state.party.forEach(m => { m.flashFireActive = false; });
+    state.party.forEach(m => { m.flashFireActive = false; revertMega(m); });
+  }
+
+  // ================== MEGA EVOLUTION ==================
+  // Real rules: the trainer needs the Key Stone, the mon must hold its own
+  // species' Mega Stone, and it's once per battle. Transforming doesn't
+  // cost the turn — the player still picks a move afterward, same as the
+  // real games' "Mega Evolve, then attack" flow.
+  canMegaEvolve() {
+    if (!state.battle || state.battle.megaUsed || !state.hasKeyStone) return false;
+    const p = activeMon();
+    if (!p || p.hp <= 0 || p.megaActive || !p.heldItem) return false;
+    const item = ITEMS[p.heldItem];
+    return item?.effect === 'mega_stone' && item.megaFor === currentMonDisplay(p).species;
+  }
+
+  megaEvolve() {
+    if (!this.canMegaEvolve()) return;
+    const p = activeMon();
+    const before = currentMonDisplay(p).name;
+    const mega = applyMega(p);
+    if (!mega) return;
+    state.battle.megaUsed = true;
+    this.render(`${before} Mega Evolved into ${mega.megaName}!`);
+  }
+
+  revertAllMegas() {
+    state.party.forEach(m => revertMega(m));
   }
 
   startTrainerBattle(ctx) {
@@ -174,6 +202,7 @@ export class BattleEngine extends Emitter {
     this.emit('render', {
       log,
       isWild: state.battle.isWild,
+      canMega: this.canMegaEvolve(),
       player: { name: pd.name, level: p.level, hp: p.hp, maxHp: p.maxHp, sprite: pd.sprite, emoji: pd.emoji, moves: p.moves, status: p.status, ability: p.ability?.name },
       enemy: { name: e.speciesName, level: e.level, hp: e.hp, maxHp: e.maxHp, sprite: ed.sprite, emoji: ed.emoji, status: e.status, ability: e.ability?.name }
     });
@@ -397,6 +426,7 @@ export class BattleEngine extends Emitter {
   }
 
   handlePlayerFainted() {
+    revertMega(activeMon()); // a fainted Mega reverts, matching the real games
     const nextIdx = firstHealthyIdx();
     if (nextIdx === -1) {
       this.render(`${currentMonDisplay(activeMon()).name} fainted. Your whole team is down...`);
@@ -511,6 +541,7 @@ export class BattleEngine extends Emitter {
 
   tryFlee() {
     if (state.battle.isWild) {
+      this.revertAllMegas();
       this.emit('end', { outcome: 'flee', ctx: state.battle.ctx, msg: 'Got away safely.' });
     } else {
       this.render("You can't flee a trainer battle!");
@@ -530,7 +561,8 @@ export class BattleEngine extends Emitter {
       msg = `Beat ${state.battle.enemyName}! +₽${moneyRewardFor('lineup')}`;
     } else if (ctx === 'dario') {
       state.darioBeaten = true;
-      msg = `You beat Dario Voss! The Zau League is open.`;
+      state.hasKeyStone = true;
+      msg = `You beat Dario Voss! He tosses you a Key Stone — "You'll need this more than me." The Zau League is open.`;
     } else if (ctx === 'league') {
       state.leagueBeaten[state.currentLeagueIdx] = true;
       const cleared = state.leagueBeaten.filter(Boolean).length;
@@ -544,6 +576,7 @@ export class BattleEngine extends Emitter {
       state.verdanyxBeaten = true;
       msg = `You defeated Verdanyx!`; // the real end-screen flow lands in a later phase
     }
+    this.revertAllMegas();
     saveGame();
     this.emit('end', { outcome: 'win', ctx, msg });
   }
@@ -554,6 +587,7 @@ export class BattleEngine extends Emitter {
     // member that just survived the loss keeps whatever status it had.
     state.party.forEach(m => { if (m.fainted) { m.fainted = false; m.hp = Math.floor(m.maxHp*0.4); m.status = null; } });
     state.activeIdx = firstHealthyIdx() === -1 ? 0 : firstHealthyIdx();
+    this.revertAllMegas();
     saveGame();
     this.emit('end', { outcome: 'lose', ctx, msg: 'Your team was outmatched. Regroup and try again.' });
   }
