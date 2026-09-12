@@ -249,3 +249,62 @@ export const RISERS_MAP = {
     {x:2,y:9,emoji:"🪜"}    // the hatch back to the data centre floor
   ]
 };
+
+// The Old Lines (STORY.md U1) — Zau's forgotten transit tunnels, the way
+// down from the Harbor's Drowned Stair to the Undercity hub. Boiler-style
+// corridor with two tunnel-dweller chokepoints, a shrine alcove (the
+// Houndoominite, MEGA.md), and the old platform at the top.
+export const OLDLINES_MAP = {
+  w: 5, h: 12,
+  bg: "#050409",
+  layout: [
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,1,0,1,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,1,0,1,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1]
+  ],
+  topX: 2, topY: 0,
+  shrineX: 3, shrineY: 1,
+  decor: [
+    {x:2,y:0,emoji:"🚇"},   // the old platform — up to the Undercity
+    {x:1,y:6,emoji:"🕯️"},   // a shrine: a kettle, a blanket, chalk marks
+    {x:2,y:11,emoji:"🌀"}   // the Drowned Stair, drained
+  ]
+};
+
+// The Undercity (stratum 1, zau-region/districts/undercity.md) — the hub
+// under everything: Kestrel's Post, Halvard's platform, Obsidian's Vault,
+// and past the Vault the Warden's Reach. Same mill-block shape as Ember.
+export const UNDERCITY_MAP = {
+  w: 9, h: 9,
+  bg: "#07060c",
+  layout: [
+    [1,1,1,1,1,1,1,1,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,0,1,1,0,1,1,0,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,0,1,1,0,1,1,0,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1,1,1]
+  ],
+  stairX: 1, stairY: 7,
+  underlightX: 7, underlightY: 7,
+  decor: [
+    {x:7,y:1,emoji:"🏦",tileKey:"door"},    // Undercity Vault — Obsidian's gym
+    {x:4,y:1,emoji:"🏮",tileKey:"window"},  // Kestrel's Post (shop)
+    {x:1,y:1,emoji:"🚉"},                    // Halvard's Platform
+    {x:7,y:5,emoji:"🫖"},                    // The Warden's Reach
+    {x:7,y:7,emoji:"🕳️"},                    // The Underlight (sealed until Act 3)
+    {x:1,y:7,emoji:"🚇"}                     // the Old Lines, back up
+  ]
+};

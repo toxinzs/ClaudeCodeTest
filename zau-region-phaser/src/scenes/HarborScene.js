@@ -9,7 +9,7 @@ import { addActionBar } from '../uiHelpers.js';
 import { goToScene, fadeIn } from '../transitions.js';
 import { preloadPlayerLayers, createPlayerSprite } from '../playerSprite.js';
 import { preloadNPCLayers, placeNPCs, makeActor } from '../npcs.js';
-import { ensureStoryState } from '../story.js';
+import { ensureStoryState, hasFlag } from '../story.js';
 import { HARBOR_NPCS, HARBOR_CARGO_BREAKIN } from '../data/npcs.js';
 
 // Harbor District — the first real district map (stratum 3 in WORLD.md,
@@ -87,10 +87,16 @@ export default class HarborScene extends Phaser.Scene {
       { label: 'Party', onClick: () => this.scene.launch('Party') },
       { label: 'Bag', onClick: () => this.scene.launch('Bag') },
       { label: 'Center', onClick: () => this.scene.launch('Center') },
+      { label: 'Quests', onClick: () => this.scene.launch('Quests') },
       { label: 'Town', onClick: () => goToScene(this, 'Town') }
     ], GAME_H - 16);
 
     setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])]);
+  }
+
+  // The ferry quest's payoff: the water tile over the stair drains away.
+  drainStair() {
+    this.cameras.main.shake(600, 0.008);
   }
 
   drawPlayer() {
@@ -125,12 +131,16 @@ export default class HarborScene extends Phaser.Scene {
       else this.toastText.setText("The Harbor Ramp. Foundry security waves you off: \"Coral's badge or nothing. Quarter's not a shortcut.\"");
       return;
     }
+    if (at('stair')) {
+      if (hasFlag('stairDrained')) { goToScene(this, 'OldLines'); return; }
+      this.toastText.setText(SPOT_TEXT.stair); return;
+    }
     if (at('market')) { this.toastText.setText('The Fish Market — loud, crowded, alive.'); this.scene.launch('Mart'); return; }
     if (at('cargo')) {
       if (state.story.cargoRow) { this.toastText.setText("Cargo Row, locked down. Someone in a Meridian jacket photographs you from behind the fence."); return; }
       if (state.story.harborDario) { this.npcLayer.run(HARBOR_CARGO_BREAKIN); return; }
     }
-    for (const key of ['cargo', 'ferry', 'lighthouse', 'stair']) {
+    for (const key of ['cargo', 'ferry', 'lighthouse']) {
       if (at(key)) { this.toastText.setText(SPOT_TEXT[key]); return; }
     }
     if (state.party.length && Math.random() < WILD_ENCOUNTER_CHANCE) {

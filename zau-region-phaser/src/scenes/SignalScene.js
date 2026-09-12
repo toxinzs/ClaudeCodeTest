@@ -82,6 +82,7 @@ export default class SignalScene extends Phaser.Scene {
       { label: 'Party', onClick: () => this.scene.launch('Party') },
       { label: 'Bag', onClick: () => this.scene.launch('Bag') },
       { label: 'Center', onClick: () => this.scene.launch('Center') },
+      { label: 'Quests', onClick: () => this.scene.launch('Quests') },
       { label: 'Greenline', onClick: () => this.leaveToGreenline() }
     ], GAME_H - 16);
 

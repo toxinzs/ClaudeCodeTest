@@ -16,6 +16,8 @@ import GreenlineScene from './scenes/GreenlineScene.js';
 import BoilerScene from './scenes/BoilerScene.js';
 import SignalScene from './scenes/SignalScene.js';
 import RisersScene from './scenes/RisersScene.js';
+import OldLinesScene from './scenes/OldLinesScene.js';
+import UndercityScene from './scenes/UndercityScene.js';
 import BattleScene from './scenes/BattleScene.js';
 import PartyScene from './scenes/PartyScene.js';
 import BagScene from './scenes/BagScene.js';
@@ -24,6 +26,7 @@ import DexScene from './scenes/DexScene.js';
 import CenterScene from './scenes/CenterScene.js';
 import MoveLearnScene from './scenes/MoveLearnScene.js';
 import DialogueScene from './dialogue.js';
+import QuestsScene from './scenes/QuestsScene.js';
 
 // loadGame() is NOT called here — Continue vs. a fresh game are genuinely
 // different starting points (matches the DOM version, where a save
@@ -44,8 +47,8 @@ const game = new Phaser.Game({
   },
   scene: [
     BootScene, TitleScene, CutsceneScene, CharCreateScene,
-    HomeScene, TownScene, LabScene, TrailScene, LeagueScene, HarborScene, EmberScene, GreenlineScene, BoilerScene, SignalScene, RisersScene, BattleScene,
-    PartyScene, BagScene, MartScene, DexScene, CenterScene, MoveLearnScene, DialogueScene
+    HomeScene, TownScene, LabScene, TrailScene, LeagueScene, HarborScene, EmberScene, GreenlineScene, BoilerScene, SignalScene, RisersScene, OldLinesScene, UndercityScene, BattleScene,
+    PartyScene, BagScene, MartScene, DexScene, CenterScene, MoveLearnScene, DialogueScene, QuestsScene
   ]
 });
 

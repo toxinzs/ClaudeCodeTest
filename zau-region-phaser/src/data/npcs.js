@@ -11,7 +11,9 @@ import { grantKeyStone } from '../keystone.js';
 // cargoRow (Harbor H1–H3); emberHalloran, blackout, boilerIla, boilerDev,
 // aggroniteFound, lineRestored, emberDarioPin (Ember E2–E3); priyaSamples,
 // stormSeen (Greenline G2–G3); signalJuno, risersOduya, risersBrann,
-// pulseDecoded, signalDario (Signal S1–S3) — see STORY.md Act 2.
+// pulseDecoded, signalDario (Signal S1–S3); ferryAsked, ferryCrew,
+// stairDrained, oldlinesNyx, oldlinesCass, houndoominiteFound,
+// gengariteGiven, wardenMet, act2Close (Undercity U1–U3) — see STORY.md.
 // Placement rule: a character must never stand in a one-tile corridor (the
 // Greenline's rows are exactly that), so there they stand ON their landmark
 // tile and carry its description — talking to Wren opens the Seed Bank.
@@ -93,8 +95,27 @@ export const HARBOR_NPCS = [
     id: 'rossi', name: 'Harbormaster Rossi', x: 6, y: 4, facing: 'right',
     appearance: { skin: 'olive', hair: 'none', hairColor: 'gray', outfit: 'formal' },
     script: (s) => {
+      if (s.story.stairDrained) return [
+        { say: ['Rossi', "Stair's dry. First time in eighteen years. Whatever's down there, it's yours now.", "And when this is over — I'm getting a boat back on the water. You'll be on it."] }
+      ];
+      if (s.story.ferryCrew) return [
+        { say: ['Rossi', "Kettering's crew? On the pumps? Give me a minute—"] },
+        { call: (scene) => scene.drainStair?.() },
+        { shake: 700 },
+        { wait: 400 },
+        { say: ['Rossi', "…and that's twelve feet of water going back where it came from. The Drowned Stair's open.", "Here. Found it in the ferry's bilge twenty years ago and never knew what it was. Looks like something you'd know."] },
+        { give: { item: 'gyaradosite' } },
+        { say: ['', "Received the Gyaradosite!"] },
+        { set: 'stairDrained' },
+        { quest: { key: 'ferry', status: 'done' } }
+      ];
+      if (s.story.ferryAsked) return [
+        { say: ['Rossi', "Kettering. Ember Quarter, the Kilns. Tell him it's for the pumps. He'll say no, then he'll say yes."] }
+      ];
       if (badges(s) >= 4) return [
-        { say: ['Rossi', "The Drowned Stair? It's twelve feet of water. My old ferry pumps could drain it — if I had a crew that could run them.", "Kettering's people up in the Quarter could. Broker that and I'll owe you."] }
+        { say: ['Rossi', "The Drowned Stair? It's twelve feet of water. My old ferry pumps could drain it — if I had a crew that could run them.", "Kettering's people up in the Quarter could. Broker that and I'll owe you."] },
+        { set: 'ferryAsked' },
+        { quest: { key: 'ferry', status: 'active' } }
       ];
       if (s.story.cargoRow) return [
         { say: ['Rossi', "Heard about the yard. Site Security's been in my office twice today asking about 'trespassers'.", "I told them the harbor's public. It is. Was."] }
@@ -170,8 +191,12 @@ export const EMBER_NPCS = [
     id: 'kettering', name: 'Foreman Kettering', x: 2, y: 5, facing: 'left',
     appearance: { skin: 'brown', hair: 'buzzcut', hairColor: 'gray', outfit: 'explorer' },
     script: (s) => {
-      if (badges(s) >= 4) return [
-        { say: ['Kettering', "Rossi wants my crew for his pumps? Fine. He can have them the day my lights stay on for a whole night."] }
+      if (s.story.ferryCrew) return [
+        { say: ['Kettering', "Crew's on the Harbor pumps. Tell Rossi he owes me a boat ride."] }
+      ];
+      if (s.story.ferryAsked) return [
+        { say: ['Kettering', "Rossi wants my crew for his pumps? …Fine. You kept my furnace alive. He can have them for a day.", "Tell him: if they come back with so much as a wet boot, the deal's off."] },
+        { set: 'ferryCrew' }
       ];
       if (s.story.lineRestored) return [
         { say: ['Kettering', "Line's back. Furnace held. You saw the cable down there, didn't you.", "Runs *down*. Not up to the Tower — down. So who's drawing?"] }
@@ -488,4 +513,85 @@ export const RISERS_TERMINAL = [
   { say: ['Prism', "I'm *fascinated*. Come to the Tower when you're ready. I want to see what you do with this."] },
   { set: 'pulseDecoded' },
   { call: (scene) => { scene.spawn(); goToScene(scene, 'Signal', { toastMsg: 'Prism will be waiting at Signal Tower.' }); } }
+];
+
+export const OLDLINES_NPCS = [
+  {
+    id: 'nyx', name: 'Nyx', x: 2, y: 8, facing: 'down',
+    when: (s) => !s.story.oldlinesNyx,
+    appearance: { skin: 'taupe', hair: 'long', hairColor: 'black', outfit: 'explorer' },
+    script: () => [
+      { say: ['Nyx', "Up-top. You came down the wet stair. Nobody comes down the wet stair.", "You can pass. After."] },
+      { battle: { trainerKey: 'dwellerNyx', returnTo: 'OldLines' } }
+    ]
+  },
+  {
+    id: 'cass', name: 'Cass', x: 2, y: 4, facing: 'down',
+    when: (s) => !s.story.oldlinesCass,
+    appearance: { skin: 'brown', hair: 'buzzcut', hairColor: 'black', outfit: 'explorer' },
+    script: () => [
+      { say: ['Cass', "Nyx let you through. She never lets anyone through. …Show me why."] },
+      { battle: { trainerKey: 'dwellerCass', returnTo: 'OldLines' } }
+    ]
+  }
+];
+
+export const OLDLINES_SHRINE = [
+  { say: ['', "A shrine in the alcove: a folded blanket, a cold kettle, and chalk marks on the wall — tallies, in groups of twelve. Eighteen groups.", "Tucked under the blanket: a stone with a smouldering black core. A Houndoominite."] },
+  { give: { item: 'houndoominite' } },
+  { set: 'houndoominiteFound' }
+];
+
+export const UNDERCITY_NPCS = [
+  {
+    id: 'halvard', name: 'Halvard', x: 2, y: 1, facing: 'left',
+    appearance: { skin: 'light', hair: 'long', hairColor: 'white', outfit: 'formal' },
+    script: (s) => [
+      { say: ['Halvard', "Station master. Was. The lines ran through here — Harbor to the Tower in eleven minutes. Then they built over us and forgot.", "I mark the years in chalk. Someone should."] },
+      { if: (st) => st.story.houndoominiteFound, then: [
+        { say: ['Halvard', "You found one of her shrines. The Warden's. She leaves them where she's slept. Eighteen years of them, all the way down."] }
+      ] }
+    ]
+  },
+  {
+    id: 'kestrel', name: 'Kestrel', x: 3, y: 1, facing: 'right',
+    appearance: { skin: 'amber', hair: 'pixie', hairColor: 'gray', outfit: 'casual' },
+    script: () => [
+      { say: ['Kestrel', "Kestrel's Post. I know every rumour down here and sell about half of them. The other half's free: don't go past the Vault unless she sends for you.", "Shop's open. Everything's second-hand and most of it works."] },
+      { call: (scene) => scene.scene.launch('Mart') }
+    ]
+  },
+  // STORY.md U3 — the Warden. Present only once Obsidian has sent word.
+  {
+    id: 'elena', name: 'The Warden', x: 7, y: 5, facing: 'up',
+    when: (s) => s.leagueBeaten[4] && !s.story.act2Close,
+    appearance: { skin: 'light', hair: 'long', hairColor: 'gray', outfit: 'explorer' },
+    script: (s) => WARDEN_BEAT
+  }
+];
+
+// STORY.md U2 — Obsidian, after the badge, hands over the Gengarite and
+// says the Warden's name for the first time.
+export const OBSIDIAN_AFTER = [
+  { say: ['Obsidian', "Five badges. Fine. You'll want this — you'll need it down there.", "It came up from below, years ago, in a kettle. I didn't ask."] },
+  { give: { item: 'gengarite' } },
+  { say: ['', "Received the Gengarite!"] },
+  { say: ['Obsidian', "There's someone past the Vault. Been down here longer than the lines have been dark. We call her the Warden. She keeps the deep tunnels *quiet* — you've noticed they're quiet?", "She's asked for you. By name. I'd go."] },
+  { set: 'gengariteGiven' }
+];
+
+// STORY.md U3 — the truth, and Act 2's close.
+export const WARDEN_BEAT = [
+  { say: ['The Warden', "You have my Absol. And my stone. Then it chose right, and I can stop waiting.", "My name is Elena Voss. I was the field engineer on Meridian's excavation, eighteen years ago. I'm the one the record blames."] },
+  { say: ['Elena', "We hit a seam of something the division called deep resonance. I ordered the drill stopped. I was overruled. The seam vented, and a wild Pokémon in the zone — a Grass-type, small, ordinary — was caught in it.", "It didn't die. It *changed*. The way your Absol changes when you hold that stone — except nobody was holding anything. No bond. No way back.", "They sealed the tunnels and called it a write-off. I came down a year later because I couldn't leave it alone in the dark. I've been here since. I keep it calm. That's all a person can do."] },
+  { say: ['Elena', "The storms are it, growing. Not anger. *Pain.* And that pulse your friend found — that's its heart.", "And now Meridian is running power to it. I can hear the rig through the rock. If it wakes fully—"] },
+  { set: 'wardenMet' },
+  { choice: { name: 'Elena', prompt: "…My son. Dario. Is he—", options: [
+    { label: "He's alright. He's angry.", then: [{ say: ['Elena', "Good. Angry means he's still standing."] }] },
+    { label: "Meridian's sponsoring him.", then: [{ say: ['Elena', "…Of course they are. Of course they are."] }] }
+  ] } },
+  { shake: 900 },
+  { flash: 200 },
+  { say: ['Elena', "That's the rig. First stage. They've started.", "Go up. Find whoever's doing this and stop them. And bring my son — if he'll come."] },
+  { set: 'act2Close' }
 ];

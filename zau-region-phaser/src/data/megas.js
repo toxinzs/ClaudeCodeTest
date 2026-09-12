@@ -87,6 +87,22 @@ const MEGAS = {
     megaName: 'Mega Manectric', stone: 'manectite', type: 'Electric', spriteId: 10055,
     baseStats: { hp: 70, atk: 75, def: 80, spAtk: 135, spDef: 80, spe: 135 },
     ability: { name: 'Intimidate', effect: null }
+  },
+  // Undercity lines (Phase 20) — Sableye/Shuppet/Mawile seeded there.
+  sableye: {
+    megaName: 'Mega Sableye', stone: 'sablenite', type: 'Dark/Ghost', spriteId: 10066,
+    baseStats: { hp: 50, atk: 85, def: 125, spAtk: 85, spDef: 115, spe: 20 },
+    ability: { name: 'Magic Bounce', effect: null }
+  },
+  banette: {
+    megaName: 'Mega Banette', stone: 'banettite', type: 'Ghost', spriteId: 10056,
+    baseStats: { hp: 64, atk: 165, def: 75, spAtk: 93, spDef: 83, spe: 75 },
+    ability: { name: 'Prankster', effect: null }
+  },
+  mawile: {
+    megaName: 'Mega Mawile', stone: 'mawilite', type: 'Steel/Fairy', spriteId: 10052,
+    baseStats: { hp: 50, atk: 105, def: 125, spAtk: 55, spDef: 95, spe: 50 },
+    ability: { name: 'Huge Power', effect: null }
   }
 };
 

@@ -64,7 +64,14 @@ const EVOLUTIONS = {
   pawniard: { evolvesTo: 'Bisharp', type: 'Dark/Steel', emoji: '🗡️', method: 'level', level: 52 },
   mareep: { evolvesTo: 'Flaaffy', type: 'Electric', emoji: '🐑', method: 'level', level: 15 },
   flaaffy: { evolvesTo: 'Ampharos', type: 'Electric', emoji: '🐑', method: 'level', level: 30 },
-  electrike: { evolvesTo: 'Manectric', type: 'Electric', emoji: '🐕', method: 'level', level: 26 }
+  electrike: { evolvesTo: 'Manectric', type: 'Electric', emoji: '🐕', method: 'level', level: 26 },
+
+  // Undercity lines — real level thresholds (Golbat->Crobat is friendship,
+  // left for now).
+  zubat: { evolvesTo: 'Golbat', type: 'Poison/Flying', emoji: '🦇', method: 'level', level: 22 },
+  drilbur: { evolvesTo: 'Excadrill', type: 'Ground/Steel', emoji: '🐹', method: 'level', level: 31 },
+  koffing: { evolvesTo: 'Weezing', type: 'Poison', emoji: '☁️', method: 'level', level: 35 },
+  shuppet: { evolvesTo: 'Banette', type: 'Ghost', emoji: '🎭', method: 'level', level: 37 }
 };
 
 export function evolutionFor(speciesName) {

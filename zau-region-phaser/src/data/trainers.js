@@ -79,6 +79,24 @@ TRAINERS.darioSignal = {
   ]
 };
 
+// STORY.md U1 — tunnel dwellers. They chose down over up.
+TRAINERS.dwellerNyx = {
+  name: 'Tunnel Dweller Nyx', emoji: '🕯️', reward: 130, winFlag: 'oldlinesNyx',
+  winMsg: 'Nyx relights her candle. "First one from up top who asked instead of told. Go on. Halvard\'s past the second gate."',
+  team: [
+    { speciesName: 'Zubat', emoji: '🦇', type: 'Poison/Flying', level: 32, moves: [moveFor('Bite'), moveFor('Astonish')] },
+    { speciesName: 'Sableye', emoji: '💎', type: 'Dark/Ghost', level: 33, moves: [moveFor('Shadow Sneak'), moveFor('Scratch')] }
+  ]
+};
+TRAINERS.dwellerCass = {
+  name: 'Tunnel Dweller Cass', emoji: '🕯️', reward: 140, winFlag: 'oldlinesCass',
+  winMsg: 'Cass shrugs: "The Vault\'s up the platform stairs. Obsidian already knows you\'re coming. She always does."',
+  team: [
+    { speciesName: 'Koffing', emoji: '☁️', type: 'Poison', level: 33, moves: [moveFor('Smog'), moveFor('Tackle')] },
+    { speciesName: 'Drilbur', emoji: '🐹', type: 'Ground', level: 34, moves: [moveFor('Mud Slap'), moveFor('Metal Claw')] }
+  ]
+};
+
 export function trainerFor(key) {
   const t = TRAINERS[key];
   if (!t) throw new Error(`Unknown trainer "${key}" — add it to data/trainers.js`);
