@@ -361,8 +361,10 @@ export const TOWER_MAP = {
     [1,0,0,0,1]
   ],
   officeX: 2, officeY: 0,
+  roofX: 3, roofY: 0,
   decor: [
     {x:2,y:0,emoji:"🚪",tileKey:"door"},   // the Director's office
+    {x:3,y:0,emoji:"🪜"},                   // the roof stair, up to the Skyline (postgame)
     {x:2,y:11,emoji:"🛗"}                    // the lobby elevator
   ]
 };
@@ -387,5 +389,35 @@ export const UNDERLIGHT_MAP = {
   decor: [
     {x:3,y:2,emoji:"🎛️"},   // the rig's controls
     {x:3,y:5,emoji:"🛗"}    // the freight core
+  ]
+};
+
+// The Skyline — stratum 10 in WORLD.md, designed in
+// zau-region/districts/skyline.md. The postgame map: a vertical climb of
+// sky bridges above Meridian Tower, open air on every side (blocked tiles
+// render as `water`, which reads as the sky you'd fall into). The roof
+// stair lands at the bottom; Verdanyx rests at the top.
+export const SKYLINE_MAP = {
+  w: 9, h: 9,
+  bg: "#1b2438",
+  layout: [
+    [1,1,1,1,1,1,1,1,1],
+    [1,1,1,0,0,0,1,1,1],
+    [1,1,1,1,0,1,1,1,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,0,1,1,1,1,1,0,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,1,1,1,0,1,1,1,1],
+    [1,1,1,0,0,0,1,1,1],
+    [1,1,1,1,1,1,1,1,1]
+  ],
+  stairX: 4, stairY: 7,
+  decor: [
+    {x:4,y:1,emoji:"⛩️"},                    // the Highest Station
+    {x:2,y:3,emoji:"📡"},                    // Station Ana
+    {x:6,y:3,emoji:"🌉"},                    // the Sky Bridges
+    {x:2,y:5,emoji:"📡"},                    // Station Bel
+    {x:6,y:5,emoji:"📡"},                    // Station Cyr
+    {x:4,y:7,emoji:"🪜"}                     // the roof stair, back down to the Tower
   ]
 };

@@ -8,6 +8,19 @@ import { ensureStoryState } from './story.js';
 // Quests overlay (QuestsScene) lists active/done quests with the first
 // unmet objective.
 export const QUESTS = {
+  // SIDEQUESTS.md #10 — the postgame route to Verdanyx.
+  keeper: {
+    name: 'The Keeper Above',
+    giver: 'Iven (weather-station keeper)', district: 'The Skyline',
+    summary: "Iven's three weather stations read the air above Zau. Read all three and they'll say where it stands still — and that's where Verdanyx is sleeping.",
+    steps: [
+      { flag: 'stationAna', text: 'Read Station Ana (the low west bridge).' },
+      { flag: 'stationBel', text: 'Read Station Bel (the low east bridge).' },
+      { flag: 'stationCyr', text: 'Read Station Cyr (the upper west bridge).' },
+      { flag: 'verdanyxCaught', text: 'Climb to the Highest Station.' }
+    ],
+    reward: 'Verdanyx, and the Garchompite'
+  },
   ferry: {
     name: 'The Ferry That Never Left',
     giver: 'Harbormaster Rossi', district: 'Harbor District',

@@ -162,6 +162,15 @@ const BASE_STATS = {
   clefable:     { hp: 95, atk: 70,  def: 73,  spAtk: 95,  spDef: 90,  spe: 60 },
 
   // Custom/fictional final legendary — not a real species, hand-authored
+  // The Skyline (Phase 27) — real Gen 1-5 Dragon/Flying lines.
+  swablu:       { hp: 45, atk: 40,  def: 60,  spAtk: 40,  spDef: 75,  spe: 50 },
+  altaria:      { hp: 75, atk: 70,  def: 90,  spAtk: 70,  spDef: 105, spe: 80 },
+  shelgon:      { hp: 65, atk: 95,  def: 100, spAtk: 60,  spDef: 50,  spe: 50 },
+  salamence:    { hp: 95, atk: 135, def: 80,  spAtk: 110, spDef: 80,  spe: 100 },
+  rotom:        { hp: 50, atk: 50,  def: 77,  spAtk: 95,  spDef: 77,  spe: 91 },
+  dratini:      { hp: 41, atk: 64,  def: 45,  spAtk: 50,  spDef: 50,  spe: 50 },
+  dragonair:    { hp: 61, atk: 84,  def: 65,  spAtk: 70,  spDef: 70,  spe: 70 },
+  dragonite:    { hp: 91, atk: 134, def: 95,  spAtk: 100, spDef: 100, spe: 80 },
   verdanyx:     { hp: 100,atk: 110, def: 90,  spAtk: 120, spDef: 100, spe: 95 }
 };
 

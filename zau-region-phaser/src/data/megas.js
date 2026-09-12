@@ -114,6 +114,18 @@ const MEGAS = {
     megaName: 'Mega Kangaskhan', stone: 'kangaskhanite', type: 'Normal', spriteId: 10039,
     baseStats: { hp: 105, atk: 125, def: 100, spAtk: 60, spDef: 100, spe: 100 },
     ability: { name: 'Parental Bond', effect: null }
+  },
+  // Phase 27's Skyline seeded both of these lines: real Mega forms,
+  // real stats/types/abilities, real PokeAPI form IDs.
+  altaria: {
+    megaName: 'Mega Altaria', stone: 'altarianite', type: 'Dragon/Fairy', spriteId: 10067,
+    baseStats: { hp: 75, atk: 110, def: 110, spAtk: 110, spDef: 105, spe: 80 },
+    ability: { name: 'Pixilate', effect: null }
+  },
+  salamence: {
+    megaName: 'Mega Salamence', stone: 'salamencite', type: 'Dragon/Flying', spriteId: 10089,
+    baseStats: { hp: 95, atk: 145, def: 130, spAtk: 120, spDef: 90, spe: 120 },
+    ability: { name: 'Aerilate', effect: null }
   }
 };
 

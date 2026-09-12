@@ -168,6 +168,16 @@ const ABILITIES = {
   clefable: { name: 'Cute Charm', effect: null },
 
   // Custom/fictional final legendary — hand-authored, same precedent as its stats/moveset/sprite
+  // The Skyline (Phase 27). Levitate and Shed Skin are among the
+  // mechanically-wired abilities; the rest are real but flavor-only.
+  swablu: { name: 'Natural Cure', effect: null },
+  altaria: { name: 'Natural Cure', effect: null },
+  shelgon: { name: 'Rock Head', effect: null },
+  salamence: { name: 'Intimidate', effect: null },
+  rotom: { name: 'Levitate', effect: 'levitate' },
+  dratini: { name: 'Shed Skin', effect: 'shed_skin' },
+  dragonair: { name: 'Shed Skin', effect: 'shed_skin' },
+  dragonite: { name: 'Inner Focus', effect: null },
   verdanyx: { name: 'Verdant Surge', effect: 'verdant_surge', boostType: 'Grass' }
 };
 

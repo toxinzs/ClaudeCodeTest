@@ -81,6 +81,12 @@ export default class DialogueScene extends Phaser.Scene {
     this.typeTimer = this.time.addEvent({
       delay: TYPE_MS, repeat: full.length - 1,
       callback: () => {
+        // The scene can be stopped mid-page (a script's battle step closes
+        // the box as it transitions). A Text object whose canvas has been
+        // destroyed throws inside Phaser if it is written to again, so the
+        // timer checks it is still alive rather than trusting the timer to
+        // have been cancelled first.
+        if (!this.text?.active) { this.typeTimer?.remove(false); return; }
         i++;
         this.text.setText(full.slice(0, i));
         if (i >= full.length) this.finishTyping();
@@ -90,6 +96,7 @@ export default class DialogueScene extends Phaser.Scene {
 
   finishTyping() {
     if (this.typeTimer) this.typeTimer.remove(false);
+    if (!this.text?.active) return;
     this.text.setText(this.lines[this.page]);
     this.typing = false;
     const lastPage = this.page === this.lines.length - 1;

@@ -66,6 +66,11 @@ const MOVES = {
   "vise grip":   { type: "Normal",   power: 55,  category: "Physical" },
   spark:         { type: "Electric", power: 65,  category: "Physical",  status: "paralyze", statusChance: 0.3 },
   "thunder wave":{ type: "Electric", power: 0,   category: "Status",    status: "paralyze" },
+  // Skyline (Phase 27): the Dragon/Flying postgame roster.
+  "wrap": { type: "Normal", power: 15, category: "Physical" },
+  "slam": { type: "Normal", power: 80, category: "Physical" },
+  "wing attack": { type: "Flying", power: 60, category: "Physical" },
+  "dragon claw": { type: "Dragon", power: 80, category: "Physical" },
   "steel wing":  { type: "Steel",    power: 70,  category: "Physical" },
   "shadow sneak":{ type: "Ghost",    power: 40,  category: "Physical" },
   "take down":   { type: "Normal",   power: 90,  category: "Physical" },

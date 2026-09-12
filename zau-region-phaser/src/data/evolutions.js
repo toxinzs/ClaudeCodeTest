@@ -91,7 +91,13 @@ const EVOLUTIONS = {
     { evolvesTo: 'Flareon', type: 'Fire', emoji: '🔥', method: 'item', item: 'firestone' }
   ],
   murkrow: { evolvesTo: 'Honchkrow', type: 'Dark/Flying', emoji: '🐦‍⬛', method: 'item', item: 'duskstone' },
-  clefairy: { evolvesTo: 'Clefable', type: 'Fairy', emoji: '🌙', method: 'item', item: 'moonstone' }
+  clefairy: { evolvesTo: 'Clefable', type: 'Fairy', emoji: '🌙', method: 'item', item: 'moonstone' },
+  // The Skyline (Phase 27) — real level-up lines.
+  swablu:    { evolvesTo: 'Altaria',    level: 35, type: 'Dragon/Flying', emoji: '☁️' },
+  bagon:     { evolvesTo: 'Shelgon',    level: 30, type: 'Dragon',        emoji: '🐲' },
+  shelgon:   { evolvesTo: 'Salamence',  level: 50, type: 'Dragon/Flying', emoji: '🐉' },
+  dratini:   { evolvesTo: 'Dragonair',  level: 30, type: 'Dragon',        emoji: '🐉' },
+  dragonair: { evolvesTo: 'Dragonite',  level: 55, type: 'Dragon/Flying', emoji: '🐲' }
 };
 
 function entries(speciesName) {

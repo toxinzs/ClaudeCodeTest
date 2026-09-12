@@ -53,6 +53,14 @@ class MonCard {
 
     this.emojiText.setText(mon.emoji).setVisible(true);
     loadMonSprite(this.scene, mon.sprite, (key) => {
+      // A sprite fetch can outlive this battle (the scene fled/won/lost
+      // and shut down while the request was in flight — a wild encounter
+      // that's over before a slow sprite even loads is the common case).
+      // Touching a destroyed GameObject's texture throws deep inside
+      // Phaser's Frame internals, so the callback must check the object
+      // it's about to mutate is still alive, not just that the scene
+      // reference still exists.
+      if (!this.spriteImg?.active) return;
       if (key) {
         this.spriteImg.setTexture(key).setVisible(true);
         this.emojiText.setVisible(false);
@@ -73,6 +81,7 @@ export default class BattleScene extends Phaser.Scene {
     this.battleKind = data.kind;        // 'wild' | trainer ctx string
     this.zoneKey = data.zoneKey;
     this.trainerKey = data.trainerKey;  // for kind 'trainer' (data/trainers.js)
+    this.fixed = data.fixed;            // for kind 'fixed' — one named wild Pokémon
     this.returnTo = data.returnTo || 'Home';
   }
 
@@ -116,8 +125,9 @@ export default class BattleScene extends Phaser.Scene {
       this.scene.launch('MoveLearn', { ...payload, engine: this.engine });
     });
 
-    const started = this.battleKind === 'wild'
-      ? this.engine.startWildEncounter(this.zoneKey)
+    const started =
+      this.battleKind === 'wild' ? this.engine.startWildEncounter(this.zoneKey)
+      : this.battleKind === 'fixed' ? this.engine.startFixedEncounter(this.fixed)
       : this.engine.startTrainerBattle(this.battleKind, this.trainerKey);
 
     if (!started) {
@@ -142,7 +152,23 @@ export default class BattleScene extends Phaser.Scene {
     return { bg, text };
   }
 
+  // The engine is a plain object independent of any scene, and its
+  // setTimeout-staggered turn sequencing (a delayed counter-attack after a
+  // failed catch, an end-of-turn status tick, and so on) can still be
+  // in flight when a battle ends and the scene stops mid-sequence — a
+  // catch that lands cuts the rest of the turn short and transitions out
+  // immediately, but an already-queued setTimeout doesn't know that. Every
+  // engine event handler must check the scene is still alive before
+  // touching a GameObject, or a late event throws deep inside Phaser
+  // (Text/Image.setText/setTexture on an object whose texture was torn
+  // down when the scene shut down).
+  isAlive() {
+    const status = this.sys.settings.status;
+    return status !== Phaser.Scenes.SHUTDOWN && status !== Phaser.Scenes.DESTROYED;
+  }
+
   onRender(payload) {
+    if (!this.isAlive()) return;
     this.playerCard.update(payload.player);
     this.enemyCard.update(payload.enemy);
     if (payload.log) this.logText.setText(payload.log);
@@ -165,6 +191,7 @@ export default class BattleScene extends Phaser.Scene {
 
   // ---- presentation: every engine 'anim' event becomes motion ----
   onAnim(evt) {
+    if (!this.isAlive()) return;
     if (evt.type !== 'evolve') (window.__zauAnims ??= []).push(evt.type); // the Evolve scene logs itself
     const card = (side) => side === 'player' ? this.playerCard : this.enemyCard;
     if (evt.type === 'intro') {
@@ -220,6 +247,7 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   onEnd(payload) {
+    if (!this.isAlive()) return;
     (window.__zauAnims ??= []).push(`end:${payload.outcome}:${payload.ctx}`);
     this.logText.setText(payload.msg || '');
     this.moveButtons.forEach(b => { b.bg.disableInteractive(); });
