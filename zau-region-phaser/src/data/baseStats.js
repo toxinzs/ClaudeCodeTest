@@ -129,6 +129,18 @@ const BASE_STATS = {
   manectric:    { hp: 70, atk: 75,  def: 60,  spAtk: 105, spDef: 60,  spe: 105 },
   skarmory:     { hp: 65, atk: 80,  def: 140, spAtk: 40,  spDef: 70,  spe: 70 },
 
+  // Undercity roster + evolutions
+  zubat:        { hp: 40, atk: 45,  def: 35,  spAtk: 30,  spDef: 40,  spe: 55 },
+  golbat:       { hp: 75, atk: 80,  def: 70,  spAtk: 65,  spDef: 75,  spe: 90 },
+  sableye:      { hp: 50, atk: 75,  def: 75,  spAtk: 65,  spDef: 65,  spe: 50 },
+  drilbur:      { hp: 60, atk: 85,  def: 40,  spAtk: 30,  spDef: 45,  spe: 68 },
+  excadrill:    { hp: 110,atk: 135, def: 60,  spAtk: 50,  spDef: 65,  spe: 88 },
+  koffing:      { hp: 40, atk: 65,  def: 95,  spAtk: 60,  spDef: 45,  spe: 35 },
+  weezing:      { hp: 65, atk: 90,  def: 120, spAtk: 85,  spDef: 70,  spe: 60 },
+  shuppet:      { hp: 44, atk: 75,  def: 35,  spAtk: 63,  spDef: 33,  spe: 45 },
+  banette:      { hp: 64, atk: 115, def: 65,  spAtk: 83,  spDef: 63,  spe: 65 },
+  mawile:       { hp: 50, atk: 85,  def: 85,  spAtk: 55,  spDef: 55,  spe: 50 },
+
   // Custom/fictional final legendary — not a real species, hand-authored
   verdanyx:     { hp: 100,atk: 110, def: 90,  spAtk: 120, spDef: 100, spe: 95 }
 };

@@ -1,6 +1,7 @@
 import { state } from './state.js';
 import { saveGame } from './save.js';
 import { setFlag } from './story.js';
+import { setQuestStatus } from './quests.js';
 import { inputLock } from './lock.js';
 import { say, choose } from './dialogue.js';
 import Phaser from 'phaser';
@@ -58,6 +59,8 @@ async function runSteps(scene, steps, actors) {
       if (branch) await runSteps(scene, branch, actors);
     } else if (step.set) {
       setFlag(step.set, step.value ?? true);
+    } else if (step.quest) {
+      setQuestStatus(step.quest.key, step.quest.status);
     } else if (step.give) {
       const { item, n = 1 } = step.give;
       state.items[item] = (state.items[item] || 0) + n;

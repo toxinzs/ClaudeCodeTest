@@ -206,7 +206,24 @@ export const WILD_SPECIES = [
   { name: "Electrike", emoji: "🐕", type: "Electric", baseLvl: [29,34],
     moves: [moveFor("Spark"), moveFor("Quick Attack")] },
   { name: "Skarmory", emoji: "🦅", type: "Steel/Flying", baseLvl: [30,34],
-    moves: [moveFor("Peck"), moveFor("Steel Wing")] }
+    moves: [moveFor("Peck"), moveFor("Steel Wing")] },
+
+  // Undercity roster (indices 56-61) — real Dark/Ghost/Poison/Ground
+  // species for the forgotten stratum, band post-Prism/pre-Obsidian per
+  // zau-region/districts/undercity.md. Sableye, Shuppet and Mawile are the
+  // Mega seeds (Sableye/Banette/Mawile).
+  { name: "Zubat", emoji: "🦇", type: "Poison/Flying", baseLvl: [31,35],
+    moves: [moveFor("Bite"), moveFor("Astonish")] },
+  { name: "Sableye", emoji: "💎", type: "Dark/Ghost", baseLvl: [32,36],
+    moves: [moveFor("Shadow Sneak"), moveFor("Scratch")] },
+  { name: "Drilbur", emoji: "🐹", type: "Ground", baseLvl: [31,35],
+    moves: [moveFor("Mud Slap"), moveFor("Metal Claw")] },
+  { name: "Koffing", emoji: "☁️", type: "Poison", baseLvl: [31,35],
+    moves: [moveFor("Smog"), moveFor("Tackle")] },
+  { name: "Shuppet", emoji: "🎭", type: "Ghost", baseLvl: [32,36],
+    moves: [moveFor("Astonish"), moveFor("Shadow Sneak")] },
+  { name: "Mawile", emoji: "🪤", type: "Steel/Fairy", baseLvl: [33,36],
+    moves: [moveFor("Bite"), moveFor("Fairy Wind")] }
 ];
 
 // Wild encounter tables per zone (by index in WILD_SPECIES)
@@ -226,5 +243,9 @@ export const WILD_ZONE_TABLE = {
   signal: [49,50,51,52,53,53,39,39,54,55],
   // The Cable Risers: the data centre's shafts — Klink/Magnemite country.
   risers: [51,51,39,39,50,52],
+  // The Old Lines (dungeon) and the Undercity hub: Gastly (9) and Murkrow
+  // (14) shared; Shuppet uncommon, Mawile rare.
+  oldlines: [56,56,57,58,59,9,14,60,61],
+  undercity: [56,57,59,9,60,61],
   district: [11,12,14,15,16,18,19,20,21,22]
 };

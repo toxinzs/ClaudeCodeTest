@@ -125,7 +125,19 @@ export const SPRITE_IDS = {
   ampharos: 181,
   electrike: 309,
   manectric: 310,
-  skarmory: 227
+  skarmory: 227,
+
+  // Undercity roster + evolutions
+  zubat: 41,
+  golbat: 42,
+  sableye: 302,
+  drilbur: 529,
+  excadrill: 530,
+  koffing: 109,
+  weezing: 110,
+  shuppet: 353,
+  banette: 354,
+  mawile: 303
 };
 
 export function spriteIdFor(speciesName) {

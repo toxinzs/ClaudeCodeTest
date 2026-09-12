@@ -135,6 +135,18 @@ const ABILITIES = {
   manectric: { name: 'Static', effect: 'static' },
   skarmory: { name: 'Sturdy', effect: 'sturdy' },
 
+  // Undercity roster + evolutions (Levitate/Insomnia are the wired ones)
+  zubat: { name: 'Inner Focus', effect: null },
+  golbat: { name: 'Inner Focus', effect: null },
+  sableye: { name: 'Keen Eye', effect: null },
+  drilbur: { name: 'Sand Rush', effect: null },
+  excadrill: { name: 'Sand Rush', effect: null },
+  koffing: { name: 'Levitate', effect: 'levitate' },
+  weezing: { name: 'Levitate', effect: 'levitate' },
+  shuppet: { name: 'Insomnia', effect: 'insomnia' },
+  banette: { name: 'Insomnia', effect: 'insomnia' },
+  mawile: { name: 'Hyper Cutter', effect: null },
+
   // Custom/fictional final legendary — hand-authored, same precedent as its stats/moveset/sprite
   verdanyx: { name: 'Verdant Surge', effect: 'verdant_surge', boostType: 'Grass' }
 };
