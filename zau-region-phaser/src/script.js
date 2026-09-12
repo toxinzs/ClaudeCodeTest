@@ -89,8 +89,8 @@ async function runSteps(scene, steps, actors) {
     } else if (step.call) {
       await step.call(scene, actors);
     } else if (step.battle) {
-      const { trainerKey, returnTo, kind } = step.battle;
-      goToScene(scene, 'Battle', { kind: kind || 'trainer', trainerKey, returnTo });
+      const { trainerKey, returnTo, kind, fixed } = step.battle;
+      goToScene(scene, 'Battle', { kind: kind || 'trainer', trainerKey, fixed, returnTo });
       return;
     }
   }

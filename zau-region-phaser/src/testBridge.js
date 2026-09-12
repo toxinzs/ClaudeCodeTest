@@ -16,6 +16,15 @@ export function installTestBridge(game) {
     // Test-only: mutates the live state object directly (not a clone), so
     // Playwright can set up scenarios — a full party + boxed catches, an
     // inflicted status — without grinding real encounters for each one.
-    mutateState: (fn) => { fn(state); }
+    mutateState: (fn) => { fn(state); },
+    // Test-only navigation. Late-game maps (the Tower, the Skyline) sit
+    // behind five or six real map transitions; a test that only wants to
+    // exercise what happens *there* shouldn't have to walk the whole
+    // region to get there. Stops whatever is running first, so no overlay
+    // or previous map is left rendering underneath.
+    goTo: (key, data) => {
+      game.scene.getScenes(true).forEach(s => { if (s.scene.key !== key) game.scene.stop(s.scene.key); });
+      game.scene.start(key, data);
+    }
   };
 }

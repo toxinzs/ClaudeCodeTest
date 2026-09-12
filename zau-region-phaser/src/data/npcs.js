@@ -1,6 +1,7 @@
 import { TOWN_MAP } from './maps.js';
 import { goToScene } from '../transitions.js';
 import { grantKeyStone } from '../keystone.js';
+import { moveFor } from './moves.js';
 
 // Every placed character in the game, per map, straight from
 // zau-region/CHARACTERS.md. An NPC is { id, name, x, y, facing, appearance,
@@ -886,4 +887,56 @@ export const ENDING = [
   { say: ['', "The truth surfaces: Prism's data, Priya's samples, Halloran's testimony, and Elena Voss — alive, and the only person in Zau who ever told Meridian to stop.", "Director Vance resigns rather than lie about it. It's the one honest thing he does, and he does it by hand.", "The Voss name is cleared by the truth instead of a press release. The ferry runs. Alma gets a phone call from the bottom of the city."] },
   { set: 'ending' },
   { call: (scene) => goToScene(scene, 'Credits') }
+];
+
+// ================== THE SKYLINE (postgame) ==================
+// districts/skyline.md + SIDEQUESTS.md #10, "The Keeper Above". Iven has
+// watched the storms form from above for thirty years; he is the only
+// person in Zau who was looking up while everyone else looked down. The
+// three weather stations are the route: each one is a reading, and the
+// readings are how you know where Verdanyx settled.
+export const SKYLINE_VERDANYX = [
+  { say: ['', 'The Highest Station. The wind gauges are still. All three of them, at once — the first time in eighteen years.'] },
+  { wait: 400 },
+  { say: ['', 'The cloud on the east rail is not a cloud.'] },
+  { call: (scene) => scene.showVerdanyx?.() },
+  { wait: 600 },
+  { say: ['Verdanyx', '…'] },
+  { say: ['', "It doesn't rise. It doesn't threaten. It has been asleep up here since the night the rig died, as high above the city as it once was below it."] },
+  { if: (s) => !s.story.garchompiteFound,
+    then: [
+      { say: ['', "Something is wedged in the wind-gauge cage, worn smooth: a Mega Stone, left by someone who climbed up here to sit with it."] },
+      { give: { item: 'garchompite' } },
+      { say: ['', 'Received the Garchompite!'] },
+      { set: 'garchompiteFound' }
+    ] },
+  { say: ['', 'It opens one eye. It knows you. The question it asks is the one it asked at the rig: *are you staying?*'] },
+  { battle: { kind: 'fixed', returnTo: 'Skyline', fixed: {
+      wildKey: 'verdanyx', speciesName: 'Verdanyx', emoji: '🐲', type: 'Grass/Dragon', level: 60,
+      moves: [moveFor('Leaf Storm'), moveFor('Dragon Breath'), moveFor('Slash'), moveFor('Dragon Claw')]
+  } } }
+];
+
+export const SKYLINE_NPCS = [
+  {
+    id: 'iven', name: 'Iven', x: 3, y: 7, facing: 'right',
+    when: () => true,
+    appearance: { skin: 'amber', hair: 'buzzcut', hairColor: 'gray', outfit: 'explorer' },
+    script: (s) => {
+      if (s.story.verdanyxCaught) return [
+        { say: ['Iven', "You brought it down with you. Or it came down with you — I'm not sure those are the same thing, and I'm not sure it matters.", "Thirty years I watched the storms form up here. Never once saw where they went. Now I know: they were going home."] }
+      ];
+      if (s.story.stationCyr && s.story.stationBel && s.story.stationAna) return [
+        { say: ['Iven', "All three agree. That's the top station, then — straight up the middle, and mind the last flight.", "Take your time up there. It's been waiting eighteen years; it can wait for you to catch your breath."] }
+      ];
+      if (s.quests?.keeper === 'active') return [
+        { say: ['Iven', "Three stations: Ana on the low west bridge, Bel on the low east, Cyr on the upper west. Read all three and they'll tell you where the air is standing still.", "Where the air stands still, that's where it's sleeping."] }
+      ];
+      return [
+        { say: ['Iven', "Mind the rail. Long way down, and nothing to catch you but a district you already saved.", "I'm Iven. I keep the weather stations. Kept them through the whole thing — nobody up here to tell me to stop."] },
+        { say: ['Iven', "There's something asleep on the top station. Big. Green. Doesn't move much. I've not gone close.", "You want to find it, do it properly: read the three stations first. Air's wrong up here otherwise."] },
+        { set: 'skyRouteAsked' }, { quest: { key: 'keeper', status: 'active' } }
+      ];
+    }
+  }
 ];

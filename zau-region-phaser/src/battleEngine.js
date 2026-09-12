@@ -1,7 +1,7 @@
 import { state, activeMon, firstHealthyIdx, MAX_PARTY } from './state.js';
 import { trainerFor } from './data/trainers.js';
 import { setFlag } from './story.js';
-import { currentMonDisplay, computeStats, statsForMon, evolveIfReady, rollWildEncounter, xpNeededForLevel, applyMega, revertMega, rollIVs } from './mon.js';
+import { currentMonDisplay, computeStats, statsForMon, evolveIfReady, rollWildEncounter, buildWildMon, xpNeededForLevel, applyMega, revertMega, rollIVs } from './mon.js';
 import { baseStatsFor } from './data/baseStats.js';
 import { abilityFor } from './data/abilities.js';
 import { ITEMS } from './data/items.js';
@@ -192,6 +192,22 @@ export class BattleEngine extends Emitter {
     state.battle = { ctx: 'wild', enemyName: wild.speciesName, enemyMons: [wild], enemyIdx: 0, isWild: true, moneyReward: 0 };
     this.emit('anim', { type: 'intro', wild: true, name: wild.speciesName });
     this.render(`A wild ${wild.speciesName} appeared!`);
+    return true;
+  }
+
+  // A named wild encounter — one specific Pokémon at one specific level,
+  // rather than a roll off a zone table. Everything downstream (balls,
+  // catch odds, XP, the 'wild' win/lose routing) is the ordinary wild
+  // flow, which is the point: Verdanyx at rest on the Skyline is a wild
+  // Pokémon you can actually catch, not a scripted boss. `wildKey` lets
+  // winBattle set the story flag for these one-off encounters.
+  startFixedEncounter({ speciesName, emoji, type, level, moves, wildKey }) {
+    if (firstHealthyIdx() === -1) return false;
+    this.resetBattleFlags();
+    const wild = buildWildMon({ name: speciesName, emoji, type, moves }, level);
+    state.battle = { ctx: 'wild', wildKey, enemyName: speciesName, enemyMons: [wild], enemyIdx: 0, isWild: true, moneyReward: 0 };
+    this.emit('anim', { type: 'intro', wild: true, name: speciesName });
+    this.render(`${speciesName} is here.`);
     return true;
   }
 
@@ -577,6 +593,14 @@ export class BattleEngine extends Emitter {
     let msg = null;
     if (ctx === 'wild') {
       msg = caughtNotDefeated ? 'Added to your party!' : `You defeated the wild ${state.battle.enemyName}!`;
+      // A named encounter (startFixedEncounter) records its outcome: a
+      // caught Verdanyx is gone from the Highest Station for good, a
+      // defeated one is back the next time you climb, same as the real
+      // games' roaming/respawning legendaries.
+      if (state.battle.wildKey === 'verdanyx') {
+        if (caughtNotDefeated) { setFlag('verdanyxCaught'); msg = 'Verdanyx is yours. It looks almost relieved.'; }
+        else { msg = 'Verdanyx folds back down into the station\'s shadow. It will be here when you come back.'; }
+      }
     } else if (ctx === 'lineup') {
       state.trainerIndex++;
       msg = `Beat ${state.battle.enemyName}! +₽${moneyRewardFor('lineup')}`;

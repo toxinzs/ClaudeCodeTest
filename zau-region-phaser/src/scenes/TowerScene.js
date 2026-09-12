@@ -105,6 +105,13 @@ export default class TowerScene extends Phaser.Scene {
       this.npcLayer.run(VANCE_TALK);
       return;
     }
+    // The roof stair — the Skyline, and the postgame. Meridian kept the
+    // roof to itself right up until nobody was left to keep it.
+    if (nx === TOWER_MAP.roofX && ny === TOWER_MAP.roofY) {
+      if (hasFlag('ending')) { goToScene(this, 'Skyline'); return; }
+      this.toastText.setText('A stair up to the roof, chained. The sign is Meridian\'s: AUTHORISED ACCESS ONLY.');
+      return;
+    }
     if (nx === SPAWN.x && ny === SPAWN.y) { this.toastText.setText('The lobby elevator, back down to the Sprawl.'); }
   }
 }

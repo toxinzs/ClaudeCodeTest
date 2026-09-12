@@ -157,7 +157,15 @@ export const SPRITE_IDS = {
   vaporeon: 134,
   jolteon: 135,
   flareon: 136,
-  clefable: 36
+  clefable: 36,
+  swablu: 333,
+  altaria: 334,
+  shelgon: 372,
+  salamence: 373,
+  rotom: 479,
+  dratini: 147,
+  dragonair: 148,
+  dragonite: 149,
 };
 
 export function spriteIdFor(speciesName) {

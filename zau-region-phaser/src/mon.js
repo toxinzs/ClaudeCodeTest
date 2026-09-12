@@ -1,4 +1,4 @@
-import { STARTER_CHAINS, WILD_ZONE_TABLE, WILD_SPECIES, EVOLVE_LEVEL_1, EVOLVE_LEVEL_2 } from './data/pokemon.js';
+import { STARTER_CHAINS, WILD_ZONE_TABLE, WILD_SPECIES, EVOLVE_LEVEL_1, EVOLVE_LEVEL_2, WILD_ZONE_LEVELS } from './data/pokemon.js';
 import { baseStatsFor } from './data/baseStats.js';
 import { abilityFor } from './data/abilities.js';
 import { evolutionFor, itemEvolutionsFor } from './data/evolutions.js';
@@ -124,7 +124,8 @@ export function rollWildEncounter(zoneKey) {
   const table = WILD_ZONE_TABLE[zoneKey] || WILD_ZONE_TABLE.outskirts;
   const speciesIdx = table[Math.floor(Math.random() * table.length)];
   const species = WILD_SPECIES[speciesIdx];
-  const lvl = species.baseLvl[0] + Math.floor(Math.random() * (species.baseLvl[1]-species.baseLvl[0]+1));
+  const band = WILD_ZONE_LEVELS[zoneKey] || species.baseLvl;
+  const lvl = band[0] + Math.floor(Math.random() * (band[1]-band[0]+1));
   return buildWildMon(species, lvl);
 }
 

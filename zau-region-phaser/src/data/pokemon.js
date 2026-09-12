@@ -239,10 +239,40 @@ export const WILD_SPECIES = [
   { name: "Kangaskhan", emoji: "🦘", type: "Normal", baseLvl: [36,38],
     moves: [moveFor("Bite"), moveFor("Double Hit")] },
   { name: "Clefairy", emoji: "🌙", type: "Fairy", baseLvl: [34,38],
-    moves: [moveFor("Disarming Voice"), moveFor("Pound")] }
+    moves: [moveFor("Disarming Voice"), moveFor("Pound")] },
+  // ============ The Skyline (Phase 27, postgame — districts/skyline.md) ============
+  // Real Flying/Dragon lines; Swablu and Bagon (22, shared with the
+  // Outskirts) are the Mega-eligible seeds, Dratini the rare climb-reward.
+  { name: "Swablu", emoji: "🕊️", type: "Normal/Flying", baseLvl: [48,52],
+    moves: [moveFor("Peck"), moveFor("Astonish")] },
+  { name: "Altaria", emoji: "☁️", type: "Dragon/Flying", baseLvl: [52,56],
+    moves: [moveFor("Dragon Breath"), moveFor("Aerial Ace")] },
+  { name: "Shelgon", emoji: "🐲", type: "Dragon", baseLvl: [50,54],
+    moves: [moveFor("Dragon Claw"), moveFor("Headbutt")] },
+  { name: "Salamence", emoji: "🐉", type: "Dragon/Flying", baseLvl: [56,58],
+    moves: [moveFor("Dragon Claw"), moveFor("Wing Attack")] },
+  { name: "Rotom", emoji: "💡", type: "Electric/Ghost", baseLvl: [48,52],
+    moves: [moveFor("Thunder Shock"), moveFor("Astonish")] },
+  { name: "Dratini", emoji: "🐍", type: "Dragon", baseLvl: [48,50],
+    moves: [moveFor("Dragon Breath"), moveFor("Wrap")] },
+  { name: "Dragonair", emoji: "🐉", type: "Dragon", baseLvl: [52,55],
+    moves: [moveFor("Dragon Breath"), moveFor("Slam")] },
+  { name: "Dragonite", emoji: "🐲", type: "Dragon/Flying", baseLvl: [56,60],
+    moves: [moveFor("Dragon Claw"), moveFor("Wing Attack")] }
 ];
 
 // Wild encounter tables per zone (by index in WILD_SPECIES)
+// A zone's own level band, where it has one. Several species appear in
+// more than one district (Bagon in the Outskirts and again on the Skyline,
+// Skarmory in Signal and again on the Skyline), and a species' own
+// baseLvl is the band of the *first* place it was written for — so a
+// postgame zone has to say what level its encounters are, or the Skyline
+// would spawn the Outskirts' Lv.18 Bagon next to a Lv.60 Verdanyx.
+// Zones without an entry just use each species' own baseLvl.
+export const WILD_ZONE_LEVELS = {
+  skyline: [48, 60]
+};
+
 export const WILD_ZONE_TABLE = {
   outskirts: [0,1,2,3,4,5,6,7,23,24,25],
   underpass: [8,9,10,13],
@@ -265,5 +295,8 @@ export const WILD_ZONE_TABLE = {
   undercity: [56,57,59,9,60,61],
   // The Sprawl: mostly a place, not a hunting ground — Kangaskhan rare.
   sprawl: [62,62,63,63,64,65,67,67,66],
+  // The Skyline (postgame, band 48-60): Swablu common, Bagon (22) shared
+  // with the Outskirts, Skarmory (55) shared with Signal, Dratini rare.
+  skyline: [68,68,68,22,22,55,72,72,70,73],
   district: [11,12,14,15,16,18,19,20,21,22]
 };
