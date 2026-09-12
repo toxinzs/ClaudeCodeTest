@@ -109,7 +109,23 @@ export const SPRITE_IDS = {
   kirlia: 281,
   gardevoir: 282,
   heracross: 214,
-  pinsir: 127
+  pinsir: 127,
+
+  // Signal District roster + evolutions
+  elekid: 239,
+  electabuzz: 125,
+  joltik: 595,
+  galvantula: 596,
+  klink: 599,
+  klang: 600,
+  pawniard: 624,
+  bisharp: 625,
+  mareep: 179,
+  flaaffy: 180,
+  ampharos: 181,
+  electrike: 309,
+  manectric: 310,
+  skarmory: 227
 };
 
 export function spriteIdFor(speciesName) {

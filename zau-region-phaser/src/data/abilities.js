@@ -119,6 +119,22 @@ const ABILITIES = {
   heracross: { name: 'Guts', effect: 'guts' },
   pinsir: { name: 'Hyper Cutter', effect: null },
 
+  // Signal District roster + evolutions (Static/Sturdy are the wired ones)
+  elekid: { name: 'Static', effect: 'static' },
+  electabuzz: { name: 'Static', effect: 'static' },
+  joltik: { name: 'Compound Eyes', effect: null },
+  galvantula: { name: 'Compound Eyes', effect: null },
+  klink: { name: 'Plus', effect: null },
+  klang: { name: 'Plus', effect: null },
+  pawniard: { name: 'Defiant', effect: null },
+  bisharp: { name: 'Defiant', effect: null },
+  mareep: { name: 'Static', effect: 'static' },
+  flaaffy: { name: 'Static', effect: 'static' },
+  ampharos: { name: 'Static', effect: 'static' },
+  electrike: { name: 'Static', effect: 'static' },
+  manectric: { name: 'Static', effect: 'static' },
+  skarmory: { name: 'Sturdy', effect: 'sturdy' },
+
   // Custom/fictional final legendary — hand-authored, same precedent as its stats/moveset/sprite
   verdanyx: { name: 'Verdant Surge', effect: 'verdant_surge', boostType: 'Grass' }
 };

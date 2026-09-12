@@ -76,6 +76,17 @@ const MEGAS = {
     megaName: 'Mega Pinsir', stone: 'pinsirite', type: 'Bug/Flying', spriteId: 10040,
     baseStats: { hp: 65, atk: 155, def: 120, spAtk: 65, spDef: 90, spe: 105 },
     ability: { name: 'Aerilate', effect: null }
+  },
+  // Signal District lines (Phase 19) — Mareep/Electrike seeded there.
+  ampharos: {
+    megaName: 'Mega Ampharos', stone: 'ampharosite', type: 'Electric/Dragon', spriteId: 10045,
+    baseStats: { hp: 90, atk: 95, def: 105, spAtk: 165, spDef: 110, spe: 45 },
+    ability: { name: 'Mold Breaker', effect: null }
+  },
+  manectric: {
+    megaName: 'Mega Manectric', stone: 'manectite', type: 'Electric', spriteId: 10055,
+    baseStats: { hp: 70, atk: 75, def: 80, spAtk: 135, spDef: 80, spe: 135 },
+    ability: { name: 'Intimidate', effect: null }
   }
 };
 

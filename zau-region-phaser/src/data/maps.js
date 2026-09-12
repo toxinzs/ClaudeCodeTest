@@ -192,3 +192,60 @@ export const BOILER_MAP = {
     {x:2,y:11,emoji:"🪜"}   // the ladder back up to the Kilns
   ]
 };
+
+// Signal District (stratum 6, zau-region/districts/signal.md) — the comms
+// growth on the stack's side. Same mill-block shape as Ember (two rows
+// of server halls split the floor into three cable-roads). Exit down is
+// the Service Stair (bottom-left), the way up the Sprawl Bridge
+// (bottom-right, Act 3).
+export const SIGNAL_MAP = {
+  w: 9, h: 9,
+  bg: "#0a0f1e",
+  layout: [
+    [1,1,1,1,1,1,1,1,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,0,1,1,0,1,1,0,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,0,1,1,0,1,1,0,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1,1,1]
+  ],
+  stairX: 1, stairY: 7,
+  bridgeX: 7, bridgeY: 7,
+  decor: [
+    {x:7,y:1,emoji:"⚡",tileKey:"door"},    // Signal Tower — Prism's gym
+    {x:4,y:1,emoji:"📻",tileKey:"window"},  // The Relay (shop)
+    {x:1,y:1,emoji:"🖥️",tileKey:"window"},  // Meridian Data Centre (-> Cable Risers)
+    {x:7,y:5,emoji:"📡"},                    // The Antenna Farm
+    {x:7,y:7,emoji:"🌉"},                    // The Sprawl Bridge (locked, Act 3)
+    {x:1,y:7,emoji:"🪜"}                     // The Service Stair (exit)
+  ]
+};
+
+// The Cable Risers (STORY.md S2) — the data centre's vertical maintenance
+// shafts, a Boiler-style corridor with two Meridian-technician
+// chokepoints and the signal terminal at the top where the storm
+// signature gets decoded.
+export const RISERS_MAP = {
+  w: 5, h: 10,
+  bg: "#06091a",
+  layout: [
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,1,0,1,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,1,0,1,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1]
+  ],
+  terminalX: 2, terminalY: 0,
+  decor: [
+    {x:2,y:0,emoji:"🖥️"},   // the signal terminal
+    {x:2,y:9,emoji:"🪜"}    // the hatch back to the data centre floor
+  ]
+};

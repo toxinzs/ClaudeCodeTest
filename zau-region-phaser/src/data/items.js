@@ -42,6 +42,8 @@ export const ITEMS = {
   gardevoirite: { name: "Gardevoirite", price: 5000, category: "held", effect: "mega_stone", megaFor: "Gardevoir" },
   heracronite:  { name: "Heracronite",  price: 5000, category: "held", effect: "mega_stone", megaFor: "Heracross" },
   pinsirite:    { name: "Pinsirite",    price: 5000, category: "held", effect: "mega_stone", megaFor: "Pinsir" },
+  ampharosite:  { name: "Ampharosite",  price: 5000, category: "held", effect: "mega_stone", megaFor: "Ampharos" },
+  manectite:    { name: "Manectite",    price: 5000, category: "held", effect: "mega_stone", megaFor: "Manectric" },
 
   // Evolution item — real item from Pokémon Legends: Arceus/Scarlet &
   // Violet, letting a real trade-evolution species (Kadabra->Alakazam,

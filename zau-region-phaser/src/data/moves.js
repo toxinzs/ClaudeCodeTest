@@ -63,7 +63,10 @@ const MOVES = {
   "vine whip":   { type: "Grass",    power: 45,  category: "Physical" },
   "disarming voice":{ type: "Fairy", power: 40,  category: "Special" },
   "horn attack": { type: "Normal",   power: 65,  category: "Physical" },
-  "vise grip":   { type: "Normal",   power: 55,  category: "Physical" }
+  "vise grip":   { type: "Normal",   power: 55,  category: "Physical" },
+  spark:         { type: "Electric", power: 65,  category: "Physical",  status: "paralyze", statusChance: 0.3 },
+  "thunder wave":{ type: "Electric", power: 0,   category: "Status",    status: "paralyze" },
+  "steel wing":  { type: "Steel",    power: 70,  category: "Physical" }
 };
 
 export function moveFor(name) {
