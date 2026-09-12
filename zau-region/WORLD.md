@@ -2,7 +2,7 @@
 
 Living reference doc for the region's geography. This is where a future "add a zone / trainer / area" ask should slot into, instead of getting invented fresh each time. Edit this whenever the vision changes — it's meant to be argued with, not treated as locked.
 
-Geography only — for the actual plot, history, and characters this world exists to serve, see [`STORY.md`](STORY.md). Any new district's story hook should be checked against that bible rather than invented independently.
+Geography only — for the actual plot, history, and characters this world exists to serve, see [`STORY.md`](STORY.md) (the full act-by-act beat sheet), [`CHARACTERS.md`](CHARACTERS.md) (every named person, per district), [`MEGA.md`](MEGA.md) (when Mega Evolution unlocks and where every stone is), and [`SIDEQUESTS.md`](SIDEQUESTS.md). Any new district's story hook should be checked against those rather than invented independently. Every stratum now has a design doc in [`districts/`](districts/).
 
 ## The concept
 
@@ -14,21 +14,40 @@ Zau isn't a spread of separate towns connected by routes — it's **one city, bu
 
 | # | Stratum | Status | What's there | Vibe / likely types |
 |---|---------|--------|---------------|---------------------|
-| 9 | **The Skyline** | *New — postgame idea* | Above Meridian Tower. Antenna farms, sky bridges, weather stations. Where you'd fight anything post-Verdanyx. | Flying, Electric, Dragon |
-| 8 | **Meridian Tower** | Built (as a battle, not a walkable map yet) | Director Vance's HQ. Corporate, glass, sterile. | Steel, Psychic, Ground |
-| 7 | **The Sprawl** | *New* | Mid-city residential/commercial layer between the towers and the gyms below — apartments, shops, the "Meet the Rivals" screen would live here. Connective tissue, not a single gym. | Normal, Fairy, mixed |
-| 6 | **Signal District** | Named only (Signal Tower, Leader Prism) | Comms/tech hub built up the side of the district — antennas, server farms. | Electric, Steel |
+| 9 | **The Skyline** | Designed — [`districts/skyline.md`](districts/skyline.md) (postgame) | Above Meridian Tower. Antenna farms, sky bridges, weather stations. Where Verdanyx goes to rest; the hardest fights. | Flying, Electric, Dragon |
+| 8 | **Meridian Tower** | Designed — [`districts/tower.md`](districts/tower.md); built as a battle only | Director Vance's HQ. Corporate, glass, sterile. Act 3's confrontation; the freight core down. | Steel, Psychic, Ground |
+| 7 | **The Sprawl** | Designed — [`districts/sprawl.md`](districts/sprawl.md) | Mid-city residential/commercial layer where Meridian is ordinary — landlord, employer, sponsor. No gym. Act 3's first stop: Dario's choice, Halloran's office. | Normal, Fairy, mixed |
+| 6 | **Signal District** | Designed — [`districts/signal.md`](districts/signal.md) | Comms/tech hub bolted onto the stack's side — antennas, server farms, Meridian's data centre. Where the storms become a *pulse*. | Electric, Steel |
 | 5 | **Greenline Terraces** | **Fleshed out** — see [`districts/greenline.md`](districts/greenline.md) | Literal stacked garden terraces — the city's one deliberate green layer, built to look like nature reclaimed the concrete. | Grass, Bug, Fairy |
 | 4 | **Ember Quarter** | **Fleshed out** — see [`districts/ember.md`](districts/ember.md) | Old industrial/factory district, still running hot. | Fire, Rock, Steel |
 | 3 | **Harbor District** | **Fleshed out** — see [`districts/harbor.md`](districts/harbor.md) | Where the city meets water — docks, piers, the one place that opens outward instead of stacking. Natural home for eventual water travel/surfing. | Water, Flying |
 | 2 | **The Outskirts / Wild Zone** | **Fully built** — Zau Outskirts (start), Underpass Loop, Harbor Steps, Midblock Plaza, Rooftop District (Act 1 trail) | Street level, least developed, where wild Pokémon and unlicensed trainers cluster. Your starting point. | Whatever's currently in `WILD_SPECIES` — broad early-game mix |
-| 1 | **The Undercity** | Named only (Undercity Vault, Leader Obsidian) | Forgotten tunnels, old transit lines, sewers — the layer everyone built over and forgot about. Natural cave/tunnel network connecting down toward the Underlight. | Dark, Ghost, Poison, Ground |
+| 1 | **The Undercity** | Designed — [`districts/undercity.md`](districts/undercity.md) | Forgotten tunnels, old transit lines, sewers — the layer everyone built over and forgot. The Old Lines dungeon, Obsidian's Vault, and the Warden. Where the truth is. | Dark, Ghost, Poison, Ground |
 | 0 | **The Underlight** | Built (as a battle) | Pre-city ruins, whatever Zau was actually built on top of. Verdanyx's domain. Final dungeon. | Grass/Dragon (Verdanyx), otherwise unknown |
+
+## The player's route through the stack
+
+The story doesn't go straight up. It climbs, then drops, then climbs to the top, then drops to the bottom — because Meridian's head is at the top and its excavation is at the bottom.
+
+| Order | Stratum | Gate | Team level | Story beat |
+|---|---|---|---|---|
+| 1 | Outskirts / Wild Zone Trail | — | 5–18 | Act 1, Dario |
+| 2 | Harbor District | Dario beaten (Harbor Steps) | 18–22 | *cargo* — Cargo Row break-in; Badge 1 |
+| 3 | Ember Quarter | Badge 1 (Harbor Ramp) | 22–26 | *power* — the blackout, Boiler Tunnels; Badge 2 |
+| 4 | Greenline Terraces | Badge 2 (Freight Lift) | 26–29 | *water* — the storm on the Overlook, the Absol; Badge 3 |
+| 5 | The Key Stone | Badge 3 | 28–32 | Elena's cache behind the Ember service tunnel; the gift Absol; Mega Evolution unlocks |
+| 6 | Signal District | Badge 3 (Service Stair) | 30–34 | *signal* — the pulse; Dario sponsored; Badge 4 |
+| 7 | The Undercity | Badge 4 + the Drowned Stair drained | 33–36 | *the truth* — the Old Lines, Obsidian, the Warden; Badge 5 |
+| 8 | The Sprawl | Badge 5 (Sprawl Bridge) | 36–38 | Dario's choice; Halloran |
+| 9 | Meridian Tower | Halloran's badge | 38–42 | Vance |
+| 10 | The Underlight | The freight core | 42–48 | Verdanyx |
+| 11 | The Skyline | Ending | 50+ | Postgame |
 
 ## How they connect
 
 - **Vertically, mostly**: elevators, stairwells, freight lifts, and maintenance shafts link adjacent strata. Going from The Sprawl to Meridian Tower means a guarded lobby elevator; going from the Outskirts down to the Undercity means finding an unlocked access tunnel, not a front door.
 - **Harbor is the one horizontal exception** — it's the edge of the stack, where the city meets open water. Everything else stacks; Harbor spreads out.
+- **The caves and tunnels are a network, not a list.** The Boiler Tunnels (Ember), the Ember service tunnel (Key Stone cache), the Cable Risers (Signal), the Drowned Stair (Harbor) and the Old Lines (Undercity) all connect into the same pre-city tunnel system, and every Meridian installation in every district — the cargo, the trunk cable, the pump intake, the fibre trunk — runs down into it. That's the region's one big secret told as geography: four districts, four different oddities, one hole.
 - Skipping strata isn't really possible — you can't get from the Outskirts to Meridian Tower without passing through the districts in between, mirroring the existing League's "beat what's in front of you" structure.
 
 ## Built vs. named vs. new
