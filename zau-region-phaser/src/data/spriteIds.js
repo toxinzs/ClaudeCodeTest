@@ -137,7 +137,16 @@ export const SPRITE_IDS = {
   weezing: 110,
   shuppet: 353,
   banette: 354,
-  mawile: 303
+  mawile: 303,
+
+  // The Sprawl roster + evolutions
+  eevee: 133,
+  meowth: 52,
+  snubbull: 209,
+  granbull: 210,
+  audino: 531,
+  kangaskhan: 115,
+  clefairy: 35
 };
 
 export function spriteIdFor(speciesName) {

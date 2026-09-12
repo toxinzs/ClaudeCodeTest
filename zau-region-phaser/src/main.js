@@ -18,6 +18,7 @@ import SignalScene from './scenes/SignalScene.js';
 import RisersScene from './scenes/RisersScene.js';
 import OldLinesScene from './scenes/OldLinesScene.js';
 import UndercityScene from './scenes/UndercityScene.js';
+import SprawlScene from './scenes/SprawlScene.js';
 import BattleScene from './scenes/BattleScene.js';
 import PartyScene from './scenes/PartyScene.js';
 import BagScene from './scenes/BagScene.js';
@@ -47,7 +48,7 @@ const game = new Phaser.Game({
   },
   scene: [
     BootScene, TitleScene, CutsceneScene, CharCreateScene,
-    HomeScene, TownScene, LabScene, TrailScene, LeagueScene, HarborScene, EmberScene, GreenlineScene, BoilerScene, SignalScene, RisersScene, OldLinesScene, UndercityScene, BattleScene,
+    HomeScene, TownScene, LabScene, TrailScene, LeagueScene, HarborScene, EmberScene, GreenlineScene, BoilerScene, SignalScene, RisersScene, OldLinesScene, UndercityScene, SprawlScene, BattleScene,
     PartyScene, BagScene, MartScene, DexScene, CenterScene, MoveLearnScene, DialogueScene, QuestsScene
   ]
 });

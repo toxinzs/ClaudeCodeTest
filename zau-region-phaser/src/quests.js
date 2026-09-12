@@ -18,6 +18,16 @@ export const QUESTS = {
       { flag: 'stairDrained', text: 'Return to Rossi at the Ferry Terminal.' }
     ],
     reward: 'Gyaradosite'
+  },
+  // SIDEQUESTS.md #9 — dialogue-only. Declining is the reward.
+  sponsored: {
+    name: 'Sponsored',
+    giver: 'Sloane (Meridian recruiter)', district: 'The Sprawl',
+    summary: "Meridian would like to sponsor you, the way they sponsor Dario. Funding, gear, a name that opens doors.",
+    steps: [
+      { flag: 'sloaneDecided', text: "Decide about Sloane's offer." }
+    ],
+    reward: 'Your own name'
   }
 };
 

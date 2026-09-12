@@ -147,6 +147,15 @@ const ABILITIES = {
   banette: { name: 'Insomnia', effect: 'insomnia' },
   mawile: { name: 'Hyper Cutter', effect: null },
 
+  // The Sprawl roster + evolutions
+  eevee: { name: 'Run Away', effect: null },
+  meowth: { name: 'Pickup', effect: null },
+  snubbull: { name: 'Intimidate', effect: null },
+  granbull: { name: 'Intimidate', effect: null },
+  audino: { name: 'Healer', effect: null },
+  kangaskhan: { name: 'Scrappy', effect: null },
+  clefairy: { name: 'Cute Charm', effect: null },
+
   // Custom/fictional final legendary — hand-authored, same precedent as its stats/moveset/sprite
   verdanyx: { name: 'Verdant Surge', effect: 'verdant_surge', boostType: 'Grass' }
 };
