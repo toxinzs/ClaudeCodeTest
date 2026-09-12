@@ -34,7 +34,7 @@ export default class CreditsScene extends Phaser.Scene {
     const p = (t, size = 12, color = '#8a8aa0') => lines.push({ t, size, color, bold: false, gap: 4 });
     const sp = (n = 18) => lines.push({ t: '', size: n, gap: 0 });
 
-    if (!this.fromTitle) { h('ZAU', 30); p('Where the storm chooses you', 13, '#c8c8d8'); sp(30); }
+    if (!this.fromTitle) { h('POKÉMON: ZAU STORME', 26); p('Where the storm chooses you', 13, '#c8c8d8'); sp(30); }
     else { h('CREDITS', 24); sp(20); }
     h('A fan-made Pokémon game', 14, '#c8c8d8');
     p('Pokémon and all species, names and artwork are © Nintendo / Creatures Inc. / GAME FREAK inc.');

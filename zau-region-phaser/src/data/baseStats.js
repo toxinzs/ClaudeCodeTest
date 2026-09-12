@@ -150,6 +150,17 @@ const BASE_STATS = {
   kangaskhan:   { hp: 105,atk: 95,  def: 80,  spAtk: 40,  spDef: 80,  spe: 90 },
   clefairy:     { hp: 70, atk: 45,  def: 48,  spAtk: 60,  spDef: 65,  spe: 35 },
 
+  // Stone evolutions
+  chandelure:   { hp: 60, atk: 55,  def: 90,  spAtk: 145, spDef: 90,  spe: 80 },
+  magnezone:    { hp: 70, atk: 70,  def: 115, spAtk: 130, spDef: 90,  spe: 60 },
+  vileplume:    { hp: 75, atk: 80,  def: 85,  spAtk: 110, spDef: 90,  spe: 50 },
+  bellossom:    { hp: 75, atk: 80,  def: 95,  spAtk: 90,  spDef: 100, spe: 50 },
+  florges:      { hp: 78, atk: 65,  def: 68,  spAtk: 112, spDef: 154, spe: 75 },
+  vaporeon:     { hp: 130,atk: 65,  def: 60,  spAtk: 110, spDef: 95,  spe: 65 },
+  jolteon:      { hp: 65, atk: 65,  def: 60,  spAtk: 110, spDef: 95,  spe: 130 },
+  flareon:      { hp: 65, atk: 130, def: 60,  spAtk: 95,  spDef: 110, spe: 65 },
+  clefable:     { hp: 95, atk: 70,  def: 73,  spAtk: 95,  spDef: 90,  spe: 60 },
+
   // Custom/fictional final legendary — not a real species, hand-authored
   verdanyx:     { hp: 100,atk: 110, def: 90,  spAtk: 120, spDef: 100, spe: 95 }
 };

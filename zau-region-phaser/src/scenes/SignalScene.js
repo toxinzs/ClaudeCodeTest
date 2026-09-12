@@ -9,7 +9,7 @@ import { addActionBar } from '../uiHelpers.js';
 import { goToScene, fadeIn } from '../transitions.js';
 import { preloadPlayerLayers, createPlayerSprite } from '../playerSprite.js';
 import { preloadNPCLayers, placeNPCs, makeActor } from '../npcs.js';
-import { ensureStoryState, hasFlag } from '../story.js';
+import { ensureStoryState, hasFlag, setFlag } from '../story.js';
 import { SIGNAL_NPCS } from '../data/npcs.js';
 
 // Signal District — stratum 6 in WORLD.md, designed in
@@ -126,6 +126,10 @@ export default class SignalScene extends Phaser.Scene {
       if (hasFlag('signalJuno')) goToScene(this, 'Risers');
       else this.toastText.setText('Meridian Data Centre. The door is badge-tapped, and the man beside it would like you to stop looking at it.');
       return;
+    }
+    if (hasFlag('songAsked') && !hasFlag('songDone')) {
+      if (at('antenna') && !hasFlag('song1')) { setFlag('song1'); this.toastText.setText('You stand at the Antenna Farm and listen. Under the wind: a slow, low note. Recorded.'); return; }
+      if (at('bridge') && !hasFlag('song3')) { setFlag('song3'); this.toastText.setText('You stand on the bridge and listen. The note again — and something turning over inside it. Recorded.'); return; }
     }
     if (at('bridge')) {
       if (state.leagueBeaten.every(Boolean) && hasFlag('act2Close')) goToScene(this, 'Sprawl');

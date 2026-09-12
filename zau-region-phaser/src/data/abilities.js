@@ -156,6 +156,17 @@ const ABILITIES = {
   kangaskhan: { name: 'Scrappy', effect: null },
   clefairy: { name: 'Cute Charm', effect: null },
 
+  // Stone evolutions
+  chandelure: { name: 'Flash Fire', effect: 'flash_fire' },
+  magnezone: { name: 'Sturdy', effect: 'sturdy' },
+  vileplume: { name: 'Chlorophyll', effect: null },
+  bellossom: { name: 'Chlorophyll', effect: null },
+  florges: { name: 'Flower Veil', effect: null },
+  vaporeon: { name: 'Water Absorb', effect: null },
+  jolteon: { name: 'Volt Absorb', effect: null },
+  flareon: { name: 'Flash Fire', effect: 'flash_fire' },
+  clefable: { name: 'Cute Charm', effect: null },
+
   // Custom/fictional final legendary — hand-authored, same precedent as its stats/moveset/sprite
   verdanyx: { name: 'Verdant Surge', effect: 'verdant_surge', boostType: 'Grass' }
 };

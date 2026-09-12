@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import { state, activeMon } from '../state.js';
 import { currentMonDisplay, evolveWithItem } from '../mon.js';
-import { evolutionFor } from '../data/evolutions.js';
+import { itemEvolutionsFor } from '../data/evolutions.js';
 import { saveGame } from '../save.js';
 import { ITEMS, itemIcon } from '../data/items.js';
 import { GAME_W, GAME_H } from '../config.js';
@@ -78,10 +78,7 @@ export default class BagScene extends Phaser.Scene {
     const item = ITEMS[key];
     drawModalBackdrop(this, `Use ${item.name} on...`);
     addCloseButton(this, () => this.scene.stop());
-    const eligible = (mon) => {
-      const evo = evolutionFor(mon.speciesName);
-      return evo && evo.method === 'item' && evo.item === key;
-    };
+    const eligible = (mon) => !mon.key && itemEvolutionsFor(mon.speciesName).some(e => e.item === key);
     const anyEligible = state.party.some(eligible);
     if (!anyEligible) {
       this.add.text(GAME_W / 2, GAME_H / 2, "None of your Pokémon can use that right now.", {

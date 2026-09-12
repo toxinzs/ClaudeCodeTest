@@ -138,6 +138,31 @@ TRAINERS.execMarlowe = {
   ]
 };
 
+// Side quests (Phase 25).
+TRAINERS.kilnTorkoal = {
+  name: 'The Furnace Torkoal', emoji: '🐢', reward: 80, winFlag: 'lastLineTorkoal',
+  winMsg: 'The Torkoal, unbothered, plods out of the furnace and settles on the warm brick beside it. Kettering: "…Huh."',
+  team: [{ speciesName: 'Torkoal', emoji: '🐢', type: 'Fire', level: 30, moves: [moveFor('Ember'), moveFor('Smog')] }]
+};
+TRAINERS.fern1 = { name: 'Overgrown Oddish', emoji: '🍀', reward: 60, winFlag: 'fern1',
+  winMsg: 'The first cutting. The stem is warm.',
+  team: [{ speciesName: 'Oddish', emoji: '🍀', type: 'Grass/Poison', level: 34, moves: [moveFor('Absorb'), moveFor('Acid')] }] };
+TRAINERS.fern2 = { name: 'Overgrown Gloom', emoji: '🥀', reward: 70, winFlag: 'fern2',
+  winMsg: 'The second cutting. Priya will want to see the veins in this.',
+  team: [{ speciesName: 'Gloom', emoji: '🥀', type: 'Grass/Poison', level: 36, moves: [moveFor('Acid'), moveFor('Razor Leaf')] }] };
+TRAINERS.fern3 = { name: 'Overgrown Vileplume', emoji: '🌺', reward: 90, winFlag: 'fern3',
+  winMsg: "The third cutting. A Vileplume, this close to the intake — Kess has gone very quiet.",
+  team: [{ speciesName: 'Vileplume', emoji: '🌺', type: 'Grass/Poison', level: 38, moves: [moveFor('Razor Leaf'), moveFor('Acid')] }] };
+TRAINERS.tomas = { name: 'Gardener Tomas', emoji: '🥕', reward: 100, winFlag: 'orchardTomas',
+  winMsg: 'Tomas: "Fine. Fine! Pip\'s next. Don\'t let the kid\'s size fool you."',
+  team: [{ speciesName: 'Sewaddle', emoji: '🍃', type: 'Bug/Grass', level: 26, moves: [moveFor('Bug Bite'), moveFor('Razor Leaf')] }, { speciesName: 'Hoppip', emoji: '🌸', type: 'Grass/Flying', level: 26, moves: [moveFor('Tackle'), moveFor('Fairy Wind')] }] };
+TRAINERS.pip = { name: 'Gardener Pip', emoji: '🧒', reward: 100, winFlag: 'orchardPip',
+  winMsg: 'Pip, delighted: "You have to fight Grandma now. Nobody beats Grandma."',
+  team: [{ speciesName: 'Combee', emoji: '🐝', type: 'Bug/Flying', level: 25, moves: [moveFor('Bug Bite'), moveFor('Gust')] }, { speciesName: 'Cutiefly', emoji: '🧚', type: 'Bug/Fairy', level: 25, moves: [moveFor('Fairy Wind'), moveFor('Bug Bite')] }] };
+TRAINERS.osei = { name: 'Grandma Osei', emoji: '👵', reward: 200, winFlag: 'orchardOsei',
+  winMsg: 'Grandma Osei, after a long pause: "Well. Someone had to, eventually. Here — found this under the old pear tree forty years ago. Never knew what it was."',
+  team: [{ speciesName: 'Vespiquen', emoji: '🐝', type: 'Bug/Flying', level: 29, moves: [moveFor('Bug Bite'), moveFor('Gust')] }, { speciesName: 'Leavanny', emoji: '🦗', type: 'Bug/Grass', level: 30, moves: [moveFor('Razor Leaf'), moveFor('Bug Bite')] }, { speciesName: 'Heracross', emoji: '🪲', type: 'Bug/Fighting', level: 30, moves: [moveFor('Horn Attack'), moveFor('Aerial Ace')] }] };
+
 export function trainerFor(key) {
   const t = TRAINERS[key];
   if (!t) throw new Error(`Unknown trainer "${key}" — add it to data/trainers.js`);

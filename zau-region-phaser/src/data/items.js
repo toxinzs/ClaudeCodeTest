@@ -54,7 +54,16 @@ export const ITEMS = {
   // Violet, letting a real trade-evolution species (Kadabra->Alakazam,
   // Haunter->Gengar; see data/evolutions.js) evolve without an actual
   // trade partner. Used from the Bag, not equipped like a held item.
-  linkingcord: { name: "Linking Cord", price: 3000, category: "evolution" }
+  linkingcord: { name: "Linking Cord", price: 3000, category: "evolution" },
+  // Evolution stones — real items for real stone evolutions (data/evolutions.js).
+  firestone:    { name: "Fire Stone",    price: 3000, category: "evolution" },
+  waterstone:   { name: "Water Stone",   price: 3000, category: "evolution" },
+  thunderstone: { name: "Thunder Stone", price: 3000, category: "evolution" },
+  leafstone:    { name: "Leaf Stone",    price: 3000, category: "evolution" },
+  sunstone:     { name: "Sun Stone",     price: 3000, category: "evolution" },
+  moonstone:    { name: "Moon Stone",    price: 3000, category: "evolution" },
+  duskstone:    { name: "Dusk Stone",    price: 3000, category: "evolution" },
+  shinystone:   { name: "Shiny Stone",   price: 3000, category: "evolution" }
 };
 
 // Which items the Mart carries at a given League badge count — same shape
@@ -62,7 +71,7 @@ export const ITEMS = {
 const MART_TIERS = [
   { minBadges: 0, items: ["pokeball", "potion"] },
   { minBadges: 1, items: ["greatball", "superpotion"] },
-  { minBadges: 3, items: ["ultraball", "hyperpotion", "revive", "charcoal", "mysticwater", "miracleseed", "magnet", "blackbelt", "lumberry"] },
+  { minBadges: 3, items: ["ultraball", "hyperpotion", "revive", "charcoal", "mysticwater", "miracleseed", "magnet", "blackbelt", "lumberry", "firestone", "waterstone", "thunderstone", "leafstone", "sunstone", "moonstone", "duskstone", "shinystone"] },
   // Mega Stones are never sold — each is found, earned or story-given
   // (MEGA.md has the source of every one).
   { minBadges: 5, items: ["maxpotion", "maxrevive", "leftovers", "linkingcord"] }
@@ -78,7 +87,7 @@ export function itemIcon(key) {
   const item = ITEMS[key];
   if (item.category === 'ball') return '🔴';
   if (item.category === 'held') return item.effect === 'cure_status' ? '🍒' : item.effect === 'mega_stone' ? '🔮' : '💠';
-  if (item.category === 'evolution') return '🔗';
+  if (item.category === 'evolution') return key === 'linkingcord' ? '🔗' : '💠';
   if (item.revive) return '✨';
   return '💊';
 }

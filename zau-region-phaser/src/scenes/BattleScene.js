@@ -220,6 +220,7 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   onEnd(payload) {
+    (window.__zauAnims ??= []).push(`end:${payload.outcome}:${payload.ctx}`);
     this.logText.setText(payload.msg || '');
     this.moveButtons.forEach(b => { b.bg.disableInteractive(); });
     this.actionButtons.forEach(b => { b.bg.disableInteractive(); });

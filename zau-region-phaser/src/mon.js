@@ -1,7 +1,7 @@
 import { STARTER_CHAINS, WILD_ZONE_TABLE, WILD_SPECIES, EVOLVE_LEVEL_1, EVOLVE_LEVEL_2 } from './data/pokemon.js';
 import { baseStatsFor } from './data/baseStats.js';
 import { abilityFor } from './data/abilities.js';
-import { evolutionFor } from './data/evolutions.js';
+import { evolutionFor, itemEvolutionsFor } from './data/evolutions.js';
 import { megaFor } from './data/megas.js';
 import { spriteUrlFor, spriteUrlForId } from './sprites.js';
 
@@ -225,8 +225,8 @@ export function evolveIfReady(mon) {
 // from the UI, but it's a plain function, not a UI assertion).
 export function evolveWithItem(mon, itemKey) {
   if (mon.key) return null;
-  const evo = evolutionFor(mon.speciesName);
-  if (!evo || evo.method !== 'item' || evo.item !== itemKey) return null;
+  const evo = itemEvolutionsFor(mon.speciesName).find(e => e.item === itemKey);
+  if (!evo) return null;
   applyEvolution(mon, evo);
   return evo.evolvesTo;
 }
