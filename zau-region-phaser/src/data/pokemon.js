@@ -145,7 +145,28 @@ export const WILD_SPECIES = [
   { name: "Buizel", emoji: "🦦", type: "Water", baseLvl: [14,20],
     moves: [moveFor("Aqua Jet"), moveFor("Quick Attack")] },
   { name: "Pelipper", emoji: "🦆", type: "Water/Flying", baseLvl: [19,22],
-    moves: [moveFor("Water Gun"), moveFor("Aerial Ace")] }
+    moves: [moveFor("Water Gun"), moveFor("Aerial Ace")] },
+
+  // Ember Quarter roster (indices 33-40) — real Fire/Rock/Steel species
+  // for the industrial district, level band post-Coral/pre-Ashgrave per
+  // zau-region/districts/ember.md. Aron, Numel and Houndour are the
+  // district's Mega seeds (Aggron/Camerupt/Houndoom all have real Megas).
+  { name: "Slugma", emoji: "🌋", type: "Fire", baseLvl: [17,23],
+    moves: [moveFor("Ember"), moveFor("Rock Throw")] },
+  { name: "Numel", emoji: "🐪", type: "Fire/Ground", baseLvl: [17,23],
+    moves: [moveFor("Ember"), moveFor("Tackle")] },
+  { name: "Aron", emoji: "🦏", type: "Steel/Rock", baseLvl: [18,24],
+    moves: [moveFor("Metal Claw"), moveFor("Headbutt")] },
+  { name: "Rolycoly", emoji: "🪨", type: "Rock", baseLvl: [16,22],
+    moves: [moveFor("Smack Down"), moveFor("Tackle")] },
+  { name: "Litwick", emoji: "🕯️", type: "Ghost/Fire", baseLvl: [18,24],
+    moves: [moveFor("Ember"), moveFor("Astonish")] },
+  { name: "Torkoal", emoji: "🐢", type: "Fire", baseLvl: [20,25],
+    moves: [moveFor("Ember"), moveFor("Smog")] },
+  { name: "Magnemite", emoji: "🧲", type: "Electric/Steel", baseLvl: [17,23],
+    moves: [moveFor("Thunder Shock"), moveFor("Tackle")] },
+  { name: "Houndour", emoji: "🐕‍🦺", type: "Dark/Fire", baseLvl: [19,25],
+    moves: [moveFor("Ember"), moveFor("Bite")] }
 ];
 
 // Wild encounter tables per zone (by index in WILD_SPECIES)
@@ -154,5 +175,7 @@ export const WILD_ZONE_TABLE = {
   underpass: [8,9,10,13],
   // Wingull/Buizel common (listed twice), Pelipper the rare "you got lucky" spawn.
   harbor: [26,26,27,28,29,30,31,31,7,32],
+  // Slugma/Rolycoly common, Torkoal uncommon, Houndour the rare spawn.
+  ember: [33,33,34,35,36,36,37,38,39,40],
   district: [11,12,14,15,16,18,19,20,21,22]
 };

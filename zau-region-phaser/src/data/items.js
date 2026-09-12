@@ -36,6 +36,9 @@ export const ITEMS = {
   lucarionite:  { name: "Lucarionite",  price: 5000, category: "held", effect: "mega_stone", megaFor: "Lucario" },
   garchompite:  { name: "Garchompite",  price: 5000, category: "held", effect: "mega_stone", megaFor: "Garchomp" },
   absolite:     { name: "Absolite",     price: 5000, category: "held", effect: "mega_stone", megaFor: "Absol" },
+  aggronite:    { name: "Aggronite",    price: 5000, category: "held", effect: "mega_stone", megaFor: "Aggron" },
+  cameruptite:  { name: "Cameruptite",  price: 5000, category: "held", effect: "mega_stone", megaFor: "Camerupt" },
+  houndoominite:{ name: "Houndoominite",price: 5000, category: "held", effect: "mega_stone", megaFor: "Houndoom" },
 
   // Evolution item — real item from Pokémon Legends: Arceus/Scarlet &
   // Violet, letting a real trade-evolution species (Kadabra->Alakazam,
@@ -50,7 +53,7 @@ const MART_TIERS = [
   { minBadges: 0, items: ["pokeball", "potion"] },
   { minBadges: 1, items: ["greatball", "superpotion"] },
   { minBadges: 3, items: ["ultraball", "hyperpotion", "revive", "charcoal", "mysticwater", "miracleseed", "magnet", "blackbelt", "lumberry"] },
-  { minBadges: 5, items: ["maxpotion", "maxrevive", "leftovers", "linkingcord", "gyaradosite", "alakazite", "gengarite", "lucarionite", "garchompite", "absolite"] }
+  { minBadges: 5, items: ["maxpotion", "maxrevive", "leftovers", "linkingcord", "gyaradosite", "alakazite", "gengarite", "lucarionite", "garchompite", "absolite", "aggronite", "cameruptite", "houndoominite"] }
 ];
 
 export function availableItems(badgeCount) {

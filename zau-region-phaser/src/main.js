@@ -11,6 +11,7 @@ import LabScene from './scenes/LabScene.js';
 import TrailScene from './scenes/TrailScene.js';
 import LeagueScene from './scenes/LeagueScene.js';
 import HarborScene from './scenes/HarborScene.js';
+import EmberScene from './scenes/EmberScene.js';
 import BattleScene from './scenes/BattleScene.js';
 import PartyScene from './scenes/PartyScene.js';
 import BagScene from './scenes/BagScene.js';
@@ -38,7 +39,7 @@ const game = new Phaser.Game({
   },
   scene: [
     BootScene, TitleScene, CutsceneScene, CharCreateScene,
-    HomeScene, TownScene, LabScene, TrailScene, LeagueScene, HarborScene, BattleScene,
+    HomeScene, TownScene, LabScene, TrailScene, LeagueScene, HarborScene, EmberScene, BattleScene,
     PartyScene, BagScene, MartScene, DexScene, CenterScene, MoveLearnScene
   ]
 });
