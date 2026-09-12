@@ -97,6 +97,28 @@ TRAINERS.dwellerCass = {
   ]
 };
 
+// STORY.md SP1 — rival battle 4, the angriest one. Told his mother is
+// alive, he doesn't believe it, and fights like it.
+TRAINERS.darioSprawl = {
+  name: 'Dario Voss', emoji: '😎', reward: 300, winFlag: 'sprawlDario',
+  winMsg: 'Dario goes quiet and short, the way he does when something lands. "…Where." You tell him. He leaves without another word.',
+  team: [
+    { speciesName: 'Honchkrow', emoji: '🐦‍⬛', type: 'Dark/Flying', level: 37, moves: [moveFor('Bite'), moveFor('Aerial Ace')] },
+    { speciesName: 'Gabite', emoji: '🐲', type: 'Dragon/Ground', level: 36, moves: [moveFor('Dragon Breath'), moveFor('Bite')] },
+    { speciesName: 'Lucario', emoji: '🥋', type: 'Fighting/Steel', level: 36, moves: [moveFor('Close Combat'), moveFor('Metal Claw')] },
+    { speciesName: 'Raichu', emoji: '🐿️', type: 'Electric', level: 37, moves: [moveFor('Thunder Shock'), moveFor('Quick Attack')] }
+  ]
+};
+// Sprawl residents — Meridian is their landlord, and they like it fine.
+TRAINERS.residentJae = {
+  name: 'Resident Jae', emoji: '🏙️', reward: 150, winFlag: 'sprawlJae',
+  winMsg: 'Jae laughs: "Okay, okay. Rooftop\'s yours. Best view of the Tower in the Sprawl — and the storms, when they come."',
+  team: [
+    { speciesName: 'Meowth', emoji: '🐱', type: 'Normal', level: 35, moves: [moveFor('Scratch'), moveFor('Bite')] },
+    { speciesName: 'Eevee', emoji: '🦊', type: 'Normal', level: 35, moves: [moveFor('Quick Attack'), moveFor('Tackle')] }
+  ]
+};
+
 export function trainerFor(key) {
   const t = TRAINERS[key];
   if (!t) throw new Error(`Unknown trainer "${key}" — add it to data/trainers.js`);

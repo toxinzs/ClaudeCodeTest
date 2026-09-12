@@ -141,6 +141,15 @@ const BASE_STATS = {
   banette:      { hp: 64, atk: 115, def: 65,  spAtk: 83,  spDef: 63,  spe: 65 },
   mawile:       { hp: 50, atk: 85,  def: 85,  spAtk: 55,  spDef: 55,  spe: 50 },
 
+  // The Sprawl roster + evolutions
+  eevee:        { hp: 55, atk: 55,  def: 50,  spAtk: 45,  spDef: 65,  spe: 55 },
+  meowth:       { hp: 40, atk: 45,  def: 35,  spAtk: 40,  spDef: 40,  spe: 90 },
+  snubbull:     { hp: 60, atk: 80,  def: 50,  spAtk: 40,  spDef: 40,  spe: 30 },
+  granbull:     { hp: 90, atk: 120, def: 75,  spAtk: 60,  spDef: 60,  spe: 45 },
+  audino:       { hp: 103,atk: 60,  def: 86,  spAtk: 60,  spDef: 86,  spe: 50 },
+  kangaskhan:   { hp: 105,atk: 95,  def: 80,  spAtk: 40,  spDef: 80,  spe: 90 },
+  clefairy:     { hp: 70, atk: 45,  def: 48,  spAtk: 60,  spDef: 65,  spe: 35 },
+
   // Custom/fictional final legendary — not a real species, hand-authored
   verdanyx:     { hp: 100,atk: 110, def: 90,  spAtk: 120, spDef: 100, spe: 95 }
 };

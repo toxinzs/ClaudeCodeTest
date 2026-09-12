@@ -103,6 +103,17 @@ const MEGAS = {
     megaName: 'Mega Mawile', stone: 'mawilite', type: 'Steel/Fairy', spriteId: 10052,
     baseStats: { hp: 50, atk: 105, def: 125, spAtk: 55, spDef: 95, spe: 50 },
     ability: { name: 'Huge Power', effect: null }
+  },
+  // The Sprawl (Phase 21) — Audino/Kangaskhan seeded there.
+  audino: {
+    megaName: 'Mega Audino', stone: 'audinite', type: 'Normal/Fairy', spriteId: 10069,
+    baseStats: { hp: 103, atk: 60, def: 126, spAtk: 80, spDef: 126, spe: 50 },
+    ability: { name: 'Healer', effect: null }
+  },
+  kangaskhan: {
+    megaName: 'Mega Kangaskhan', stone: 'kangaskhanite', type: 'Normal', spriteId: 10039,
+    baseStats: { hp: 105, atk: 125, def: 100, spAtk: 60, spDef: 100, spe: 100 },
+    ability: { name: 'Parental Bond', effect: null }
   }
 };
 

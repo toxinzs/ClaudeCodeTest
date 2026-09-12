@@ -71,7 +71,10 @@ const EVOLUTIONS = {
   zubat: { evolvesTo: 'Golbat', type: 'Poison/Flying', emoji: '🦇', method: 'level', level: 22 },
   drilbur: { evolvesTo: 'Excadrill', type: 'Ground/Steel', emoji: '🐹', method: 'level', level: 31 },
   koffing: { evolvesTo: 'Weezing', type: 'Poison', emoji: '☁️', method: 'level', level: 35 },
-  shuppet: { evolvesTo: 'Banette', type: 'Ghost', emoji: '🎭', method: 'level', level: 37 }
+  shuppet: { evolvesTo: 'Banette', type: 'Ghost', emoji: '🎭', method: 'level', level: 37 },
+
+  // The Sprawl — Eevee's and Clefairy's real evolutions are stone-based, left for now.
+  snubbull: { evolvesTo: 'Granbull', type: 'Fairy', emoji: '🐶', method: 'level', level: 23 }
 };
 
 export function evolutionFor(speciesName) {

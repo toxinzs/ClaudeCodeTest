@@ -13,7 +13,8 @@ import { grantKeyStone } from '../keystone.js';
 // stormSeen (Greenline G2–G3); signalJuno, risersOduya, risersBrann,
 // pulseDecoded, signalDario (Signal S1–S3); ferryAsked, ferryCrew,
 // stairDrained, oldlinesNyx, oldlinesCass, houndoominiteFound,
-// gengariteGiven, wardenMet, act2Close (Undercity U1–U3) — see STORY.md.
+// gengariteGiven, wardenMet, act2Close (Undercity U1–U3); sprawlDario,
+// towerBadge, sloaneDecided, sprawlJae, towerOpen (Sprawl SP1–SP2).
 // Placement rule: a character must never stand in a one-tile corridor (the
 // Greenline's rows are exactly that), so there they stand ON their landmark
 // tile and carry its description — talking to Wren opens the Seed Bank.
@@ -594,4 +595,87 @@ export const WARDEN_BEAT = [
   { flash: 200 },
   { say: ['Elena', "That's the rig. First stage. They've started.", "Go up. Find whoever's doing this and stop them. And bring my son — if he'll come."] },
   { set: 'act2Close' }
+];
+
+export const SPRAWL_NPCS = [
+  // STORY.md SP1 — the contract, and the truth he won't hear.
+  {
+    id: 'darioSprawl', name: 'Dario Voss', x: 2, y: 1, facing: 'left',
+    when: (s) => s.story.act2Close && !s.story.sprawlDario,
+    appearance: { skin: 'taupe', hair: 'afro', hairColor: 'black', outfit: 'trainer' },
+    script: () => [
+      { say: ['Dario', "Halloran's office. I'm signing the long one today — five years. Meridian funds a public review of the Incident. They clear the Voss name. *Publicly.*", "Eighteen years of people saying my mother was careless, and it ends with a press release. I'd sign it in blood."] },
+      { choice: { name: 'Dario', prompt: "…Why are you looking at me like that. Say it.", options: [
+        { label: "Your mother is alive. She's under the city.", then: [
+          { say: ['Dario', "…That's not funny.", "That's not — she *left*. She left us. Everyone knows she left. You don't get to walk in here with a Key Stone and a story and—"] }
+        ] },
+        { label: "Meridian blamed her for something they did.", then: [
+          { say: ['Dario', "You think I don't know what they said about her? I've read every line of it.", "And now they're the ones offering to *un*-say it. You want me to turn that down? On your word?"] }
+        ] }
+      ] } },
+      { say: ['Dario', "Fine. You want to be right about my family? *Earn it.*"] },
+      { battle: { trainerKey: 'darioSprawl', returnTo: 'Sprawl' } }
+    ]
+  },
+  // STORY.md SP2 — Halloran, alone, and the badge.
+  {
+    id: 'halloranSprawl', name: 'Dr. Halloran', x: 1, y: 2, facing: 'up',
+    when: (s) => s.story.act2Close && !s.story.towerBadge,
+    appearance: { skin: 'olive', hair: 'bob', hairColor: 'ginger', outfit: 'formal' },
+    script: (s) => {
+      if (!s.story.sprawlDario) return [
+        { say: ['Dr. Halloran', "He's inside. Signing. I've never seen him this happy — I'd like to keep it that way, if you're about to say something."] }
+      ];
+      return [
+        { say: ['Dr. Halloran', "He walked out. Past me. Didn't sign. Didn't *look* at me.", "What did you tell him?"] },
+        { choice: { name: 'Dr. Halloran', prompt: "What did you tell him?", options: [
+          { label: "That his mother is alive, under the city.", then: [
+            { say: ['Dr. Halloran', "…", "The review I offered him. It was real. I wrote it. I believed it.", "I didn't know. I want you to understand that I didn't *know*."] }
+          ] },
+          { label: "What Meridian is actually digging for.", then: [
+            { say: ['Dr. Halloran', "I run community relations. I fund roofs. I—", "I didn't know. Do you understand? Nobody on my side of the building *knows*."] }
+          ] }
+        ] } },
+        { say: ['Dr. Halloran', "Here. It's mine. Tower access, all floors. Don't ask me why I'm giving it to you, because I don't have an answer yet."] },
+        { say: ['', "Received the Meridian Tower access badge!"] },
+        { set: 'towerBadge' }
+      ];
+    }
+  },
+  // SIDEQUESTS.md #9 — Sloane's offer. Declining is the reward.
+  {
+    id: 'sloane', name: 'Sloane', x: 5, y: 3, facing: 'left',
+    appearance: { skin: 'light', hair: 'ponytail', hairColor: 'blonde', outfit: 'formal' },
+    script: (s) => {
+      if (s.story.sloaneDecided) return [
+        { say: ['Sloane', "The offer stands, for what it's worth. They always do. That's rather the point of them."] }
+      ];
+      return [
+        { say: ['Sloane', "Sloane. Meridian talent. Five badges, a Key Stone, and the Voss boy trailing after you — you're the most interesting trainer in the stack, and I'd like to make you the best-funded one.", "Sponsorship. Gear, funding, a name that opens the doors that are currently closing in your face. Same deal Dario has. Better, honestly."] },
+        { quest: { key: 'sponsored', status: 'active' } },
+        { choice: { name: 'Sloane', prompt: "So. Shall I draw up the paperwork?", options: [
+          { label: "No.", then: [{ say: ['Sloane', "…No. Just like that. Well.", "You'd be surprised how few people say it that quickly. I'll note it."] }] },
+          { label: "I'm not for sale.", then: [{ say: ['Sloane', "Everyone's for sale; the interesting ones just have a higher price. I'll note yours as 'undisclosed'."] }] }
+        ] } },
+        { set: 'sloaneDecided' },
+        { quest: { key: 'sponsored', status: 'done' } }
+      ];
+    }
+  },
+  {
+    id: 'jae', name: 'Jae', x: 6, y: 1, facing: 'right',
+    when: (s) => !s.story.sprawlJae,
+    appearance: { skin: 'brown', hair: 'bob', hairColor: 'blue', outfit: 'sporty' },
+    script: () => [
+      { say: ['Jae', "Rooftop's mine — best view of the Tower in the Sprawl. You want it, you battle for it. House rules."] },
+      { battle: { trainerKey: 'residentJae', returnTo: 'Sprawl' } }
+    ]
+  },
+  {
+    id: 'oyelaran', name: 'Mrs. Oyelaran', x: 3, y: 5, facing: 'down',
+    appearance: { skin: 'black', hair: 'bob', hairColor: 'gray', outfit: 'casual' },
+    script: () => [
+      { say: ['Mrs. Oyelaran', "Building manager, forty years. Meridian's the landlord. Rent's fair, lifts work, heating's on. People up top say the company's up to something — down here it's just the name on the cheque.", "That's not a defence. It's just what it looks like from a kitchen window."] }
+    ]
+  }
 ];

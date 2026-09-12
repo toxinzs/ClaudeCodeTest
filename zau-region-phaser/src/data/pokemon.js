@@ -223,7 +223,23 @@ export const WILD_SPECIES = [
   { name: "Shuppet", emoji: "🎭", type: "Ghost", baseLvl: [32,36],
     moves: [moveFor("Astonish"), moveFor("Shadow Sneak")] },
   { name: "Mawile", emoji: "🪤", type: "Steel/Fairy", baseLvl: [33,36],
-    moves: [moveFor("Bite"), moveFor("Fairy Wind")] }
+    moves: [moveFor("Bite"), moveFor("Fairy Wind")] },
+
+  // The Sprawl roster (indices 62-67) — the mid-city's ordinary Normal/
+  // Fairy neighbours, band Act 3 per zau-region/districts/sprawl.md.
+  // Audino and Kangaskhan are the Mega seeds.
+  { name: "Eevee", emoji: "🦊", type: "Normal", baseLvl: [34,38],
+    moves: [moveFor("Quick Attack"), moveFor("Tackle")] },
+  { name: "Meowth", emoji: "🐱", type: "Normal", baseLvl: [34,38],
+    moves: [moveFor("Scratch"), moveFor("Bite")] },
+  { name: "Snubbull", emoji: "🐶", type: "Fairy", baseLvl: [34,38],
+    moves: [moveFor("Bite"), moveFor("Headbutt")] },
+  { name: "Audino", emoji: "🩷", type: "Normal", baseLvl: [35,38],
+    moves: [moveFor("Take Down"), moveFor("Disarming Voice")] },
+  { name: "Kangaskhan", emoji: "🦘", type: "Normal", baseLvl: [36,38],
+    moves: [moveFor("Bite"), moveFor("Double Hit")] },
+  { name: "Clefairy", emoji: "🌙", type: "Fairy", baseLvl: [34,38],
+    moves: [moveFor("Disarming Voice"), moveFor("Pound")] }
 ];
 
 // Wild encounter tables per zone (by index in WILD_SPECIES)
@@ -247,5 +263,7 @@ export const WILD_ZONE_TABLE = {
   // (14) shared; Shuppet uncommon, Mawile rare.
   oldlines: [56,56,57,58,59,9,14,60,61],
   undercity: [56,57,59,9,60,61],
+  // The Sprawl: mostly a place, not a hunting ground — Kangaskhan rare.
+  sprawl: [62,62,63,63,64,65,67,67,66],
   district: [11,12,14,15,16,18,19,20,21,22]
 };

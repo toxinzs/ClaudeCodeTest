@@ -127,7 +127,12 @@ export default class SignalScene extends Phaser.Scene {
       else this.toastText.setText('Meridian Data Centre. The door is badge-tapped, and the man beside it would like you to stop looking at it.');
       return;
     }
-    for (const key of ['antenna', 'bridge']) {
+    if (at('bridge')) {
+      if (state.leagueBeaten.every(Boolean) && hasFlag('act2Close')) goToScene(this, 'Sprawl');
+      else this.toastText.setText(SPOT_TEXT.bridge);
+      return;
+    }
+    for (const key of ['antenna']) {
       if (at(key)) { this.toastText.setText(SPOT_TEXT[key]); return; }
     }
     if (state.party.length && Math.random() < WILD_ENCOUNTER_CHANCE) {

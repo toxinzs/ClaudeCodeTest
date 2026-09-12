@@ -308,3 +308,32 @@ export const UNDERCITY_MAP = {
     {x:1,y:7,emoji:"🚇"}                     // the Old Lines, back up
   ]
 };
+
+// The Sprawl (stratum 7, zau-region/districts/sprawl.md) — where Meridian
+// is ordinary: apartments, the Concourse, Halloran's community office,
+// the rooftops, and the Tower's lobby elevator. No gym. Same block shape
+// as Ember/Signal/Undercity.
+export const SPRAWL_MAP = {
+  w: 9, h: 9,
+  bg: "#12141f",
+  layout: [
+    [1,1,1,1,1,1,1,1,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,0,1,1,0,1,1,0,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,0,1,1,0,1,1,0,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1,1,1]
+  ],
+  bridgeX: 1, bridgeY: 7,
+  elevatorX: 7, elevatorY: 7,
+  decor: [
+    {x:1,y:1,emoji:"🏢",tileKey:"door"},    // Halloran's Community Office
+    {x:4,y:1,emoji:"🛍️",tileKey:"window"},  // The Concourse (shop)
+    {x:7,y:1,emoji:"🏙️"},                    // The Rooftops
+    {x:7,y:7,emoji:"🛗"},                    // The Tower Lobby Elevator
+    {x:1,y:7,emoji:"🌉"}                     // The Sprawl Bridge, down to Signal
+  ]
+};
