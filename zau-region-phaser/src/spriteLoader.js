@@ -35,6 +35,7 @@ export function addMonIcon(scene, x, y, display, size = 28) {
 export function addMonSpriteAt(scene, x, y, { id, emoji, size = 64, hudCam = null, depth = 40 }) {
   const holder = { obj: scene.add.text(x, y, emoji, { fontSize: `${Math.round(size * 0.55)}px` }).setOrigin(0.5).setDepth(depth) };
   if (hudCam) hudCam.ignore(holder.obj);
+  if (!id) return holder; // custom species (Verdanyx) — no artwork exists
   loadMonSprite(scene, spriteUrlForId(id), (key) => {
     if (!key || !holder.obj?.active) return;
     const img = scene.add.image(x, y, key).setOrigin(0.5).setDisplaySize(size, size).setDepth(depth).setAlpha(holder.obj.alpha);

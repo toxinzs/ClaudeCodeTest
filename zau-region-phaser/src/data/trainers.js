@@ -119,6 +119,25 @@ TRAINERS.residentJae = {
   ]
 };
 
+// STORY.md T1 — the Tower's floors. Site Security are polite; the
+// executives apologise for winning.
+TRAINERS.secRask = {
+  name: 'Site Security Rask', emoji: '🧥', reward: 200, winFlag: 'towerRask',
+  winMsg: 'Rask steps aside, radio down. "Floors are yours. I\'m going to say I never saw the badge."',
+  team: [
+    { speciesName: 'Houndoom', emoji: '🐕‍🦺', type: 'Dark/Fire', level: 38, moves: [moveFor('Bite'), moveFor('Flamethrower')] },
+    { speciesName: 'Magneton', emoji: '🧲', type: 'Electric/Steel', level: 38, moves: [moveFor('Thunder Shock'), moveFor('Tackle')] }
+  ]
+};
+TRAINERS.execMarlowe = {
+  name: 'Executive Marlowe', emoji: '💼', reward: 260, winFlag: 'towerMarlowe',
+  winMsg: 'Marlowe straightens his tie. "…And I apologise for losing. It\'s a reflex. Forty-first floor. He knows you\'re coming."',
+  team: [
+    { speciesName: 'Bronzong', emoji: '🥉', type: 'Steel/Psychic', level: 38, moves: [moveFor('Metal Claw'), moveFor('Confusion')] },
+    { speciesName: 'Alakazam', emoji: '🥄', type: 'Psychic', level: 39, moves: [moveFor('Confusion'), moveFor('Teleport')] }
+  ]
+};
+
 export function trainerFor(key) {
   const t = TRAINERS[key];
   if (!t) throw new Error(`Unknown trainer "${key}" — add it to data/trainers.js`);

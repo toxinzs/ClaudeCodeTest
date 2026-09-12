@@ -34,6 +34,7 @@ export default class TitleScene extends Phaser.Scene {
     if (hasSave()) menu.push({ label: 'Continue', onClick: () => this.continueGame() });
     menu.push({ label: 'Begin Journey', onClick: () => goToScene(this, 'Cutscene') });
     menu.push({ label: 'Skip Intro', onClick: () => goToScene(this, 'CharCreate') });
+    menu.push({ label: 'Credits', onClick: () => goToScene(this, 'Credits', { fromTitle: true }) });
 
     menu.forEach((m, i) => {
       const y = 260 + i * 48;

@@ -337,3 +337,55 @@ export const SPRAWL_MAP = {
     {x:1,y:7,emoji:"🌉"}                     // The Sprawl Bridge, down to Signal
   ]
 };
+
+// Meridian Tower (stratum 8, zau-region/districts/tower.md) — the
+// elevator core as a corridor: the lobby at the bottom, Site Security and
+// an Executive at the floor chokepoints, Amara beside the Director's
+// office door at the top. The office is also, after the rig, the way into
+// the freight core.
+export const TOWER_MAP = {
+  w: 5, h: 12,
+  bg: "#0c1220",
+  layout: [
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,1,0,1,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,1,0,1,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1]
+  ],
+  officeX: 2, officeY: 0,
+  decor: [
+    {x:2,y:0,emoji:"🚪",tileKey:"door"},   // the Director's office
+    {x:2,y:11,emoji:"🛗"}                    // the lobby elevator
+  ]
+};
+
+// The Underlight (stratum 0) — the old excavation, lit for the first time
+// by Meridian's rig. Small: the rig and its controls at the top, and the
+// thing the rig is pointed at.
+export const UNDERLIGHT_MAP = {
+  w: 7, h: 7,
+  bg: "#02110a",
+  layout: [
+    [1,1,1,1,1,1,1],
+    [1,1,0,0,0,1,1],
+    [1,0,0,0,0,0,1],
+    [1,0,0,0,0,0,1],
+    [1,0,0,0,0,0,1],
+    [1,1,0,0,0,1,1],
+    [1,1,1,1,1,1,1]
+  ],
+  rigX: 3, rigY: 2,
+  verdanyxX: 3, verdanyxY: 1,
+  decor: [
+    {x:3,y:2,emoji:"🎛️"},   // the rig's controls
+    {x:3,y:5,emoji:"🛗"}    // the freight core
+  ]
+};
