@@ -7,6 +7,9 @@ import { drawTiles, drawDecor, createWalker, setupFollowCamera, setupHUD } from 
 import { addActionBar } from '../uiHelpers.js';
 import { goToScene, fadeIn } from '../transitions.js';
 import { preloadPlayerLayers, createPlayerSprite } from '../playerSprite.js';
+import { preloadNPCLayers, placeNPCs, makeActor } from '../npcs.js';
+import { ensureStoryState } from '../story.js';
+import { TOWN_NPCS } from '../data/npcs.js';
 
 const WILD_ENCOUNTER_CHANCE = 0.12;
 
@@ -17,10 +20,12 @@ export default class TownScene extends Phaser.Scene {
 
   init(data) {
     this.pendingToast = data?.toastMsg || '';
+    ensureStoryState();
   }
 
   preload() {
     preloadPlayerLayers(this, state.player.appearance);
+    preloadNPCLayers(this, TOWN_NPCS);
   }
 
   create() {
@@ -40,8 +45,12 @@ export default class TownScene extends Phaser.Scene {
     this.walker = createWalker(this, {
       mapDef: TOWN_MAP, posRef: state.pos.town, sprite: this.playerCtrl.container, playerCtrl: this.playerCtrl,
       offsetX: this.offsetX, offsetY: this.offsetY,
-      onStep: (nx, ny) => this.handleStep(nx, ny)
+      onStep: (nx, ny) => this.handleStep(nx, ny),
+      isBlocked: (x, y) => this.npcLayer?.isBlocked(x, y)
     });
+
+    const playerActor = makeActor(this, this.playerCtrl, state.pos.town, this.offsetX, this.offsetY);
+    this.npcLayer = placeNPCs(this, { npcs: TOWN_NPCS, offsetX: this.offsetX, offsetY: this.offsetY, player: playerActor, walker: this.walker, posRef: state.pos.town });
 
     setupFollowCamera(this, { mapDef: TOWN_MAP, offsetX: this.offsetX, offsetY: this.offsetY, player: this.playerCtrl.container });
 

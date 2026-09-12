@@ -55,6 +55,7 @@ export default class BattleScene extends Phaser.Scene {
   init(data) {
     this.battleKind = data.kind;        // 'wild' | trainer ctx string
     this.zoneKey = data.zoneKey;
+    this.trainerKey = data.trainerKey;  // for kind 'trainer' (data/trainers.js)
     this.returnTo = data.returnTo || 'Home';
   }
 
@@ -98,7 +99,7 @@ export default class BattleScene extends Phaser.Scene {
 
     const started = this.battleKind === 'wild'
       ? this.engine.startWildEncounter(this.zoneKey)
-      : this.engine.startTrainerBattle(this.battleKind);
+      : this.engine.startTrainerBattle(this.battleKind, this.trainerKey);
 
     if (!started) {
       // No healthy party member — mirrors the DOM version's fainted-party

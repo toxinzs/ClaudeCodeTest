@@ -6,6 +6,9 @@ import { TILE, GAME_W, GAME_H } from '../config.js';
 import { drawTiles, drawDecor, createWalker } from '../mapRenderer.js';
 import { goToScene, fadeIn } from '../transitions.js';
 import { preloadPlayerLayers, createPlayerSprite } from '../playerSprite.js';
+import { preloadNPCLayers, placeNPCs, makeActor } from '../npcs.js';
+import { ensureStoryState, hasFlag } from '../story.js';
+import { HOME_NPCS, HOME_INTRO } from '../data/npcs.js';
 
 // The first walkable scene ported to Phaser. Grid movement is tied to the
 // real state.pos.home (not a scene-local throwaway) so save/load already
@@ -17,9 +20,11 @@ export default class HomeScene extends Phaser.Scene {
 
   preload() {
     preloadPlayerLayers(this, state.player.appearance);
+    preloadNPCLayers(this, HOME_NPCS);
   }
 
   create() {
+    ensureStoryState();
     fadeIn(this);
     this.offsetX = Math.floor((GAME_W - HOME_MAP.w * TILE) / 2);
     this.offsetY = 20;
@@ -41,10 +46,17 @@ export default class HomeScene extends Phaser.Scene {
     this.walker = createWalker(this, {
       mapDef: HOME_MAP, posRef: state.pos.home, sprite: this.playerCtrl.container, playerCtrl: this.playerCtrl,
       offsetX: this.offsetX, offsetY: this.offsetY,
-      onStep: () => { this.updateDialogue(); saveGame(); }
+      onStep: () => { this.updateDialogue(); saveGame(); },
+      isBlocked: (x, y) => this.npcLayer?.isBlocked(x, y)
     });
 
+    const playerActor = makeActor(this, this.playerCtrl, state.pos.home, this.offsetX, this.offsetY);
+    this.npcLayer = placeNPCs(this, { npcs: HOME_NPCS, offsetX: this.offsetX, offsetY: this.offsetY, player: playerActor, walker: this.walker, posRef: state.pos.home });
+
     this.updateDialogue();
+    // A fresh game opens with a real on-map cutscene (STORY.md Act 1, beat 1)
+    // instead of the player just standing in a room.
+    if (!hasFlag('introDone')) this.npcLayer.run(HOME_INTRO);
   }
 
   drawPlayer() {

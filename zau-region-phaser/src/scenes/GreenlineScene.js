@@ -8,6 +8,9 @@ import { drawTiles, drawDecor, createWalker, setupFollowCamera, setupHUD } from 
 import { addActionBar } from '../uiHelpers.js';
 import { goToScene, fadeIn } from '../transitions.js';
 import { preloadPlayerLayers, createPlayerSprite } from '../playerSprite.js';
+import { preloadNPCLayers, placeNPCs, makeActor } from '../npcs.js';
+import { ensureStoryState } from '../story.js';
+import { GREENLINE_NPCS } from '../data/npcs.js';
 
 // Greenline Terraces — stratum 5 in WORLD.md, designed in
 // zau-region/districts/greenline.md. Same shape as Harbor/Ember: Thistle's
@@ -44,6 +47,7 @@ export default class GreenlineScene extends Phaser.Scene {
 
   init(data) {
     this.pendingToast = data?.toastMsg || '';
+    ensureStoryState();
     // Old saves predate this map and Object.assign(state, saved) replaces
     // the whole `pos` object, so the default from state.js can be missing.
     state.pos.greenline ??= { ...SPAWN };
@@ -51,6 +55,7 @@ export default class GreenlineScene extends Phaser.Scene {
 
   preload() {
     preloadPlayerLayers(this, state.player.appearance);
+    preloadNPCLayers(this, GREENLINE_NPCS);
   }
 
   create() {
@@ -70,8 +75,12 @@ export default class GreenlineScene extends Phaser.Scene {
     this.walker = createWalker(this, {
       mapDef: GREENLINE_MAP, posRef: state.pos.greenline, sprite: this.playerCtrl.container, playerCtrl: this.playerCtrl,
       offsetX: this.offsetX, offsetY: this.offsetY,
-      onStep: (nx, ny) => this.handleStep(nx, ny)
+      onStep: (nx, ny) => this.handleStep(nx, ny),
+      isBlocked: (x, y) => this.npcLayer?.isBlocked(x, y)
     });
+
+    const playerActor = makeActor(this, this.playerCtrl, state.pos.greenline, this.offsetX, this.offsetY);
+    this.npcLayer = placeNPCs(this, { npcs: GREENLINE_NPCS, offsetX: this.offsetX, offsetY: this.offsetY, player: playerActor, walker: this.walker, posRef: state.pos.greenline });
 
     setupFollowCamera(this, { mapDef: GREENLINE_MAP, offsetX: this.offsetX, offsetY: this.offsetY, player: this.playerCtrl.container });
 

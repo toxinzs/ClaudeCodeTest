@@ -1,4 +1,6 @@
 import { state, activeMon, firstHealthyIdx, MAX_PARTY } from './state.js';
+import { trainerFor } from './data/trainers.js';
+import { setFlag } from './story.js';
 import { currentMonDisplay, computeStats, statsForMon, evolveIfReady, rollWildEncounter, xpNeededForLevel, applyMega, revertMega } from './mon.js';
 import { baseStatsFor } from './data/baseStats.js';
 import { abilityFor } from './data/abilities.js';
@@ -163,10 +165,11 @@ export class BattleEngine extends Emitter {
     state.party.forEach(m => revertMega(m));
   }
 
-  startTrainerBattle(ctx) {
+  startTrainerBattle(ctx, trainerKey) {
     if (firstHealthyIdx() === -1) return false;
     this.resetBattleFlags();
-    let enemyTeam, enemyName;
+    let enemyTeam, enemyName, trainer = null;
+    if (ctx === 'trainer') { trainer = trainerFor(trainerKey); enemyTeam = trainer.team; enemyName = trainer.name; }
     if (ctx === 'lineup') { enemyTeam = TRAINER_LINEUP[state.trainerIndex].team; enemyName = TRAINER_LINEUP[state.trainerIndex].name; }
     if (ctx === 'dario') { enemyTeam = RIVAL_DARIO.team; enemyName = RIVAL_DARIO.name; }
     if (ctx === 'league') { enemyTeam = LEAGUE_LEADERS[state.currentLeagueIdx].team; enemyName = LEAGUE_LEADERS[state.currentLeagueIdx].name; }
@@ -174,7 +177,7 @@ export class BattleEngine extends Emitter {
     if (ctx === 'verdanyx') { enemyTeam = VERDANYX.team; enemyName = VERDANYX.name; }
 
     const enemyMons = enemyTeam.map(t => buildBattleMon(t.speciesName, t.emoji, t.type, t.level, t.moves));
-    state.battle = { ctx, enemyName, enemyMons, enemyIdx: 0, isWild: false, moneyReward: moneyRewardFor(ctx) };
+    state.battle = { ctx, trainerKey, enemyName, enemyMons, enemyIdx: 0, isWild: false, moneyReward: trainer ? trainer.reward : moneyRewardFor(ctx) };
     this.render(`${enemyName} wants to battle!`);
     return true;
   }
@@ -563,6 +566,10 @@ export class BattleEngine extends Emitter {
       state.darioBeaten = true;
       state.hasKeyStone = true;
       msg = `You beat Dario Voss! He tosses you a Key Stone — "You'll need this more than me." The Zau League is open.`;
+    } else if (ctx === 'trainer') {
+      const t = trainerFor(state.battle.trainerKey);
+      if (t.winFlag) setFlag(t.winFlag);
+      msg = t.winMsg || `Beat ${t.name}! +₽${t.reward}`;
     } else if (ctx === 'league') {
       state.leagueBeaten[state.currentLeagueIdx] = true;
       const cleared = state.leagueBeaten.filter(Boolean).length;
