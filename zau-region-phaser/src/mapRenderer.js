@@ -1,4 +1,5 @@
 import { TILE, GAME_W, GAME_H } from './config.js';
+import { inputLock } from './lock.js';
 
 // Draws every floor/wall tile in a map's layout grid, real Kenney art
 // instead of placeholder rectangles. blockedKey/floorKey let each scene
@@ -40,16 +41,21 @@ export function drawDecor(scene, decor, { offsetX, offsetY }) {
 // screen transitions). Movement writes straight to state.pos[mapKey], the
 // same shared/save-relevant position every scene and the save system
 // read from.
-export function createWalker(scene, { mapDef, posRef, sprite, playerCtrl, offsetX, offsetY, onStep }) {
+export function createWalker(scene, { mapDef, posRef, sprite, playerCtrl, offsetX, offsetY, onStep, isBlocked }) {
   const MOVE_MS = 140;
-  const walker = { moving: false };
+  // facing: the direction the player last tried to move — what "the tile in
+  // front of the player" means for NPC interaction. isBlocked: extra
+  // dynamic blockers (NPCs) on top of the static layout.
+  const walker = { moving: false, facing: 'down' };
 
   walker.tryMove = (dx, dy, dir) => {
     if (playerCtrl) playerCtrl.setDirection(dir);
+    walker.facing = dir;
     if (walker.moving) return;
     const nx = posRef.x + dx, ny = posRef.y + dy;
     if (nx < 0 || ny < 0 || nx >= mapDef.w || ny >= mapDef.h) return;
     if (mapDef.layout[ny][nx] === 1) return;
+    if (isBlocked && isBlocked(nx, ny)) return;
 
     posRef.x = nx; posRef.y = ny;
     walker.moving = true;
@@ -70,7 +76,7 @@ export function createWalker(scene, { mapDef, posRef, sprite, playerCtrl, offset
   const cursors = scene.input.keyboard.createCursorKeys();
   const onUpdate = (_time, delta) => {
     if (playerCtrl) playerCtrl.step(delta);
-    if (walker.moving) return;
+    if (walker.moving || inputLock.locked) return;
     if (cursors.up.isDown) walker.tryMove(0, -1, 'up');
     else if (cursors.down.isDown) walker.tryMove(0, 1, 'down');
     else if (cursors.left.isDown) walker.tryMove(-1, 0, 'left');

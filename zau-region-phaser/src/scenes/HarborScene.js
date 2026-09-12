@@ -8,6 +8,9 @@ import { drawTiles, drawDecor, createWalker, setupFollowCamera, setupHUD } from 
 import { addActionBar } from '../uiHelpers.js';
 import { goToScene, fadeIn } from '../transitions.js';
 import { preloadPlayerLayers, createPlayerSprite } from '../playerSprite.js';
+import { preloadNPCLayers, placeNPCs, makeActor } from '../npcs.js';
+import { ensureStoryState } from '../story.js';
+import { HARBOR_NPCS, HARBOR_CARGO_BREAKIN } from '../data/npcs.js';
 
 // Harbor District — the first real district map (stratum 3 in WORLD.md,
 // designed in zau-region/districts/harbor.md). Unlike the abstract League
@@ -43,6 +46,7 @@ export default class HarborScene extends Phaser.Scene {
 
   init(data) {
     this.pendingToast = data?.toastMsg || '';
+    ensureStoryState();
     // Old saves predate this map and Object.assign(state, saved) replaces
     // the whole `pos` object, so the default from state.js can be missing.
     state.pos.harbor ??= { x: 4, y: 3 };
@@ -50,6 +54,7 @@ export default class HarborScene extends Phaser.Scene {
 
   preload() {
     preloadPlayerLayers(this, state.player.appearance);
+    preloadNPCLayers(this, HARBOR_NPCS);
   }
 
   create() {
@@ -69,8 +74,12 @@ export default class HarborScene extends Phaser.Scene {
     this.walker = createWalker(this, {
       mapDef: HARBOR_MAP, posRef: state.pos.harbor, sprite: this.playerCtrl.container, playerCtrl: this.playerCtrl,
       offsetX: this.offsetX, offsetY: this.offsetY,
-      onStep: (nx, ny) => this.handleStep(nx, ny)
+      onStep: (nx, ny) => this.handleStep(nx, ny),
+      isBlocked: (x, y) => this.npcLayer?.isBlocked(x, y)
     });
+
+    const playerActor = makeActor(this, this.playerCtrl, state.pos.harbor, this.offsetX, this.offsetY);
+    this.npcLayer = placeNPCs(this, { npcs: HARBOR_NPCS, offsetX: this.offsetX, offsetY: this.offsetY, player: playerActor, walker: this.walker, posRef: state.pos.harbor });
 
     setupFollowCamera(this, { mapDef: HARBOR_MAP, offsetX: this.offsetX, offsetY: this.offsetY, player: this.playerCtrl.container });
 
@@ -117,6 +126,10 @@ export default class HarborScene extends Phaser.Scene {
       return;
     }
     if (at('market')) { this.toastText.setText('The Fish Market — loud, crowded, alive.'); this.scene.launch('Mart'); return; }
+    if (at('cargo')) {
+      if (state.story.cargoRow) { this.toastText.setText("Cargo Row, locked down. Someone in a Meridian jacket photographs you from behind the fence."); return; }
+      if (state.story.harborDario) { this.npcLayer.run(HARBOR_CARGO_BREAKIN); return; }
+    }
     for (const key of ['cargo', 'ferry', 'lighthouse', 'stair']) {
       if (at(key)) { this.toastText.setText(SPOT_TEXT[key]); return; }
     }

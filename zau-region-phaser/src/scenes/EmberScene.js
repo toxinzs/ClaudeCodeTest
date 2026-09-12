@@ -8,6 +8,9 @@ import { drawTiles, drawDecor, createWalker, setupFollowCamera, setupHUD } from 
 import { addActionBar } from '../uiHelpers.js';
 import { goToScene, fadeIn } from '../transitions.js';
 import { preloadPlayerLayers, createPlayerSprite } from '../playerSprite.js';
+import { preloadNPCLayers, placeNPCs, makeActor } from '../npcs.js';
+import { ensureStoryState } from '../story.js';
+import { EMBER_NPCS } from '../data/npcs.js';
 
 // Ember Quarter — stratum 4 in WORLD.md, designed in
 // zau-region/districts/ember.md. Same shape as HarborScene: Ashgrave's
@@ -42,6 +45,7 @@ export default class EmberScene extends Phaser.Scene {
 
   init(data) {
     this.pendingToast = data?.toastMsg || '';
+    ensureStoryState();
     // Old saves predate this map and Object.assign(state, saved) replaces
     // the whole `pos` object, so the default from state.js can be missing.
     state.pos.ember ??= { ...SPAWN };
@@ -49,6 +53,7 @@ export default class EmberScene extends Phaser.Scene {
 
   preload() {
     preloadPlayerLayers(this, state.player.appearance);
+    preloadNPCLayers(this, EMBER_NPCS);
   }
 
   create() {
@@ -68,8 +73,12 @@ export default class EmberScene extends Phaser.Scene {
     this.walker = createWalker(this, {
       mapDef: EMBER_MAP, posRef: state.pos.ember, sprite: this.playerCtrl.container, playerCtrl: this.playerCtrl,
       offsetX: this.offsetX, offsetY: this.offsetY,
-      onStep: (nx, ny) => this.handleStep(nx, ny)
+      onStep: (nx, ny) => this.handleStep(nx, ny),
+      isBlocked: (x, y) => this.npcLayer?.isBlocked(x, y)
     });
+
+    const playerActor = makeActor(this, this.playerCtrl, state.pos.ember, this.offsetX, this.offsetY);
+    this.npcLayer = placeNPCs(this, { npcs: EMBER_NPCS, offsetX: this.offsetX, offsetY: this.offsetY, player: playerActor, walker: this.walker, posRef: state.pos.ember });
 
     setupFollowCamera(this, { mapDef: EMBER_MAP, offsetX: this.offsetX, offsetY: this.offsetY, player: this.playerCtrl.container });
 

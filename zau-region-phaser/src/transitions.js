@@ -10,7 +10,7 @@ const FADE_COLOR = [10, 14, 26]; // matches the canvas's own dark background, no
 // never pause it, so the player can step off a shop tile and walk straight
 // into a wild battle with the Mart still open. An overlay belongs to the
 // scene that launched it — close it with that scene.
-const OVERLAY_SCENES = ['Party', 'Bag', 'Mart', 'Center', 'Dex'];
+const OVERLAY_SCENES = ['Party', 'Bag', 'Mart', 'Center', 'Dex', 'Dialogue'];
 
 export function goToScene(scene, key, data) {
   OVERLAY_SCENES.forEach(k => { if (scene.scene.isActive(k)) scene.scene.stop(k); });
