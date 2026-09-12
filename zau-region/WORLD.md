@@ -33,8 +33,7 @@ Zau isn't a spread of separate towns connected by routes — it's **one city, bu
 
 ## Built vs. named vs. new
 
-- **Fully built (walkable + battles)**: Outskirts/Wild Zone (Act 1), The Underlight (final battle only, not walkable yet).
-- **Fleshed out on paper, no walkable map yet**: Harbor District (see [`districts/harbor.md`](districts/harbor.md) — sub-locations, NPCs, wild Pokémon, a story hook).
+- **Fully built (walkable + battles)**: Outskirts/Wild Zone (Act 1), Harbor District (walkable map in the Phaser build — Coral's gym, Fish Market, and the other sub-locations from [`districts/harbor.md`](districts/harbor.md) as step triggers; its story-hook spots are flavor until the Undercity/water-travel systems exist), The Underlight (final battle only, not walkable yet).
 - **Named + has a gym battle, still just a name otherwise**: Ember Quarter, Greenline Terraces, Signal District, Undercity, Meridian Tower. (The League hub map currently represents all 5 gyms as one shared space — eventually each could get its own real district map.)
 - **Brand new, not in the game at all yet**: The Sprawl, The Skyline.
 

@@ -77,6 +77,14 @@ export default class TownScene extends Phaser.Scene {
       goToScene(this, 'Trail');
       return;
     }
+    // Harbor Steps — the Harbor District opens after Act 1 (post-Dario, per
+    // its design doc's level band), same "beat what's in front of you"
+    // gating as the League.
+    if (nx === TOWN_MAP.harborX && ny === TOWN_MAP.harborY) {
+      if (state.darioBeaten) goToScene(this, 'Harbor');
+      else this.toastText.setText('The Harbor Steps are chained off. Prove yourself on the Trail first.');
+      return;
+    }
     if (state.party.length && Math.random() < WILD_ENCOUNTER_CHANCE) {
       goToScene(this, 'Battle', { kind: 'wild', zoneKey: 'outskirts', returnTo: 'Town' });
     }

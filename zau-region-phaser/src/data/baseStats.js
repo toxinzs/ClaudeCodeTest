@@ -54,6 +54,15 @@ const BASE_STATS = {
   gabite:       { hp: 68, atk: 90,  def: 65,  spAtk: 50,  spDef: 55,  spe: 82 },
   garchomp:     { hp: 108,atk: 130, def: 95,  spAtk: 80,  spDef: 85,  spe: 102 },
 
+  // Harbor District roster
+  wingull:      { hp: 40, atk: 30,  def: 30,  spAtk: 55,  spDef: 30,  spe: 85 },
+  tentacool:    { hp: 40, atk: 40,  def: 35,  spAtk: 50,  spDef: 100, spe: 70 },
+  krabby:       { hp: 30, atk: 105, def: 90,  spAtk: 25,  spDef: 25,  spe: 50 },
+  horsea:       { hp: 30, atk: 40,  def: 70,  spAtk: 70,  spDef: 25,  spe: 60 },
+  chinchou:     { hp: 75, atk: 38,  def: 38,  spAtk: 56,  spDef: 56,  spe: 67 },
+  buizel:       { hp: 55, atk: 65,  def: 35,  spAtk: 60,  spDef: 30,  spe: 85 },
+  pelipper:     { hp: 60, atk: 50,  def: 100, spAtk: 95,  spDef: 70,  spe: 65 },
+
   // Trainers, rival, league leaders, Director Vance
   kadabra:      { hp: 40, atk: 35,  def: 30,  spAtk: 120, spDef: 70,  spe: 105 },
   charjabug:    { hp: 57, atk: 82,  def: 95,  spAtk: 55,  spDef: 75,  spe: 36 },

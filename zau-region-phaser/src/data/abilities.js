@@ -60,6 +60,15 @@ const ABILITIES = {
   gabite: { name: 'Rough Skin', effect: null },
   garchomp: { name: 'Rough Skin', effect: null },
 
+  // Harbor District roster
+  wingull: { name: 'Keen Eye', effect: null },
+  tentacool: { name: 'Clear Body', effect: null },
+  krabby: { name: 'Hyper Cutter', effect: null },
+  horsea: { name: 'Swift Swim', effect: null },
+  chinchou: { name: 'Volt Absorb', effect: null },
+  buizel: { name: 'Swift Swim', effect: null },
+  pelipper: { name: 'Keen Eye', effect: null },
+
   // Trainers / rival / league leaders / Director Vance
   kadabra: { name: 'Synchronize', effect: 'synchronize' },
   charjabug: { name: 'Battery', effect: null },
