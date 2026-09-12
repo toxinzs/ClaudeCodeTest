@@ -88,7 +88,7 @@ export function placeNPCs(scene, { npcs, offsetX, offsetY, player, walker, posRe
   // and pauses a beat before speaking, like a trainer who's seen you.
   function spot(npc) {
     return new Promise(res => {
-      const t = scene.add.text(npc.ctrl.container.x, npc.ctrl.container.y - 40, '!', { fontFamily: 'sans-serif', fontSize: '28px', fontStyle: 'bold', color: '#e8d27a' }).setOrigin(0.5).setDepth(90).setScale(0);
+      const t = scene.add.text(npc.ctrl.container.x, npc.ctrl.container.y - 40, '!', { fontFamily: 'Nunito, sans-serif', fontSize: '28px', fontStyle: 'bold', color: '#e8d27a' }).setOrigin(0.5).setDepth(90).setScale(0);
       if (scene.hudCam) scene.hudCam.ignore(t);
       (window.__zauAnims ??= []).push('spot');
       scene.tweens.add({ targets: t, scaleX: 1, scaleY: 1, duration: 160, ease: 'Back.easeOut' });

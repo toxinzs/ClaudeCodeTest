@@ -43,7 +43,7 @@ export default class PartyScene extends Phaser.Scene {
     const list = this.tab === 'box' ? state.box : state.party;
     if (list.length === 0) {
       this.add.text(GAME_W / 2, GAME_H / 2, this.tab === 'box' ? 'Your Box is empty.' : "You don't have any Pokémon yet.", {
-        fontFamily: 'sans-serif', fontSize: '13px', color: '#8a8aa0'
+        fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#8a8aa0'
       }).setOrigin(0.5);
       return;
     }
@@ -64,7 +64,7 @@ export default class PartyScene extends Phaser.Scene {
     tabs.forEach(([key, label], i) => {
       const x = GAME_W / 2 + (i === 0 ? -90 : 90);
       const bg = this.add.rectangle(x, 40, 160, 22, 0x232640).setStrokeStyle(1, this.tab === key ? 0x8a8aff : 0x3a3d5c).setInteractive({ useHandCursor: true });
-      this.add.text(x, 40, label, { fontFamily: 'sans-serif', fontSize: '11px', color: '#e8e8f0' }).setOrigin(0.5);
+      this.add.text(x, 40, label, { fontFamily: 'Nunito, sans-serif', fontSize: '11px', color: '#e8e8f0' }).setOrigin(0.5);
       bg.on('pointerdown', () => { this.tab = key; this.page = 0; this.render(); });
     });
   }
@@ -77,11 +77,11 @@ export default class PartyScene extends Phaser.Scene {
 
     addMonIcon(this, 36, y, d, 24);
     const label = `${d.name}${isFainted ? ' (Fainted)' : ''}${statusTag}${isActive ? ' ★' : ''}`;
-    this.add.text(64, y - 16, label, { fontFamily: 'sans-serif', fontSize: '13px', color: isFainted ? '#e57373' : '#e8e8f0' });
-    this.add.text(64, y + 1, `Lv.${m.level} · ${d.type} · ${m.hp}/${m.maxHp} HP`, { fontFamily: 'sans-serif', fontSize: '11px', color: '#8a8aa0' });
+    this.add.text(64, y - 16, label, { fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: isFainted ? '#e57373' : '#e8e8f0' });
+    this.add.text(64, y + 1, `Lv.${m.level} · ${d.type} · ${m.hp}/${m.maxHp} HP`, { fontFamily: 'Nunito, sans-serif', fontSize: '11px', color: '#8a8aa0' });
     const heldLabel = m.heldItem ? ` · @ ${ITEMS[m.heldItem].name}` : '';
     const iv = ivSummary(m);
-    this.add.text(64, y + 15, `${m.ability.name}${heldLabel} · IV ${iv.total} (${iv.word})`, { fontFamily: 'sans-serif', fontSize: '10px', color: '#6a6a80' });
+    this.add.text(64, y + 15, `${m.ability.name}${heldLabel} · IV ${iv.total} (${iv.word})`, { fontFamily: 'Nunito, sans-serif', fontSize: '10px', color: '#6a6a80' });
 
     if (this.switchMode) {
       const clickable = !isFainted && idx !== state.activeIdx;
@@ -105,7 +105,7 @@ export default class PartyScene extends Phaser.Scene {
     const bw = 64, bh = 22;
     const bx = GAME_W - 24 - bw / 2 - 12;
     const bg = this.add.rectangle(bx, y, bw, bh, 0x232640).setStrokeStyle(1, 0x3a3d5c).setInteractive({ useHandCursor: true });
-    this.add.text(bx, y, label, { fontFamily: 'sans-serif', fontSize: '11px', color: '#e8e8f0' }).setOrigin(0.5);
+    this.add.text(bx, y, label, { fontFamily: 'Nunito, sans-serif', fontSize: '11px', color: '#e8e8f0' }).setOrigin(0.5);
     bg.on('pointerdown', onClick);
   }
 
@@ -121,12 +121,12 @@ export default class PartyScene extends Phaser.Scene {
     const maxPage = Math.ceil(total / ROWS_PER_PAGE) - 1;
     const y = GAME_H - 40;
     if (this.page > 0) {
-      const prev = this.add.text(GAME_W / 2 - 60, y, '< Prev', { fontFamily: 'sans-serif', fontSize: '12px', color: '#8a8aff' }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+      const prev = this.add.text(GAME_W / 2 - 60, y, '< Prev', { fontFamily: 'Nunito, sans-serif', fontSize: '12px', color: '#8a8aff' }).setOrigin(0.5).setInteractive({ useHandCursor: true });
       prev.on('pointerdown', () => { this.page--; this.render(); });
     }
-    this.add.text(GAME_W / 2, y, `Page ${this.page + 1}/${maxPage + 1}`, { fontFamily: 'sans-serif', fontSize: '12px', color: '#8a8aa0' }).setOrigin(0.5);
+    this.add.text(GAME_W / 2, y, `Page ${this.page + 1}/${maxPage + 1}`, { fontFamily: 'Nunito, sans-serif', fontSize: '12px', color: '#8a8aa0' }).setOrigin(0.5);
     if (this.page < maxPage) {
-      const next = this.add.text(GAME_W / 2 + 60, y, 'Next >', { fontFamily: 'sans-serif', fontSize: '12px', color: '#8a8aff' }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+      const next = this.add.text(GAME_W / 2 + 60, y, 'Next >', { fontFamily: 'Nunito, sans-serif', fontSize: '12px', color: '#8a8aff' }).setOrigin(0.5).setInteractive({ useHandCursor: true });
       next.on('pointerdown', () => { this.page++; this.render(); });
     }
   }

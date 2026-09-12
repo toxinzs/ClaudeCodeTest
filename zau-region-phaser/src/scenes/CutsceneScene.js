@@ -15,7 +15,7 @@ export default class CutsceneScene extends Phaser.Scene {
     state.cutsceneIdx = 0;
 
     this.slideText = this.add.text(GAME_W / 2, 60, '', {
-      fontFamily: 'sans-serif', fontSize: '15px', color: '#e8e8f0',
+      fontFamily: 'Nunito, sans-serif', fontSize: '15px', color: '#e8e8f0',
       wordWrap: { width: GAME_W - 80 }, align: 'center'
     }).setOrigin(0.5, 0);
 
@@ -28,10 +28,10 @@ export default class CutsceneScene extends Phaser.Scene {
     });
 
     const skipBg = this.add.rectangle(90, GAME_H - 40, 120, 34, 0x232640).setStrokeStyle(1, 0x3a3d5c).setInteractive({ useHandCursor: true });
-    this.add.text(90, GAME_H - 40, 'Skip', { fontFamily: 'sans-serif', fontSize: '13px', color: '#e8e8f0' }).setOrigin(0.5);
+    this.add.text(90, GAME_H - 40, 'Skip', { fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#e8e8f0' }).setOrigin(0.5);
     skipBg.on('pointerdown', () => goToScene(this, 'CharCreate'));
 
-    this.nextText = this.add.text(GAME_W - 90, GAME_H - 40, 'Next', { fontFamily: 'sans-serif', fontSize: '13px', color: '#e8e8f0' }).setOrigin(0.5);
+    this.nextText = this.add.text(GAME_W - 90, GAME_H - 40, 'Next', { fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#e8e8f0' }).setOrigin(0.5);
     const nextBg = this.add.rectangle(GAME_W - 90, GAME_H - 40, 120, 34, 0x2d6a4f).setStrokeStyle(1, 0x3fa373).setInteractive({ useHandCursor: true });
     this.children.bringToTop(this.nextText);
     nextBg.on('pointerdown', () => this.nextSlide());

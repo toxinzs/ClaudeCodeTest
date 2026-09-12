@@ -35,13 +35,13 @@ export default class HomeScene extends Phaser.Scene {
     this.drawPlayer();
 
     this.dialogueText = this.add.text(GAME_W / 2, this.offsetY + HOME_MAP.h * TILE + 12, '', {
-      fontFamily: 'sans-serif', fontSize: '14px', color: '#e8e8f0', wordWrap: { width: GAME_W - 20 }
+      fontFamily: 'Nunito, sans-serif', fontSize: '14px', color: '#e8e8f0', wordWrap: { width: GAME_W - 20 }
     }).setOrigin(0.5, 0);
 
     // Always available, same as the DOM version's "Head Outside" button —
     // not gated on standing at the door tile (that's flavor text only).
     const btn = this.add.rectangle(GAME_W / 2, GAME_H - 24, 200, 32, 0x232640).setStrokeStyle(1, 0x3a3d5c).setInteractive({ useHandCursor: true });
-    this.add.text(GAME_W / 2, GAME_H - 24, 'Head Outside', { fontFamily: 'sans-serif', fontSize: '13px', color: '#e8e8f0' }).setOrigin(0.5);
+    this.add.text(GAME_W / 2, GAME_H - 24, 'Head Outside', { fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#e8e8f0' }).setOrigin(0.5);
     btn.on('pointerdown', () => goToScene(this, 'Town'));
 
     this.walker = createWalker(this, {

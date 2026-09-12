@@ -51,13 +51,13 @@ export default class DialogueScene extends Phaser.Scene {
     this.add.rectangle(GAME_W / 2, BOX_Y + BOX_H / 2, w, BOX_H, 0x0d0f18, 0.96).setStrokeStyle(2, 0x3a3d5c);
     if (this.name) {
       const plate = this.add.rectangle(8 + PAD, BOX_Y - 1, 10, 22, 0x232640).setOrigin(0, 1).setStrokeStyle(1, 0x3a3d5c);
-      const nameText = this.add.text(8 + PAD + 8, BOX_Y - 12, this.name, { fontFamily: 'sans-serif', fontSize: '12px', color: '#e8e8f0', fontStyle: 'bold' }).setOrigin(0, 0.5);
+      const nameText = this.add.text(8 + PAD + 8, BOX_Y - 12, this.name, { fontFamily: 'Nunito, sans-serif', fontSize: '12px', color: '#e8e8f0', fontStyle: 'bold' }).setOrigin(0, 0.5);
       plate.width = nameText.width + 16;
     }
     this.text = this.add.text(8 + PAD, BOX_Y + PAD, '', {
-      fontFamily: 'sans-serif', fontSize: '14px', color: '#e8e8f0', wordWrap: { width: w - PAD * 2 }, lineSpacing: 4
+      fontFamily: 'Nunito, sans-serif', fontSize: '14px', color: '#e8e8f0', wordWrap: { width: w - PAD * 2 }, lineSpacing: 4
     });
-    this.cursor = this.add.text(GAME_W - 8 - PAD, BOX_Y + BOX_H - 10, '▼', { fontFamily: 'sans-serif', fontSize: '12px', color: '#8a8aa0' }).setOrigin(1, 1).setVisible(false);
+    this.cursor = this.add.text(GAME_W - 8 - PAD, BOX_Y + BOX_H - 10, '▼', { fontFamily: 'Nunito, sans-serif', fontSize: '12px', color: '#8a8aa0' }).setOrigin(1, 1).setVisible(false);
     this.tweens.add({ targets: this.cursor, y: '+=3', duration: 400, yoyo: true, repeat: -1 });
     this.optionNodes = [];
 
@@ -101,13 +101,13 @@ export default class DialogueScene extends Phaser.Scene {
     const startY = BOX_Y + PAD + this.text.height + 10;
     this.options.forEach((label, i) => {
       const y = startY + i * 20;
-      const t = this.add.text(8 + PAD + 16, y, label, { fontFamily: 'sans-serif', fontSize: '13px', color: '#e8e8f0' })
+      const t = this.add.text(8 + PAD + 16, y, label, { fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#e8e8f0' })
         .setInteractive({ useHandCursor: true });
       t.on('pointerdown', () => { this.selected = i; this.pick(); });
       t.on('pointerover', () => { this.selected = i; this.paintSelection(); });
       this.optionNodes.push(t);
     });
-    this.pointer = this.add.text(8 + PAD + 2, startY, '▶', { fontFamily: 'sans-serif', fontSize: '12px', color: '#e8d27a' });
+    this.pointer = this.add.text(8 + PAD + 2, startY, '▶', { fontFamily: 'Nunito, sans-serif', fontSize: '12px', color: '#e8d27a' });
     this.paintSelection();
   }
 
