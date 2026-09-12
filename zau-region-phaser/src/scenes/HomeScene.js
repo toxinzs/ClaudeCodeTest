@@ -9,6 +9,7 @@ import { preloadPlayerLayers, createPlayerSprite } from '../playerSprite.js';
 import { preloadNPCLayers, placeNPCs, makeActor } from '../npcs.js';
 import { ensureStoryState, hasFlag } from '../story.js';
 import { HOME_NPCS, HOME_INTRO } from '../data/npcs.js';
+import { enablePauseMenu } from '../pause.js';
 
 // The first walkable scene ported to Phaser. Grid movement is tied to the
 // real state.pos.home (not a scene-local throwaway) so save/load already
@@ -53,6 +54,7 @@ export default class HomeScene extends Phaser.Scene {
     const playerActor = makeActor(this, this.playerCtrl, state.pos.home, this.offsetX, this.offsetY);
     this.npcLayer = placeNPCs(this, { npcs: HOME_NPCS, offsetX: this.offsetX, offsetY: this.offsetY, player: playerActor, walker: this.walker, posRef: state.pos.home });
 
+    enablePauseMenu(this);
     this.updateDialogue();
     // A fresh game opens with a real on-map cutscene (STORY.md Act 1, beat 1)
     // instead of the player just standing in a room.

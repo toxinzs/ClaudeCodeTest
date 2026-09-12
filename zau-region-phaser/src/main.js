@@ -32,6 +32,8 @@ import CenterScene from './scenes/CenterScene.js';
 import MoveLearnScene from './scenes/MoveLearnScene.js';
 import DialogueScene from './dialogue.js';
 import QuestsScene from './scenes/QuestsScene.js';
+import EvolutionScene from './scenes/EvolutionScene.js';
+import PauseScene from './scenes/PauseScene.js';
 
 // loadGame() is NOT called here — Continue vs. a fresh game are genuinely
 // different starting points (matches the DOM version, where a save
@@ -53,7 +55,7 @@ const game = new Phaser.Game({
   scene: [
     BootScene, TitleScene, CutsceneScene, CharCreateScene,
     HomeScene, TownScene, LabScene, TrailScene, LeagueScene, HarborScene, EmberScene, GreenlineScene, BoilerScene, SignalScene, RisersScene, OldLinesScene, UndercityScene, SprawlScene, TowerScene, DescentScene, UnderlightScene, CreditsScene, BattleScene,
-    PartyScene, BagScene, MartScene, DexScene, CenterScene, MoveLearnScene, DialogueScene, QuestsScene
+    PartyScene, BagScene, MartScene, DexScene, CenterScene, MoveLearnScene, DialogueScene, QuestsScene, EvolutionScene, PauseScene
   ]
 });
 

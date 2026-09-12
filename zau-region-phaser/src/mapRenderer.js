@@ -1,6 +1,7 @@
 import { TILE, GAME_W, GAME_H } from './config.js';
 import { inputLock } from './lock.js';
 import { showBanner } from './banner.js';
+import { enablePauseMenu } from './pause.js';
 
 // Draws every floor/wall tile in a map's layout grid, real Kenney art
 // instead of placeholder rectangles. blockedKey/floorKey let each scene
@@ -115,5 +116,6 @@ export function setupHUD(scene, hudObjects, { banner = null } = {}) {
   const hudCam = scene.cameras.add(0, 0, GAME_W, GAME_H);
   const worldObjects = scene.children.list.filter(o => !hudObjects.includes(o));
   hudCam.ignore(worldObjects);
+  enablePauseMenu(scene);
   return hudCam;
 }
