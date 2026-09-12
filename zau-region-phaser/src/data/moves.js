@@ -55,7 +55,15 @@ const MOVES = {
   "dragon breath":{ type: "Dragon",  power: 60,  category: "Special",   status: "paralyze", statusChance: 0.3 },
   smog:          { type: "Poison",   power: 30,  category: "Special",   status: "poison",  statusChance: 0.4 },
   astonish:      { type: "Ghost",    power: 30,  category: "Physical" },
-  "smack down":  { type: "Rock",     power: 50,  category: "Physical" }
+  "smack down":  { type: "Rock",     power: 50,  category: "Physical" },
+  absorb:        { type: "Grass",    power: 20,  category: "Special" },
+  acid:          { type: "Poison",   power: 40,  category: "Special" },
+  "razor leaf":  { type: "Grass",    power: 55,  category: "Physical" },
+  gust:          { type: "Flying",   power: 40,  category: "Special" },
+  "vine whip":   { type: "Grass",    power: 45,  category: "Physical" },
+  "disarming voice":{ type: "Fairy", power: 40,  category: "Special" },
+  "horn attack": { type: "Normal",   power: 65,  category: "Physical" },
+  "vise grip":   { type: "Normal",   power: 55,  category: "Physical" }
 };
 
 export function moveFor(name) {

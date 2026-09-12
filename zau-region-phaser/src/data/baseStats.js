@@ -94,6 +94,25 @@ const BASE_STATS = {
   houndour:     { hp: 45, atk: 60,  def: 30,  spAtk: 80,  spDef: 50,  spe: 65 },
   houndoom:     { hp: 75, atk: 90,  def: 50,  spAtk: 110, spDef: 80,  spe: 95 },
 
+  // Greenline Terraces roster + evolutions
+  oddish:       { hp: 45, atk: 50,  def: 55,  spAtk: 75,  spDef: 65,  spe: 30 },
+  gloom:        { hp: 60, atk: 65,  def: 70,  spAtk: 85,  spDef: 75,  spe: 40 },
+  hoppip:       { hp: 35, atk: 35,  def: 40,  spAtk: 35,  spDef: 55,  spe: 50 },
+  skiploom:     { hp: 55, atk: 45,  def: 50,  spAtk: 45,  spDef: 65,  spe: 80 },
+  jumpluff:     { hp: 75, atk: 55,  def: 70,  spAtk: 55,  spDef: 95,  spe: 110 },
+  sewaddle:     { hp: 45, atk: 53,  def: 70,  spAtk: 40,  spDef: 60,  spe: 42 },
+  swadloon:     { hp: 55, atk: 63,  def: 90,  spAtk: 50,  spDef: 80,  spe: 42 },
+  leavanny:     { hp: 75, atk: 103, def: 80,  spAtk: 70,  spDef: 80,  spe: 92 },
+  combee:       { hp: 30, atk: 30,  def: 42,  spAtk: 30,  spDef: 42,  spe: 70 },
+  vespiquen:    { hp: 70, atk: 80,  def: 102, spAtk: 80,  spDef: 102, spe: 40 },
+  flabébé:      { hp: 44, atk: 38,  def: 39,  spAtk: 61,  spDef: 79,  spe: 42 },
+  floette:      { hp: 54, atk: 45,  def: 47,  spAtk: 75,  spDef: 98,  spe: 52 },
+  ralts:        { hp: 28, atk: 25,  def: 25,  spAtk: 45,  spDef: 35,  spe: 40 },
+  kirlia:       { hp: 38, atk: 35,  def: 35,  spAtk: 65,  spDef: 55,  spe: 50 },
+  gardevoir:    { hp: 68, atk: 65,  def: 65,  spAtk: 125, spDef: 115, spe: 80 },
+  heracross:    { hp: 80, atk: 125, def: 75,  spAtk: 40,  spDef: 95,  spe: 85 },
+  pinsir:       { hp: 65, atk: 125, def: 100, spAtk: 55,  spDef: 70,  spe: 85 },
+
   // Custom/fictional final legendary — not a real species, hand-authored
   verdanyx:     { hp: 100,atk: 110, def: 90,  spAtk: 120, spDef: 100, spe: 95 }
 };

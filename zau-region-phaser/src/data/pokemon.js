@@ -166,7 +166,28 @@ export const WILD_SPECIES = [
   { name: "Magnemite", emoji: "🧲", type: "Electric/Steel", baseLvl: [17,23],
     moves: [moveFor("Thunder Shock"), moveFor("Tackle")] },
   { name: "Houndour", emoji: "🐕‍🦺", type: "Dark/Fire", baseLvl: [19,25],
-    moves: [moveFor("Ember"), moveFor("Bite")] }
+    moves: [moveFor("Ember"), moveFor("Bite")] },
+
+  // Greenline Terraces roster (indices 41-48) — real Grass/Bug/Fairy
+  // species for the garden stratum, level band post-Ashgrave/pre-Thistle
+  // per zau-region/districts/greenline.md. Ralts, Heracross and Pinsir
+  // are the district's Mega seeds.
+  { name: "Oddish", emoji: "🍀", type: "Grass/Poison", baseLvl: [21,26],
+    moves: [moveFor("Absorb"), moveFor("Acid")] },
+  { name: "Hoppip", emoji: "🌸", type: "Grass/Flying", baseLvl: [21,26],
+    moves: [moveFor("Tackle"), moveFor("Fairy Wind")] },
+  { name: "Sewaddle", emoji: "🍃", type: "Bug/Grass", baseLvl: [22,27],
+    moves: [moveFor("Bug Bite"), moveFor("Razor Leaf")] },
+  { name: "Combee", emoji: "🐝", type: "Bug/Flying", baseLvl: [21,26],
+    moves: [moveFor("Bug Bite"), moveFor("Gust")] },
+  { name: "Flabébé", emoji: "🌼", type: "Fairy", baseLvl: [22,27],
+    moves: [moveFor("Fairy Wind"), moveFor("Vine Whip")] },
+  { name: "Ralts", emoji: "🧝", type: "Psychic/Fairy", baseLvl: [22,27],
+    moves: [moveFor("Confusion"), moveFor("Disarming Voice")] },
+  { name: "Heracross", emoji: "🪲", type: "Bug/Fighting", baseLvl: [24,28],
+    moves: [moveFor("Horn Attack"), moveFor("Aerial Ace")] },
+  { name: "Pinsir", emoji: "🦂", type: "Bug", baseLvl: [24,28],
+    moves: [moveFor("Vise Grip"), moveFor("Double Hit")] }
 ];
 
 // Wild encounter tables per zone (by index in WILD_SPECIES)
@@ -177,5 +198,8 @@ export const WILD_ZONE_TABLE = {
   harbor: [26,26,27,28,29,30,31,31,7,32],
   // Slugma/Rolycoly common, Torkoal uncommon, Houndour the rare spawn.
   ember: [33,33,34,35,36,36,37,38,39,40],
+  // Oddish/Hoppip common, Cutiefly (21) shared with the Outskirts,
+  // Heracross uncommon, Pinsir the rare spawn.
+  greenline: [41,41,42,42,43,44,45,46,21,47,48],
   district: [11,12,14,15,16,18,19,20,21,22]
 };

@@ -39,7 +39,22 @@ const EVOLUTIONS = {
   carkol: { evolvesTo: 'Coalossal', type: 'Rock/Fire', emoji: '🌋', method: 'level', level: 34 },
   litwick: { evolvesTo: 'Lampent', type: 'Ghost/Fire', emoji: '🕯️', method: 'level', level: 41 },
   magnemite: { evolvesTo: 'Magneton', type: 'Electric/Steel', emoji: '🧲', method: 'level', level: 30 },
-  houndour: { evolvesTo: 'Houndoom', type: 'Dark/Fire', emoji: '🐕‍🦺', method: 'level', level: 24 }
+  houndour: { evolvesTo: 'Houndoom', type: 'Dark/Fire', emoji: '🐕‍🦺', method: 'level', level: 24 },
+
+  // Greenline Terraces lines — real level thresholds. Gloom->Vileplume/
+  // Bellossom (Leaf/Sun Stone) and Floette->Florges (Shiny Stone) are
+  // real stone evolutions with no stone item yet, so those lines stop
+  // there for now. Swadloon->Leavanny is a real friendship evolution,
+  // simplified to a level like Riolu.
+  oddish: { evolvesTo: 'Gloom', type: 'Grass/Poison', emoji: '🥀', method: 'level', level: 21 },
+  hoppip: { evolvesTo: 'Skiploom', type: 'Grass/Flying', emoji: '🌸', method: 'level', level: 18 },
+  skiploom: { evolvesTo: 'Jumpluff', type: 'Grass/Flying', emoji: '🌾', method: 'level', level: 27 },
+  sewaddle: { evolvesTo: 'Swadloon', type: 'Bug/Grass', emoji: '🍃', method: 'level', level: 20 },
+  swadloon: { evolvesTo: 'Leavanny', type: 'Bug/Grass', emoji: '🦗', method: 'level', level: 30 },
+  combee: { evolvesTo: 'Vespiquen', type: 'Bug/Flying', emoji: '🐝', method: 'level', level: 21 },
+  flabébé: { evolvesTo: 'Floette', type: 'Fairy', emoji: '🌼', method: 'level', level: 19 },
+  ralts: { evolvesTo: 'Kirlia', type: 'Psychic/Fairy', emoji: '🧝', method: 'level', level: 20 },
+  kirlia: { evolvesTo: 'Gardevoir', type: 'Psychic/Fairy', emoji: '👗', method: 'level', level: 30 }
 };
 
 export function evolutionFor(speciesName) {
