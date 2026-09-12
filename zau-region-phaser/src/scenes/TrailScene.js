@@ -60,7 +60,7 @@ export default class TrailScene extends Phaser.Scene {
     ], GAME_H - 16);
 
     const hudObjects = [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])];
-    setupHUD(this, hudObjects);
+    setupHUD(this, hudObjects, { banner: 'WILD ZONE TRAIL' });
   }
 
   // Progress-dependent, so it's rebuilt fresh each time the scene starts

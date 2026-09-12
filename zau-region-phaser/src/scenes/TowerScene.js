@@ -69,7 +69,7 @@ export default class TowerScene extends Phaser.Scene {
       { label: 'Sprawl', onClick: () => this.leave() }
     ], GAME_H - 16);
 
-    this.hudCam = setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])]);
+    this.hudCam = setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])], { banner: 'MERIDIAN TOWER' });
 
     // T3: back from the Vance battle, he activates the rig anyway.
     if (state.vanceBeaten && !hasFlag('rigActivated')) this.npcLayer.run(TOWER_RIG);

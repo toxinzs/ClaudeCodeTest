@@ -80,7 +80,7 @@ export default class BoilerScene extends Phaser.Scene {
       { label: 'Climb Out', onClick: () => this.leave() }
     ], GAME_H - 16);
 
-    this.hudCam = setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])]);
+    this.hudCam = setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])], { banner: 'BOILER TUNNELS' });
 
     // STORY.md K1: after Badge 3 the Absol waits at the door.
     if (keyStoneReady()) {

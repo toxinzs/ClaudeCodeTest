@@ -65,7 +65,7 @@ export default class LeagueScene extends Phaser.Scene {
     ], GAME_H - 16);
 
     const hudObjects = [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])];
-    setupHUD(this, hudObjects);
+    setupHUD(this, hudObjects, { banner: 'ZAU LEAGUE' });
   }
 
   buildDecor() {

@@ -69,7 +69,7 @@ export default class UnderlightScene extends Phaser.Scene {
       { label: 'Center', onClick: () => this.scene.launch('Center') }
     ], GAME_H - 16);
 
-    this.hudCam = setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])]);
+    this.hudCam = setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])], { banner: 'THE UNDERLIGHT' });
 
     // Verdanyx — no artwork exists for a custom species; the glyph stands.
     const vx = this.tileCenter(UNDERLIGHT_MAP.verdanyxX, UNDERLIGHT_MAP.verdanyxY);

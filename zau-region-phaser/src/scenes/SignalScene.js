@@ -86,7 +86,7 @@ export default class SignalScene extends Phaser.Scene {
       { label: 'Greenline', onClick: () => this.leaveToGreenline() }
     ], GAME_H - 16);
 
-    this.hudCam = setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])]);
+    this.hudCam = setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])], { banner: 'SIGNAL DISTRICT' });
   }
 
   drawPlayer() {

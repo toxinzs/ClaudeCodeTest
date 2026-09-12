@@ -159,6 +159,7 @@ export class BattleEngine extends Emitter {
     const mega = applyMega(p);
     if (!mega) return;
     state.battle.megaUsed = true;
+    this.emit('anim', { type: 'mega', side: 'player', name: mega.megaName });
     this.render(`${before} Mega Evolved into ${mega.megaName}!`);
   }
 
@@ -179,6 +180,7 @@ export class BattleEngine extends Emitter {
 
     const enemyMons = enemyTeam.map(t => buildBattleMon(t.speciesName, t.emoji, t.type, t.level, t.moves));
     state.battle = { ctx, trainerKey, enemyName, enemyMons, enemyIdx: 0, isWild: false, moneyReward: trainer ? trainer.reward : moneyRewardFor(ctx) };
+    this.emit('anim', { type: 'intro', wild: false, name: enemyName });
     this.render(`${enemyName} wants to battle!`);
     return true;
   }
@@ -188,6 +190,7 @@ export class BattleEngine extends Emitter {
     this.resetBattleFlags();
     const wild = rollWildEncounter(zoneKey);
     state.battle = { ctx: 'wild', enemyName: wild.speciesName, enemyMons: [wild], enemyIdx: 0, isWild: true, moneyReward: 0 };
+    this.emit('anim', { type: 'intro', wild: true, name: wild.speciesName });
     this.render(`A wild ${wild.speciesName} appeared!`);
     return true;
   }
@@ -256,7 +259,12 @@ export class BattleEngine extends Emitter {
       sturdyTriggered = true;
     }
     defender.hp = Math.max(0, defender.hp - dmg);
-    if (defender.hp <= 0) { defender.fainted = true; defender.status = null; }
+    {
+      const attackerSide = attacker === activeMon() ? 'player' : 'enemy';
+      const eff = typeMultiplier(move.type, defender.type);
+      this.emit('anim', { type: 'hit', attacker: attackerSide, defender: attackerSide === 'player' ? 'enemy' : 'player', effectiveness: eff });
+    }
+    if (defender.hp <= 0) { defender.fainted = true; defender.status = null; this.emit('anim', { type: 'faint', side: attacker === activeMon() ? 'enemy' : 'player' }); }
     if (mult === 0) msg += " It has no effect...";
     else if (mult > 1) msg += " It's super effective!";
     else if (mult < 1) msg += " It's not very effective...";
@@ -515,6 +523,7 @@ export class BattleEngine extends Emitter {
     const statusMult = e.status === 'sleep' ? 2 : e.status ? 1.5 : 1;
     const catchChance = Math.min(0.95, (0.9 - hpPct*0.7) * ITEMS[ballKey].catchMult * statusMult);
     this.render(`You throw a ${ITEMS[ballKey].name}...`);
+    this.emit('anim', { type: 'ball' });
     setTimeout(() => {
       if (Math.random() < catchChance) {
         const caughtMon = {
@@ -530,17 +539,20 @@ export class BattleEngine extends Emitter {
         // overlay rather than losing the catch or being forced to swap.
         if (state.party.length < MAX_PARTY) {
           state.party.push(caughtMon);
+          this.emit('anim', { type: 'catch', caught: true });
           this.render(`Gotcha! ${e.speciesName} was caught!`);
         } else {
           state.box.push(caughtMon);
+          this.emit('anim', { type: 'catch', caught: true });
           this.render(`Gotcha! ${e.speciesName} was caught and sent to your PC Box (party's full).`);
         }
         setTimeout(() => this.winBattle(true), 1300);
       } else {
+        this.emit('anim', { type: 'catch', caught: false });
         this.render(`${e.speciesName} broke free!`);
         setTimeout(() => this.enemyTurnOnly(), 900);
       }
-    }, 900);
+    }, 1900);
   }
 
   tryFlee() {
@@ -587,7 +599,7 @@ export class BattleEngine extends Emitter {
     }
     this.revertAllMegas();
     saveGame();
-    this.emit('end', { outcome: 'win', ctx, msg });
+    this.emit('end', { outcome: 'win', ctx, leaderName: ctx === 'league' ? LEAGUE_LEADERS[state.currentLeagueIdx].name.replace('Leader ', '') : null, msg });
   }
 
   loseBattle() {

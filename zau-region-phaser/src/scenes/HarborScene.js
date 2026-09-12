@@ -91,7 +91,7 @@ export default class HarborScene extends Phaser.Scene {
       { label: 'Town', onClick: () => goToScene(this, 'Town') }
     ], GAME_H - 16);
 
-    setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])]);
+    setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])], { banner: 'HARBOR DISTRICT' });
   }
 
   // The ferry quest's payoff: the water tile over the stair drains away.

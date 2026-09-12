@@ -96,7 +96,7 @@ export default class EmberScene extends Phaser.Scene {
       .setAlpha(0).setDepth(50);
     if (hasFlag('blackout') && !hasFlag('lineRestored')) this.blackoutRect.setAlpha(0.55);
 
-    setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])]);
+    setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])], { banner: 'EMBER QUARTER' });
   }
 
   setBlackout(on) {

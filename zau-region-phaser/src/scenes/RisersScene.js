@@ -69,7 +69,7 @@ export default class RisersScene extends Phaser.Scene {
       { label: 'Climb Down', onClick: () => this.leave() }
     ], GAME_H - 16);
 
-    this.hudCam = setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])]);
+    this.hudCam = setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])], { banner: 'CABLE RISERS' });
   }
 
   drawPlayer() {
