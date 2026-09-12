@@ -5,6 +5,7 @@ export const state = {
   starterKey: null,
   party: [],       // array of mon objects, [0] is not necessarily active, capped at MAX_PARTY
   box: [],         // overflow storage (PC Box) — unlimited, mons caught while party is full land here
+  hasKeyStone: false, // granted by the story (beating Dario); required alongside a held Mega Stone to Mega Evolve
   activeIdx: 0,
   money: 300,
   items: { pokeball: 5, potion: 3 },

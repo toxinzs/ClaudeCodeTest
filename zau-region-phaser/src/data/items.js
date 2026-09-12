@@ -26,6 +26,17 @@ export const ITEMS = {
   lumberry:     { name: "Lum Berry",    price: 800,  category: "held", effect: "cure_status" },
   leftovers:    { name: "Leftovers",    price: 2000, category: "held", effect: "leftovers" },
 
+  // Mega Stones — one per real Mega-eligible species in the roster (see
+  // data/megas.js). Held items, inert unless the holder is the matching
+  // species and the player has the Key Stone; the Mega button in battle
+  // does the rest.
+  gyaradosite:  { name: "Gyaradosite",  price: 5000, category: "held", effect: "mega_stone", megaFor: "Gyarados" },
+  alakazite:    { name: "Alakazite",    price: 5000, category: "held", effect: "mega_stone", megaFor: "Alakazam" },
+  gengarite:    { name: "Gengarite",    price: 5000, category: "held", effect: "mega_stone", megaFor: "Gengar" },
+  lucarionite:  { name: "Lucarionite",  price: 5000, category: "held", effect: "mega_stone", megaFor: "Lucario" },
+  garchompite:  { name: "Garchompite",  price: 5000, category: "held", effect: "mega_stone", megaFor: "Garchomp" },
+  absolite:     { name: "Absolite",     price: 5000, category: "held", effect: "mega_stone", megaFor: "Absol" },
+
   // Evolution item — real item from Pokémon Legends: Arceus/Scarlet &
   // Violet, letting a real trade-evolution species (Kadabra->Alakazam,
   // Haunter->Gengar; see data/evolutions.js) evolve without an actual
@@ -39,7 +50,7 @@ const MART_TIERS = [
   { minBadges: 0, items: ["pokeball", "potion"] },
   { minBadges: 1, items: ["greatball", "superpotion"] },
   { minBadges: 3, items: ["ultraball", "hyperpotion", "revive", "charcoal", "mysticwater", "miracleseed", "magnet", "blackbelt", "lumberry"] },
-  { minBadges: 5, items: ["maxpotion", "maxrevive", "leftovers", "linkingcord"] }
+  { minBadges: 5, items: ["maxpotion", "maxrevive", "leftovers", "linkingcord", "gyaradosite", "alakazite", "gengarite", "lucarionite", "garchompite", "absolite"] }
 ];
 
 export function availableItems(badgeCount) {
@@ -51,7 +62,7 @@ export function availableItems(badgeCount) {
 export function itemIcon(key) {
   const item = ITEMS[key];
   if (item.category === 'ball') return '🔴';
-  if (item.category === 'held') return item.effect === 'cure_status' ? '🍒' : '💠';
+  if (item.category === 'held') return item.effect === 'cure_status' ? '🍒' : item.effect === 'mega_stone' ? '🔮' : '💠';
   if (item.category === 'evolution') return '🔗';
   if (item.revive) return '✨';
   return '💊';

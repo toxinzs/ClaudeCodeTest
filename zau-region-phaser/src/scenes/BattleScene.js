@@ -78,12 +78,16 @@ export default class BattleScene extends Phaser.Scene {
     // tryFlee() itself refuses on a trainer battle rather than the button
     // being hidden. Catching is now a Bag→ball-item flow, not a shortcut
     // button, same as the DOM version.
-    const [switchBar, bagBar, fleeBar] = addActionBar(this, [
+    // Mega only lights up when the engine says it's legal (Key Stone +
+    // matching held Mega Stone + not yet used this battle) — see onRender.
+    const [megaBar, switchBar, bagBar, fleeBar] = addActionBar(this, [
+      { label: 'Mega', onClick: () => this.engine.megaEvolve() },
       { label: 'Switch', onClick: () => this.openParty() },
       { label: 'Bag', onClick: () => this.openBag() },
       { label: 'Flee', onClick: () => this.engine.tryFlee() }
     ], 428);
-    this.actionButtons = [switchBar, bagBar, fleeBar];
+    this.megaButton = megaBar;
+    this.actionButtons = [megaBar, switchBar, bagBar, fleeBar];
 
     this.engine = new BattleEngine();
     this.engine.on('render', (payload) => this.onRender(payload));
@@ -122,6 +126,11 @@ export default class BattleScene extends Phaser.Scene {
     this.playerCard.update(payload.player);
     this.enemyCard.update(payload.enemy);
     if (payload.log) this.logText.setText(payload.log);
+
+    const canMega = !!payload.canMega;
+    this.megaButton.bg.setAlpha(canMega ? 1 : 0.35);
+    this.megaButton.label.setAlpha(canMega ? 1 : 0.35);
+    if (canMega) this.megaButton.bg.setInteractive({ useHandCursor: true }); else this.megaButton.bg.disableInteractive();
 
     payload.player.moves.forEach((m, i) => {
       this.moveButtons[i].text.setText(m ? `${m.name} (${m.type})` : '');
