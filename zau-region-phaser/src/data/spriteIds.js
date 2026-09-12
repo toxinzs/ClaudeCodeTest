@@ -146,7 +146,18 @@ export const SPRITE_IDS = {
   granbull: 210,
   audino: 531,
   kangaskhan: 115,
-  clefairy: 35
+  clefairy: 35,
+
+  // Stone evolutions
+  chandelure: 609,
+  magnezone: 462,
+  vileplume: 45,
+  bellossom: 182,
+  florges: 671,
+  vaporeon: 134,
+  jolteon: 135,
+  flareon: 136,
+  clefable: 36
 };
 
 export function spriteIdFor(speciesName) {

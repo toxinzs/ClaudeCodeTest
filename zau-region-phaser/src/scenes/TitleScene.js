@@ -17,7 +17,7 @@ export default class TitleScene extends Phaser.Scene {
 
   create() {
     fadeIn(this);
-    this.add.text(GAME_W / 2, 40, 'POKÉMON: ZAU', {
+    this.add.text(GAME_W / 2, 40, 'POKÉMON: ZAU STORME', {
       fontFamily: 'sans-serif', fontSize: '26px', fontStyle: 'bold', color: '#e8e8f0'
     }).setOrigin(0.5);
     this.add.text(GAME_W / 2, 74, 'Where The Storm Chooses You', {

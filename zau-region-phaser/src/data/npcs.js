@@ -16,7 +16,8 @@ import { grantKeyStone } from '../keystone.js';
 // gengariteGiven, wardenMet, act2Close (Undercity U1–U3); sprawlDario,
 // towerBadge, sloaneDecided, sprawlJae, towerOpen (Sprawl SP1–SP2);
 // towerRask, towerMarlowe, vanceTalked, rigActivated, underlightDario,
-// ending (Tower T1–T3, Underlight V1–V4).
+// ending (Tower T1–T3, Underlight V1–V4); lastLine*, fern*, growsDone,
+// orchard*, song* (side quests #3–#6, Phase 25).
 // Placement rule: a character must never stand in a one-tile corridor (the
 // Greenline's rows are exactly that), so there they stand ON their landmark
 // tile and carry its description — talking to Wren opens the Seed Bank.
@@ -190,10 +191,39 @@ export const HARBOR_CARGO_BREAKIN = [
 ];
 
 export const EMBER_NPCS = [
+  // SIDEQUESTS.md #3 — Ila quit when the line died; she's at the west end.
+  {
+    id: 'ilaQuit', name: 'Ila', x: 1, y: 6, facing: 'right',
+    when: (s) => s.story.lastLineAsked && !s.story.lastLineIla,
+    appearance: { skin: 'bronze', hair: 'ponytail', hairColor: 'black', outfit: 'sporty' },
+    script: () => [
+      { say: ['Ila', "Kettering sent you. Of course he did. He'd rather send you than ask.", "…Line's really back? All right. Tell him I want the day shift. And a chair that isn't a crate."] },
+      { set: 'lastLineIla' }
+    ]
+  },
   {
     id: 'kettering', name: 'Foreman Kettering', x: 2, y: 5, facing: 'left',
     appearance: { skin: 'brown', hair: 'buzzcut', hairColor: 'gray', outfit: 'explorer' },
     script: (s) => {
+      // SIDEQUESTS.md #3 — The Last Line (after the blackout is fixed).
+      if (s.story.lineRestored && !s.story.lastLineDone) {
+        if (s.story.lastLineTorkoal) return [
+          { say: ['Kettering', "Part's in, Ila's back, Torkoal's on the brick instead of in the box. Three lines. Three.", "Ten years I've been running one. Here — found this in the slag pit the day the substation went in. Figured it was your kind of thing."] },
+          { give: { item: 'lucarionite' } }, { say: ['', 'Received the Lucarionite!'] },
+          { set: 'lastLineDone' }, { quest: { key: 'lastline', status: 'done' } }
+        ];
+        if (s.story.lastLineIla) return [
+          { say: ['Kettering', "Last thing. There's a Torkoal living in furnace three. Likes the heat. Won't leave. I'm not going in there after it — you are."] },
+          { battle: { trainerKey: 'kilnTorkoal', returnTo: 'Ember' } }
+        ];
+        if (s.story.lastLineAsked) return [
+          { say: ['Kettering', "Relay from Bo at the Exchange. Ila, west end of the Quarter — she quit when the line died. Then we talk about the Torkoal."] }
+        ];
+        return [
+          { say: ['Kettering', "Line's back. One line. I used to run three.", "Want to make yourself useful? I need a relay from Bo's scrapyard, I need Ila back — she quit when it died — and I need something done about the Torkoal in furnace three."] },
+          { set: 'lastLineAsked' }, { quest: { key: 'lastline', status: 'active' } }
+        ];
+      }
       if (s.story.ferryCrew) return [
         { say: ['Kettering', "Crew's on the Harbor pumps. Tell Rossi he owes me a boat ride."] }
       ];
@@ -223,8 +253,10 @@ export const EMBER_NPCS = [
   {
     id: 'bo', name: 'Bo', x: 3, y: 3, facing: 'right',
     appearance: { skin: 'black', hair: 'afro', hairColor: 'black', outfit: 'casual' },
-    script: () => [
-      { say: ['Bo', "Everything off a pallet, till's a coffee tin. Meridian's paying for my new roof, so I'm not complaining. Out loud."] }
+    script: (s) => [
+      { if: (st) => st.story.lastLineAsked && !st.story.lastLinePart,
+        then: [{ say: ['Bo', "A relay for Kettering's line? Pallet nine, under the tarp. Take it — he's been asking for a year and I've been pretending I didn't hear."] }, { set: 'lastLinePart' }],
+        else: [{ say: ['Bo', "Everything off a pallet, till's a coffee tin. Meridian's paying for my new roof, so I'm not complaining. Out loud."] }] }
     ]
   },
   {
@@ -317,6 +349,21 @@ export const GREENLINE_NPCS = [
     when: (s) => badges(s) >= 2,
     appearance: { skin: 'amber', hair: 'braid', hairColor: 'black', outfit: 'casual' },
     script: (s) => {
+      // SIDEQUESTS.md #5 — the Allotments' regulars want a match.
+      if (s.story.stormSeen && !s.story.orchardOsei) {
+        if (s.story.orchardPip) return [{ say: ['Priya', "Grandma Osei. Everyone here knows she's the strongest trainer in the district. Except her."] }, { battle: { trainerKey: 'osei', returnTo: 'Greenline' } }];
+        if (s.story.orchardTomas) return [{ say: ['Priya', "Pip's next. Pip is eight. Do not go easy on Pip — Pip will know."] }, { battle: { trainerKey: 'pip', returnTo: 'Greenline' } }];
+        if (s.story.orchardAsked) return [{ say: ['Priya', "Tomas first. He's been talking about his Sewaddle all week."] }, { battle: { trainerKey: 'tomas', returnTo: 'Greenline' } }];
+        return [
+          { say: ['Priya', "Oh — the Allotments have a bet going. Tomas, Pip and Grandma Osei each think they'd beat you. Osei's the real fight, whatever she says.", "Winner gets whatever Osei found under the old pear tree. She won't say what it is."] },
+          { set: 'orchardAsked' }, { quest: { key: 'orchard', status: 'active' } }
+        ];
+      }
+      if (s.story.orchardOsei && !s.story.orchardDone) return [
+        { say: ['Priya', "You beat *Grandma Osei*. Nobody beats Grandma Osei. Here — she says it's yours."] },
+        { give: { item: 'heracronite' } }, { say: ['', 'Received the Heracronite!'] },
+        { set: 'orchardDone' }, { quest: { key: 'orchard', status: 'done' } }
+      ];
       if (s.story.stormSeen) return [
         { say: ['Priya', "That wasn't a wild Pokémon. It looked at you. It *waited* for you.", "That was a message. I just don't know who from yet."] }
       ];
@@ -333,6 +380,19 @@ export const GREENLINE_NPCS = [
     id: 'sato', name: 'Old Sato', x: 7, y: 5, facing: 'left',
     appearance: { skin: 'amber', hair: 'none', hairColor: 'white', outfit: 'explorer' },
     script: (s) => {
+      // SIDEQUESTS.md #4 — What Grows There.
+      if (s.story.stormSeen && !s.story.growsDone) {
+        if (s.story.fern3) return [
+          { say: ['Old Sato', "Three cuttings. Look at the stems — they're *warm*. Priya's girl will have a field day.", "Here. It was in the intake filter the first year. Didn't know what it was. Still don't. It's yours."] },
+          { give: { item: 'gardevoirite' } }, { say: ['', 'Received the Gardevoirite!'] },
+          { set: 'growsDone' }, { quest: { key: 'grows', status: 'done' } }
+        ];
+        if (s.story.growsAsked) return [{ say: ['Old Sato', "Kess is at the Irrigation Works. She'll pretend she doesn't know which ferns. She knows."] }];
+        return [
+          { say: ['Old Sato', "You want to know what grows there? Then bring me three cuttings from the ferns by the intake. Priya's girl wants them for her samples.", "Careful. The things living in that bed grew the same way the ferns did."] },
+          { set: 'growsAsked' }, { quest: { key: 'grows', status: 'active' } }
+        ];
+      }
       if (s.story.stormSeen) return [
         { say: ['Old Sato', "It's never come that close before. It's never looked at anyone but me.", "Whatever it's waiting for — I think it's decided it's you."] }
       ];
@@ -345,9 +405,18 @@ export const GREENLINE_NPCS = [
   {
     id: 'kess', name: 'Dr. Kess', x: 1, y: 3, facing: 'right',
     appearance: { skin: 'light', hair: 'pixie', hairColor: 'blonde', outfit: 'formal' },
-    script: () => [
-      { say: ['Dr. Kess', "Meridian Irrigation Works. The intake feeds every terrace. Deep aquifer — mineral-rich, hence the warmth. Perfectly ordinary hydrology.", "…The ferns by the pipe? Twice the size, yes. I'm a hydrologist. Plants aren't my department."] }
-    ]
+    script: (s) => {
+      if (s.story.growsAsked && !s.story.fern3) {
+        const n = s.story.fern2 ? 3 : s.story.fern1 ? 2 : 1;
+        return [
+          { say: ['Dr. Kess', n === 1 ? "Cuttings. From *those* ferns. …Fine. The bed's right there. Something's living in it." : n === 2 ? "Another? The bigger one's further in. It's — it's bigger than it should be." : "The last one's right at the pipe. I've never gone that close. Nobody has."] },
+          { battle: { trainerKey: `fern${n}`, returnTo: 'Greenline' } }
+        ];
+      }
+      return [
+        { say: ['Dr. Kess', "Meridian Irrigation Works. The intake feeds every terrace. Deep aquifer — mineral-rich, hence the warmth. Perfectly ordinary hydrology.", "…The ferns by the pipe? Twice the size, yes. I'm a hydrologist. Plants aren't my department."] }
+      ];
+    }
   },
   {
     id: 'wren', name: 'Wren', x: 1, y: 1, facing: 'right',
@@ -444,9 +513,19 @@ export const SIGNAL_NPCS = [
   {
     id: 'talia', name: 'Busker Talia', x: 6, y: 5, facing: 'right',
     appearance: { skin: 'brown', hair: 'long', hairColor: 'purple', outfit: 'casual' },
-    script: () => [
-      { say: ['Talia', "♪ *Followed the thunder up the stairs, and the thunder had a tune…* ♪", "I can hear it up here. In the storms. A melody, almost. I've been trying to write it down for a month and I can't finish it."] }
-    ]
+    script: (s) => {
+      if (s.story.songDone) return [{ say: ['Talia', "♪ *Eleven seconds, then it turns; the city holds its breath and learns…* ♪", "Finished. It only took a heartbeat."] }];
+      if (s.story.song3) return [
+        { say: ['Talia', "Three points. Play them together — there. *There.* It's a bar of eleven. It repeats. It's been repeating the whole time.", "I couldn't finish it because it isn't finished. It's *waiting*.", "Here. A kid in the Outskirts traded me this for a song, years ago. It's been in my case ever since. You'll know what to do with it."] },
+        { give: { item: 'alakazite' } }, { say: ['', 'Received the Alakazite!'] },
+        { set: 'songDone' }, { quest: { key: 'song', status: 'done' } }
+      ];
+      if (s.story.songAsked) return [{ say: ['Talia', "Antenna Farm, the terminal in the Risers, and the bridge — where the wind is. Stand there and listen. That's all recording is."] }];
+      return [
+        { say: ['Talia', "♪ *Followed the thunder up the stairs, and the thunder had a tune…* ♪", "I can hear it up here. In the storms. A melody, almost. I've been trying to write it down for a month and I can't finish it.", "Would you listen for me? Three places where it's loudest: the Antenna Farm, the terminal in the Risers, the bridge. Just stand there. Listen."] },
+        { set: 'songAsked' }, { quest: { key: 'song', status: 'active' } }
+      ];
+    }
   },
   // STORY.md S3 — rival battle 3, sponsored.
   {

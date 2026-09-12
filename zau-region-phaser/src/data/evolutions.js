@@ -73,10 +73,41 @@ const EVOLUTIONS = {
   koffing: { evolvesTo: 'Weezing', type: 'Poison', emoji: '☁️', method: 'level', level: 35 },
   shuppet: { evolvesTo: 'Banette', type: 'Ghost', emoji: '🎭', method: 'level', level: 37 },
 
-  // The Sprawl — Eevee's and Clefairy's real evolutions are stone-based, left for now.
-  snubbull: { evolvesTo: 'Granbull', type: 'Fairy', emoji: '🐶', method: 'level', level: 23 }
+  snubbull: { evolvesTo: 'Granbull', type: 'Fairy', emoji: '🐶', method: 'level', level: 23 },
+
+  // Evolution stones (Phase 25) — the real stone for each real evolution.
+  // A species with several stone options (Gloom, Eevee) lists them all;
+  // the Bag offers whichever stone the player is holding.
+  lampent: { evolvesTo: 'Chandelure', type: 'Ghost/Fire', emoji: '🕯️', method: 'item', item: 'duskstone' },
+  magneton: { evolvesTo: 'Magnezone', type: 'Electric/Steel', emoji: '🧲', method: 'item', item: 'thunderstone' },
+  gloom: [
+    { evolvesTo: 'Vileplume', type: 'Grass/Poison', emoji: '🌺', method: 'item', item: 'leafstone' },
+    { evolvesTo: 'Bellossom', type: 'Grass', emoji: '🌼', method: 'item', item: 'sunstone' }
+  ],
+  floette: { evolvesTo: 'Florges', type: 'Fairy', emoji: '💐', method: 'item', item: 'shinystone' },
+  eevee: [
+    { evolvesTo: 'Vaporeon', type: 'Water', emoji: '🐬', method: 'item', item: 'waterstone' },
+    { evolvesTo: 'Jolteon', type: 'Electric', emoji: '⚡', method: 'item', item: 'thunderstone' },
+    { evolvesTo: 'Flareon', type: 'Fire', emoji: '🔥', method: 'item', item: 'firestone' }
+  ],
+  murkrow: { evolvesTo: 'Honchkrow', type: 'Dark/Flying', emoji: '🐦‍⬛', method: 'item', item: 'duskstone' },
+  clefairy: { evolvesTo: 'Clefable', type: 'Fairy', emoji: '🌙', method: 'item', item: 'moonstone' }
 };
 
+function entries(speciesName) {
+  const e = EVOLUTIONS[speciesName.toLowerCase()];
+  if (!e) return [];
+  return Array.isArray(e) ? e : [e];
+}
+
+// The level-up evolution for a species (or, if it only has one item
+// evolution, that one — the Bag checks `method` before using it).
 export function evolutionFor(speciesName) {
-  return EVOLUTIONS[speciesName.toLowerCase()] || null;
+  const all = entries(speciesName);
+  return all.find(e => e.method === 'level') || all[0] || null;
+}
+
+// Every item-triggered evolution for a species (stones, the Linking Cord).
+export function itemEvolutionsFor(speciesName) {
+  return entries(speciesName).filter(e => e.method === 'item');
 }

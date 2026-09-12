@@ -8,7 +8,7 @@ import { addActionBar } from '../uiHelpers.js';
 import { goToScene, fadeIn } from '../transitions.js';
 import { preloadPlayerLayers, createPlayerSprite } from '../playerSprite.js';
 import { preloadNPCLayers, placeNPCs, makeActor } from '../npcs.js';
-import { ensureStoryState, hasFlag } from '../story.js';
+import { ensureStoryState, hasFlag, setFlag } from '../story.js';
 import { RISERS_NPCS, RISERS_TERMINAL } from '../data/npcs.js';
 
 // The Cable Risers (STORY.md S2) — the Meridian data centre's maintenance
@@ -93,6 +93,7 @@ export default class RisersScene extends Phaser.Scene {
     this.toastText.setText('');
     saveGame();
     if (nx === RISERS_MAP.terminalX && ny === RISERS_MAP.terminalY) {
+      if (hasFlag('pulseDecoded') && hasFlag('songAsked') && !hasFlag('song2')) { setFlag('song2'); this.toastText.setText('You put your ear to the terminal. Eleven seconds. It has a shape. Recorded.'); return; }
       if (hasFlag('pulseDecoded')) this.toastText.setText('The terminal loops the waveform. Every eleven seconds, exactly.');
       else this.npcLayer.run(RISERS_TERMINAL);
       return;
