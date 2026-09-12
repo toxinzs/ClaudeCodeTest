@@ -113,6 +113,22 @@ const BASE_STATS = {
   heracross:    { hp: 80, atk: 125, def: 75,  spAtk: 40,  spDef: 95,  spe: 85 },
   pinsir:       { hp: 65, atk: 125, def: 100, spAtk: 55,  spDef: 70,  spe: 85 },
 
+  // Signal District roster + evolutions
+  elekid:       { hp: 45, atk: 63,  def: 37,  spAtk: 65,  spDef: 55,  spe: 95 },
+  electabuzz:   { hp: 65, atk: 83,  def: 57,  spAtk: 95,  spDef: 85,  spe: 105 },
+  joltik:       { hp: 50, atk: 47,  def: 50,  spAtk: 57,  spDef: 50,  spe: 65 },
+  galvantula:   { hp: 70, atk: 77,  def: 60,  spAtk: 97,  spDef: 60,  spe: 108 },
+  klink:        { hp: 40, atk: 55,  def: 70,  spAtk: 45,  spDef: 60,  spe: 30 },
+  klang:        { hp: 60, atk: 80,  def: 95,  spAtk: 70,  spDef: 85,  spe: 50 },
+  pawniard:     { hp: 45, atk: 85,  def: 70,  spAtk: 40,  spDef: 40,  spe: 60 },
+  bisharp:      { hp: 65, atk: 125, def: 100, spAtk: 60,  spDef: 70,  spe: 70 },
+  mareep:       { hp: 55, atk: 40,  def: 40,  spAtk: 65,  spDef: 45,  spe: 35 },
+  flaaffy:      { hp: 70, atk: 55,  def: 55,  spAtk: 80,  spDef: 60,  spe: 45 },
+  ampharos:     { hp: 90, atk: 75,  def: 85,  spAtk: 115, spDef: 90,  spe: 55 },
+  electrike:    { hp: 40, atk: 45,  def: 40,  spAtk: 65,  spDef: 40,  spe: 65 },
+  manectric:    { hp: 70, atk: 75,  def: 60,  spAtk: 105, spDef: 60,  spe: 105 },
+  skarmory:     { hp: 65, atk: 80,  def: 140, spAtk: 40,  spDef: 70,  spe: 70 },
+
   // Custom/fictional final legendary — not a real species, hand-authored
   verdanyx:     { hp: 100,atk: 110, def: 90,  spAtk: 120, spDef: 100, spe: 95 }
 };

@@ -187,7 +187,26 @@ export const WILD_SPECIES = [
   { name: "Heracross", emoji: "🪲", type: "Bug/Fighting", baseLvl: [24,28],
     moves: [moveFor("Horn Attack"), moveFor("Aerial Ace")] },
   { name: "Pinsir", emoji: "🦂", type: "Bug", baseLvl: [24,28],
-    moves: [moveFor("Vise Grip"), moveFor("Double Hit")] }
+    moves: [moveFor("Vise Grip"), moveFor("Double Hit")] },
+
+  // Signal District roster (indices 49-55) — real Electric/Steel species
+  // for the comms stratum, band post-Thistle/pre-Prism per
+  // zau-region/districts/signal.md. Mareep and Electrike are the
+  // district's Mega seeds (Ampharos/Manectric).
+  { name: "Elekid", emoji: "🔌", type: "Electric", baseLvl: [28,33],
+    moves: [moveFor("Thunder Shock"), moveFor("Quick Attack")] },
+  { name: "Joltik", emoji: "🕷️", type: "Bug/Electric", baseLvl: [28,33],
+    moves: [moveFor("Bug Bite"), moveFor("Thunder Wave")] },
+  { name: "Klink", emoji: "⚙️", type: "Steel", baseLvl: [28,33],
+    moves: [moveFor("Vise Grip"), moveFor("Thunder Shock")] },
+  { name: "Pawniard", emoji: "🗡️", type: "Dark/Steel", baseLvl: [29,34],
+    moves: [moveFor("Metal Claw"), moveFor("Scratch")] },
+  { name: "Mareep", emoji: "🐑", type: "Electric", baseLvl: [28,33],
+    moves: [moveFor("Thunder Shock"), moveFor("Tackle")] },
+  { name: "Electrike", emoji: "🐕", type: "Electric", baseLvl: [29,34],
+    moves: [moveFor("Spark"), moveFor("Quick Attack")] },
+  { name: "Skarmory", emoji: "🦅", type: "Steel/Flying", baseLvl: [30,34],
+    moves: [moveFor("Peck"), moveFor("Steel Wing")] }
 ];
 
 // Wild encounter tables per zone (by index in WILD_SPECIES)
@@ -203,5 +222,9 @@ export const WILD_ZONE_TABLE = {
   greenline: [41,41,42,42,43,44,45,46,21,47,48],
   // Boiler Tunnels: the Ember roster's cave-dwellers, no Numel/Magnemite/Houndour.
   boiler: [33,33,36,36,35,37,38],
+  // Signal: Magnemite (39) shared with Ember; Electrike rare, Skarmory rarer.
+  signal: [49,50,51,52,53,53,39,39,54,55],
+  // The Cable Risers: the data centre's shafts — Klink/Magnemite country.
+  risers: [51,51,39,39,50,52],
   district: [11,12,14,15,16,18,19,20,21,22]
 };

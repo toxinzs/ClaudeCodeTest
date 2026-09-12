@@ -38,7 +38,7 @@ const SPOT_TEXT = {
   irrigation: "Meridian Irrigation Works. The intake water comes up warm. A hydrologist smiles: \"Deep aquifer.\" The ferns by the pipe are twice the size of the ones ten metres away.",
   allotments: "The Allotments. Kids from the strata below, trainers between gyms, retirees with opinions about tomatoes. The Greenline's social floor.",
   overlook: "The Overlook. Old Sato doesn't look up from his bench: \"Planted every terrace here. Stopped planting near the pump. Nobody asked why, so I stopped saying.\" Below, storms gather over the Outskirts.",
-  stair: "The Service Stair — up toward Signal District. The Meridian keycard reader at the bottom blinks red at you, same as everyone."
+  stair: "The Service Stair — up toward Signal District. The keycard reader blinks red. A gardener: \"Thistle's badge opens it. League courtesy.\""
 };
 
 export default class GreenlineScene extends Phaser.Scene {
@@ -155,7 +155,12 @@ export default class GreenlineScene extends Phaser.Scene {
       return;
     }
     if (at('seedbank')) { this.toastText.setText('The Seed Bank — the old horticultural archive, now a shop. Every purchase is a small bet on the future.'); this.scene.launch('Mart'); return; }
-    for (const key of ['irrigation', 'allotments', 'overlook', 'stair']) {
+    if (at('stair')) {
+      if (state.leagueBeaten[THISTLE_IDX]) goToScene(this, 'Signal');
+      else this.toastText.setText(SPOT_TEXT.stair);
+      return;
+    }
+    for (const key of ['irrigation', 'allotments', 'overlook']) {
       if (at(key)) { this.toastText.setText(SPOT_TEXT[key]); return; }
     }
     if (state.party.length && Math.random() < WILD_ENCOUNTER_CHANCE) {

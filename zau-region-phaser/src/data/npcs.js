@@ -10,7 +10,8 @@ import { grantKeyStone } from '../keystone.js';
 // Story flags used here (state.story.*): introDone, marenTip, harborDario,
 // cargoRow (Harbor H1–H3); emberHalloran, blackout, boilerIla, boilerDev,
 // aggroniteFound, lineRestored, emberDarioPin (Ember E2–E3); priyaSamples,
-// stormSeen (Greenline G2–G3) — see STORY.md Act 2.
+// stormSeen (Greenline G2–G3); signalJuno, risersOduya, risersBrann,
+// pulseDecoded, signalDario (Signal S1–S3) — see STORY.md Act 2.
 // Placement rule: a character must never stand in a one-tile corridor (the
 // Greenline's rows are exactly that), so there they stand ON their landmark
 // tile and carry its description — talking to Wren opens the Seed Bank.
@@ -373,4 +374,118 @@ export const KEYSTONE_BEAT = [
     else: [{ say: ['', "You received the Key Stone! Absol joined your party, holding the Absolite."] }] },
   { say: ['Mabosso (call)', "…Alma called me. Said you'd gone under the Quarter and come back with something on a cord. A Key Stone. Then listen, because I was there.", "Meridian's division called it deep resonance. It's the energy Mega Stones are made of. A Key Stone lets a trainer's bond reach a Pokémon holding its own stone — and the Pokémon changes, past its natural form, for as long as the battle lasts.", "Then it comes back. That's the part that matters. It comes *back*.", "E. Voss was the engineer who ordered the drill stopped, eighteen years ago. She was blamed when it wasn't. I signed nothing and I left. I have never told Dario. Please — not yet.", "In battle, when your Absol's out and holding that stone, you'll see the Mega button light. Use it. And be careful who sees you use it."] },
   { set: 'mabossoExplained' }
+];
+
+export const SIGNAL_NPCS = [
+  // STORY.md S1 — Prism's assistant; the data doesn't make sense.
+  {
+    id: 'juno', name: 'Juno', x: 5, y: 3, facing: 'left',
+    appearance: { skin: 'olive', hair: 'pixie', hairColor: 'blue', outfit: 'sporty' },
+    script: (s) => {
+      if (s.story.pulseDecoded) return [
+        { say: ['Juno', "A pulse. Prism's been staring at the waveform for an hour without blinking. That's — for Prism that's basically screaming."] }
+      ];
+      if (s.story.signalJuno) return [
+        { say: ['Juno', "The data centre door's badge-tapped, but Marchetti lets Prism's people through. Tell him I sent you. He'll sigh. That's a yes."] }
+      ];
+      return [
+        { say: ['Juno', "You're the challenger? Prism's… busy. Not gym busy. *Lab* busy.", "The storms have an electrical signature that matches nothing in the record. Not weather, not the grid. Prism doesn't care about Meridian. Prism cares that the numbers don't make sense.", "We need the raw feed from the data centre's risers. I used to work there. I'd rather not go back in. Would you?"] },
+        { set: 'signalJuno' }
+      ];
+    }
+  },
+  {
+    id: 'marchetti', name: 'Marchetti', x: 2, y: 1, facing: 'left',
+    appearance: { skin: 'light', hair: 'buzzcut', hairColor: 'dark_brown', outfit: 'formal' },
+    script: (s) => [
+      { if: (st) => st.story.signalJuno && !st.story.pulseDecoded,
+        then: [{ say: ['Marchetti', "Juno sent you. *Sigh.* The risers are through here. Don't touch the trunk fibre, don't ask me about power draw, and if anyone asks, you're a contractor."] }],
+        else: [{ say: ['Marchetti', "Meridian Data Centre. Badge-tapped. And no, I don't know what the power draw is for. I'd like everyone to stop asking."] }] }
+    ]
+  },
+  {
+    id: 'ashren', name: 'Ash & Ren', x: 5, y: 1, facing: 'left',
+    appearance: { skin: 'amber', hair: 'bob', hairColor: 'ginger', outfit: 'casual' },
+    script: () => [
+      { say: ['Ash', "Welcome to the Relay—"] },
+      { say: ['Ren', "—where we sell everything that hums—"] },
+      { say: ['Ash', "—and some things that shouldn't. Shop's right there."] },
+      { call: (scene) => scene.scene.launch('Mart') }
+    ]
+  },
+  {
+    id: 'talia', name: 'Busker Talia', x: 6, y: 5, facing: 'right',
+    appearance: { skin: 'brown', hair: 'long', hairColor: 'purple', outfit: 'casual' },
+    script: () => [
+      { say: ['Talia', "♪ *Followed the thunder up the stairs, and the thunder had a tune…* ♪", "I can hear it up here. In the storms. A melody, almost. I've been trying to write it down for a month and I can't finish it."] }
+    ]
+  },
+  // STORY.md S3 — rival battle 3, sponsored.
+  {
+    id: 'darioSignal', name: 'Dario Voss', x: 5, y: 5, facing: 'down',
+    when: (s) => s.story.pulseDecoded && !s.story.signalDario,
+    appearance: { skin: 'taupe', hair: 'afro', hairColor: 'black', outfit: 'trainer' },
+    script: (s) => [
+      { say: ['Dario', "There you are. New coat, new team, new *everything* — Meridian doesn't do things by halves.", "Halloran says the League's watching me now. Me. A Voss."] },
+      { if: (st) => st.hasKeyStone,
+        then: [{ say: ['Dario', "…What's that on your wrist. That's not a badge.", "Doesn't matter. Bet it doesn't help."] }],
+        else: [{ say: ['Dario', "Bet your team's not ready for mine. Not this one."] }] },
+      { battle: { trainerKey: 'darioSignal', returnTo: 'Signal' } }
+    ]
+  },
+  {
+    id: 'halloranSignal', name: 'Dr. Halloran', x: 6, y: 6, facing: 'up',
+    when: (s) => s.story.pulseDecoded && !s.story.signalDario,
+    appearance: { skin: 'olive', hair: 'bob', hairColor: 'ginger', outfit: 'formal' },
+    script: () => [
+      { say: ['Dr. Halloran', "I'm just here to watch. He asked me to. He's never asked anyone to watch him before — did you know that?"] }
+    ]
+  }
+];
+
+export const RISERS_NPCS = [
+  {
+    id: 'oduya', name: 'Oduya', x: 2, y: 6, facing: 'down',
+    when: (s) => !s.story.risersOduya,
+    appearance: { skin: 'black', hair: 'braid', hairColor: 'black', outfit: 'formal' },
+    script: () => [
+      { say: ['Oduya', "Contractor? You're not a contractor. Nobody's a contractor. Fine — you want up, you go through me."] },
+      { battle: { trainerKey: 'techOduya', returnTo: 'Risers' } }
+    ]
+  },
+  {
+    id: 'brann', name: 'Brann', x: 2, y: 3, facing: 'down',
+    when: (s) => !s.story.risersBrann,
+    appearance: { skin: 'light', hair: 'ponytail', hairColor: 'blonde', outfit: 'formal' },
+    script: () => [
+      { say: ['Brann', "Oduya let you past. She owes me lunch. You owe me a battle."] },
+      { battle: { trainerKey: 'techBrann', returnTo: 'Risers' } }
+    ]
+  },
+  {
+    id: 'priyaRisers', name: 'Priya', x: 1, y: 0, facing: 'right',
+    when: (s) => !s.story.pulseDecoded,
+    appearance: { skin: 'amber', hair: 'braid', hairColor: 'black', outfit: 'casual' },
+    script: () => [{ say: ['Priya', "We got in through the roof. Don't ask. Step up to the terminal — Prism's ready."] }]
+  },
+  {
+    id: 'prismRisers', name: 'Prism', x: 3, y: 0, facing: 'left',
+    when: (s) => !s.story.pulseDecoded,
+    appearance: { skin: 'taupe', hair: 'pixie', hairColor: 'white', outfit: 'formal' },
+    script: () => [{ say: ['Prism', "Terminal. Feed. Now, please. I've been wrong about something for a month and I'd like to know what."] }]
+  }
+];
+
+// STORY.md S2 — the storm signature, cleaned up.
+export const RISERS_TERMINAL = [
+  { say: ['Prism', "Raw feed's up. Every storm this year, stacked. Strip the grid noise, strip the weather… there."] },
+  { flash: 100 },
+  { wait: 400 },
+  { say: ['Priya', "It's… regular. Slow. Every eleven seconds, exactly.", "Weather isn't *regular*."] },
+  { say: ['Prism', "No. It isn't.", "That's not weather. That's a *pulse*."] },
+  { shake: 400 },
+  { say: ['Priya', "Something under the city has a heartbeat, and Meridian is running a cable to it.", "…Prism. Are you okay?"] },
+  { say: ['Prism', "I'm *fascinated*. Come to the Tower when you're ready. I want to see what you do with this."] },
+  { set: 'pulseDecoded' },
+  { call: (scene) => { scene.spawn(); goToScene(scene, 'Signal', { toastMsg: 'Prism will be waiting at Signal Tower.' }); } }
 ];

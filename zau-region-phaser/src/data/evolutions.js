@@ -54,7 +54,17 @@ const EVOLUTIONS = {
   combee: { evolvesTo: 'Vespiquen', type: 'Bug/Flying', emoji: '🐝', method: 'level', level: 21 },
   flabébé: { evolvesTo: 'Floette', type: 'Fairy', emoji: '🌼', method: 'level', level: 19 },
   ralts: { evolvesTo: 'Kirlia', type: 'Psychic/Fairy', emoji: '🧝', method: 'level', level: 20 },
-  kirlia: { evolvesTo: 'Gardevoir', type: 'Psychic/Fairy', emoji: '👗', method: 'level', level: 30 }
+  kirlia: { evolvesTo: 'Gardevoir', type: 'Psychic/Fairy', emoji: '👗', method: 'level', level: 30 },
+
+  // Signal District lines — real level thresholds (Electabuzz->Electivire
+  // and Klang->Klinklang are stone/level-later evolutions left for now).
+  elekid: { evolvesTo: 'Electabuzz', type: 'Electric', emoji: '🔌', method: 'level', level: 30 },
+  joltik: { evolvesTo: 'Galvantula', type: 'Bug/Electric', emoji: '🕷️', method: 'level', level: 36 },
+  klink: { evolvesTo: 'Klang', type: 'Steel', emoji: '⚙️', method: 'level', level: 38 },
+  pawniard: { evolvesTo: 'Bisharp', type: 'Dark/Steel', emoji: '🗡️', method: 'level', level: 52 },
+  mareep: { evolvesTo: 'Flaaffy', type: 'Electric', emoji: '🐑', method: 'level', level: 15 },
+  flaaffy: { evolvesTo: 'Ampharos', type: 'Electric', emoji: '🐑', method: 'level', level: 30 },
+  electrike: { evolvesTo: 'Manectric', type: 'Electric', emoji: '🐕', method: 'level', level: 26 }
 };
 
 export function evolutionFor(speciesName) {
