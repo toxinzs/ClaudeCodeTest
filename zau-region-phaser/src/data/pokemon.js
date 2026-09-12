@@ -201,5 +201,7 @@ export const WILD_ZONE_TABLE = {
   // Oddish/Hoppip common, Cutiefly (21) shared with the Outskirts,
   // Heracross uncommon, Pinsir the rare spawn.
   greenline: [41,41,42,42,43,44,45,46,21,47,48],
+  // Boiler Tunnels: the Ember roster's cave-dwellers, no Numel/Magnemite/Houndour.
+  boiler: [33,33,36,36,35,37,38],
   district: [11,12,14,15,16,18,19,20,21,22]
 };

@@ -11,6 +11,8 @@ import { preloadPlayerLayers, createPlayerSprite } from '../playerSprite.js';
 import { preloadNPCLayers, placeNPCs, makeActor } from '../npcs.js';
 import { ensureStoryState } from '../story.js';
 import { GREENLINE_NPCS } from '../data/npcs.js';
+import { loadMonSprite } from '../spriteLoader.js';
+import { spriteUrlForId } from '../sprites.js';
 
 // Greenline Terraces — stratum 5 in WORLD.md, designed in
 // zau-region/districts/greenline.md. Same shape as Harbor/Ember: Thistle's
@@ -91,7 +93,39 @@ export default class GreenlineScene extends Phaser.Scene {
       { label: 'Ember', onClick: () => this.leaveToEmber() }
     ], GAME_H - 16);
 
-    setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])]);
+    // STORY.md G3: the storm tint (world-space, under the HUD camera).
+    this.stormRect = this.add.rectangle(GAME_W / 2, this.offsetY + GREENLINE_MAP.h * TILE / 2, GAME_W * 3, GREENLINE_MAP.h * TILE * 3, 0x0a1430, 1).setAlpha(0).setDepth(50);
+
+    this.hudCam = setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])]);
+  }
+
+  // ---- cutscene hooks used by GREENLINE_STORM (data/npcs.js) ----
+  tileCenter(x, y) { return { x: this.offsetX + x * TILE + TILE / 2, y: this.offsetY + y * TILE + TILE / 2 }; }
+  panTarget() { return this.tileCenter(GREENLINE_MAP.edgeX, GREENLINE_MAP.edgeY); }
+  stormStart() { this.tweens.add({ targets: this.stormRect, alpha: 0.5, duration: 900 }); }
+  stormEnd() {
+    this.tweens.add({ targets: this.stormRect, alpha: 0, duration: 1200 });
+    this.cameras.main.startFollow(this.playerCtrl.container, true, 0.12, 0.12);
+  }
+  showAbsol() {
+    const { x, y } = this.panTarget();
+    // Real artwork if it loads, the emoji glyph if not — same fallback as battle.
+    this.absol = this.add.text(x, y, '🐺', { fontSize: '36px' }).setOrigin(0.5).setDepth(40).setAlpha(0);
+    this.hudCam.ignore(this.absol); // created after setupHUD, so it isn't in the HUD cam's ignore list
+    this.tweens.add({ targets: this.absol, alpha: 1, duration: 500 });
+    loadMonSprite(this, spriteUrlForId(359), (key) => {
+      if (!key || !this.absol?.active) return;
+      const img = this.add.image(x, y, key).setOrigin(0.5).setDisplaySize(TILE * 1.3, TILE * 1.3).setDepth(40).setAlpha(1);
+      this.hudCam.ignore(img);
+      this.absol.destroy();
+      this.absol = img;
+    });
+  }
+  hideAbsol() {
+    if (!this.absol) return;
+    const a = this.absol;
+    this.tweens.add({ targets: a, alpha: 0, duration: 400, onComplete: () => a.destroy() });
+    this.absol = null;
   }
 
   drawPlayer() {

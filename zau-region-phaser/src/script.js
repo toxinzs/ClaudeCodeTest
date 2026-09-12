@@ -4,7 +4,7 @@ import { setFlag } from './story.js';
 import { inputLock } from './lock.js';
 import { say, choose } from './dialogue.js';
 import Phaser from 'phaser';
-import { goToScene } from './transitions.js';
+import { goToScene, closeOverlays } from './transitions.js';
 
 // The cutscene/dialogue script runner. A script is an array of steps, run
 // top to bottom, each awaited — so writing a scene reads like stage
@@ -30,6 +30,7 @@ import { goToScene } from './transitions.js';
 // the walker's onStep on purpose: a scripted walk must not roll encounters.
 export async function runScript(scene, steps, actors = {}) {
   inputLock.acquire();
+  closeOverlays(scene, { keepDialogue: true });
   try {
     await runSteps(scene, steps, actors);
   } finally {
@@ -72,7 +73,9 @@ async function runSteps(scene, steps, actors) {
       await delay(scene, step.wait);
     } else if (step.pan) {
       const cam = scene.cameras.main;
-      cam.pan(step.pan.x, step.pan.y, step.pan.ms ?? 600, 'Sine.easeInOut');
+      const target = step.pan.toEdge && scene.panTarget ? scene.panTarget() : step.pan;
+      cam.stopFollow();
+      cam.pan(target.x, target.y, step.pan.ms ?? 600, 'Sine.easeInOut');
       await delay(scene, step.pan.ms ?? 600);
     } else if (step.flash) {
       scene.cameras.main.flash(step.flash, 255, 255, 255);

@@ -146,12 +146,13 @@ export const GREENLINE_MAP = {
     [1,1,1,1,1,1,0,1,1],
     [1,0,0,0,0,0,0,0,1],
     [1,1,0,1,1,1,1,1,1],
-    [1,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0],  // (8,5): the terrace edge past the Overlook — where the Absol stands
     [1,1,1,1,1,1,0,1,1],
     [1,0,0,0,0,0,0,0,1],
     [1,1,1,1,1,1,1,1,1]
   ],
   liftX: 1, liftY: 7,
+  edgeX: 8, edgeY: 5,
   decor: [
     {x:7,y:1,emoji:"🌿",tileKey:"door"},    // Thistle's Canopy Gym
     {x:1,y:1,emoji:"🌱",tileKey:"window"},  // The Seed Bank
@@ -160,5 +161,34 @@ export const GREENLINE_MAP = {
     {x:7,y:5,emoji:"🌩️"},                    // The Overlook (Old Sato)
     {x:7,y:7,emoji:"🪜"},                    // The Service Stair (locked)
     {x:1,y:7,emoji:"🛗"}                     // The Freight Lift (exit)
+  ]
+};
+
+// Boiler Tunnels (STORY.md E3) — the game's first real dungeon: the steam
+// tunnels under the Ember Quarter's Kilns, a Trail-style corridor with two
+// one-tile chokepoints where the off-shift mill workers stand (rows 8 and
+// 4), the breaker at the far end, and a side alcove with the Aggronite.
+export const BOILER_MAP = {
+  w: 5, h: 12,
+  bg: "#120a06",
+  layout: [
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,1,0,1,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,1,0,1,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1]
+  ],
+  breakerX: 2, breakerY: 0,
+  stoneX: 3, stoneY: 1,
+  decor: [
+    {x:2,y:0,emoji:"🔌"},   // the breaker panel
+    {x:2,y:11,emoji:"🪜"}   // the ladder back up to the Kilns
   ]
 };
