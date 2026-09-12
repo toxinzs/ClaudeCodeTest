@@ -96,7 +96,7 @@ export default class GreenlineScene extends Phaser.Scene {
     // STORY.md G3: the storm tint (world-space, under the HUD camera).
     this.stormRect = this.add.rectangle(GAME_W / 2, this.offsetY + GREENLINE_MAP.h * TILE / 2, GAME_W * 3, GREENLINE_MAP.h * TILE * 3, 0x0a1430, 1).setAlpha(0).setDepth(50);
 
-    this.hudCam = setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])]);
+    this.hudCam = setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])], { banner: 'GREENLINE TERRACES' });
   }
 
   // ---- cutscene hooks used by GREENLINE_STORM (data/npcs.js) ----

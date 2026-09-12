@@ -1,5 +1,6 @@
 import { TILE, GAME_W, GAME_H } from './config.js';
 import { inputLock } from './lock.js';
+import { showBanner } from './banner.js';
 
 // Draws every floor/wall tile in a map's layout grid, real Kenney art
 // instead of placeholder rectangles. blockedKey/floorKey let each scene
@@ -107,7 +108,9 @@ export function setupFollowCamera(scene, { mapDef, offsetX, offsetY, player, zoo
 // scaled and shifted by that zoom, landing them at the wrong screen
 // position (and wrong click position for buttons). Call this once at the
 // end of create(), after every HUD object already exists.
-export function setupHUD(scene, hudObjects) {
+export function setupHUD(scene, hudObjects, { banner = null } = {}) {
+  // An area-name banner on entry, rendered by the HUD camera like the rest.
+  if (banner) hudObjects = [...hudObjects, ...showBanner(scene, banner, { y: 48 }).objects];
   scene.cameras.main.ignore(hudObjects);
   const hudCam = scene.cameras.add(0, 0, GAME_W, GAME_H);
   const worldObjects = scene.children.list.filter(o => !hudObjects.includes(o));

@@ -63,7 +63,7 @@ export default class TownScene extends Phaser.Scene {
     ], GAME_H - 16);
 
     const hudObjects = [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])];
-    setupHUD(this, hudObjects);
+    setupHUD(this, hudObjects, { banner: 'ZAU OUTSKIRTS' });
   }
 
   drawPlayer() {

@@ -71,7 +71,7 @@ export default class OldLinesScene extends Phaser.Scene {
       { label: 'Harbor', onClick: () => this.leaveUp() }
     ], GAME_H - 16);
 
-    this.hudCam = setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])]);
+    this.hudCam = setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])], { banner: 'THE OLD LINES' });
   }
 
   drawPlayer() {
