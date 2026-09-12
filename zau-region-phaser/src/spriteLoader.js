@@ -10,9 +10,16 @@ export function loadMonSprite(scene, url, applyFn) {
   const key = 'mon-' + url.replace(/[^a-zA-Z0-9]/g, '');
   if (scene.textures.exists(key)) { applyFn(key); return; }
   scene.load.image(key, url);
-  scene.load.once(Phaser.Loader.Events.COMPLETE, () => {
+  // One resolution only: COMPLETE, or a watchdog if the request stalls
+  // (a reset connection can leave the loader waiting indefinitely).
+  let settled = false;
+  const settle = () => {
+    if (settled) return;
+    settled = true;
     applyFn(scene.textures.exists(key) ? key : null);
-  });
+  };
+  scene.load.once(Phaser.Loader.Events.COMPLETE, settle);
+  scene.time.delayedCall(4000, settle);
   scene.load.start();
 }
 

@@ -5,6 +5,7 @@ import { GAME_W } from '../config.js';
 import { addActionBar } from '../uiHelpers.js';
 import { goToScene, fadeIn } from '../transitions.js';
 import { showBanner } from '../banner.js';
+import { typeColor } from '../data/typeColors.js';
 
 const HP_BAR_W = 180;
 const STATUS_BADGE = { burn: ['BRN', '#e57373'], poison: ['PSN', '#ba68c8'], paralyze: ['PAR', '#ffca28'], sleep: ['SLP', '#90a4ae'] };
@@ -164,7 +165,7 @@ export default class BattleScene extends Phaser.Scene {
 
   // ---- presentation: every engine 'anim' event becomes motion ----
   onAnim(evt) {
-    (window.__zauAnims ??= []).push(evt.type);
+    if (evt.type !== 'evolve') (window.__zauAnims ??= []).push(evt.type); // the Evolve scene logs itself
     const card = (side) => side === 'player' ? this.playerCard : this.enemyCard;
     if (evt.type === 'intro') {
       const h = this.enemyCard.holder;
@@ -180,6 +181,14 @@ export default class BattleScene extends Phaser.Scene {
         this.tweens.add({ targets: d, x: d.x + 7, duration: 40, yoyo: true, repeat: 3 });
         if (evt.effectiveness >= 2) this.cameras.main.shake(160, 0.006);
       });
+      // Move-effect layer: a type-coloured burst on the defender.
+      this.time.delayedCall(100, () => {
+        const c = this.add.circle(d.x, d.y, 12, typeColor(evt.moveType), 0.85).setDepth(60);
+        this.tweens.add({ targets: c, radius: 64, alpha: 0, duration: 380, ease: 'Quad.easeOut', onUpdate: () => c.setRadius(c.radius), onComplete: () => c.destroy() });
+        (window.__zauAnims ??= []).push(`fx:${evt.moveType}`);
+      });
+    } else if (evt.type === 'evolve') {
+      this.scene.launch('Evolve', { from: evt.from, to: evt.to });
     } else if (evt.type === 'faint') {
       const h = card(evt.side).holder;
       this.tweens.add({ targets: h, y: h.y + 44, alpha: 0, duration: 420, ease: 'Quad.easeIn' });

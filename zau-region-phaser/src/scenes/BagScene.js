@@ -106,16 +106,14 @@ export default class BagScene extends Phaser.Scene {
 
   applyEvolveItem(key, idx) {
     const mon = state.party[idx];
-    const before = currentMonDisplay(mon).name;
+    const beforeDisplay = currentMonDisplay(mon);
+    const before = beforeDisplay.name, beforeSprite = beforeDisplay.sprite, beforeEmoji = beforeDisplay.emoji;
     const evolvedTo = evolveWithItem(mon, key);
     state.items[key]--;
     saveGame();
-    this.children.removeAll(true);
-    drawModalBackdrop(this, 'Evolution!');
-    addCloseButton(this, () => this.scene.stop());
-    this.add.text(GAME_W / 2, GAME_H / 2, `${before} evolved into ${evolvedTo}!`, {
-      fontFamily: 'sans-serif', fontSize: '14px', color: '#e8e8f0', wordWrap: { width: GAME_W - 60 }, align: 'center'
-    }).setOrigin(0.5);
+    const after = currentMonDisplay(mon);
+    this.scene.launch('Evolve', { from: { name: before, sprite: beforeSprite, emoji: beforeEmoji }, to: { name: after.name, sprite: after.sprite, emoji: after.emoji } });
+    this.scene.stop();
   }
 
   // Held items equip onto a party mon rather than being consumed outright —

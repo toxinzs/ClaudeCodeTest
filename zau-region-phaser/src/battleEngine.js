@@ -262,7 +262,7 @@ export class BattleEngine extends Emitter {
     {
       const attackerSide = attacker === activeMon() ? 'player' : 'enemy';
       const eff = typeMultiplier(move.type, defender.type);
-      this.emit('anim', { type: 'hit', attacker: attackerSide, defender: attackerSide === 'player' ? 'enemy' : 'player', effectiveness: eff });
+      this.emit('anim', { type: 'hit', attacker: attackerSide, defender: attackerSide === 'player' ? 'enemy' : 'player', effectiveness: eff, moveType: move.type });
     }
     if (defender.hp <= 0) { defender.fainted = true; defender.status = null; this.emit('anim', { type: 'faint', side: attacker === activeMon() ? 'enemy' : 'player' }); }
     if (mult === 0) msg += " It has no effect...";
@@ -477,7 +477,12 @@ export class BattleEngine extends Emitter {
 
   levelUpMon(mon) {
     mon.level++;
+    const before = currentMonDisplay(mon);
     evolveIfReady(mon);
+    const after = currentMonDisplay(mon);
+    if (after.species !== before.species) {
+      this.emit('anim', { type: 'evolve', mon, from: { name: before.name, sprite: before.sprite, emoji: before.emoji }, to: { name: after.name, sprite: after.sprite, emoji: after.emoji } });
+    }
 
     const newStats = statsForMon(mon);
     const gained = newStats.maxHp - mon.maxHp;
