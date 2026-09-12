@@ -41,15 +41,19 @@ No stone is sold in the Mart any more (they currently sit in the badge-5 tier �
 | Pinsirite | Pinsir | Thistle — leader rematch reward | Postgame | Postgame |
 | Alakazite | Alakazam | Busker Talia — *"The Song She Can't Finish"* side quest (a Signal District recording) | Side quest | Post–Badge 4 |
 | Gengarite | Gengar | Obsidian — after the badge, "you'll need it down there" | **Story-given** | Post–Badge 5 |
+| Banettite | Banette | Halcyon — the Terminus gym, after the badge | **Story-given** | Post–Badge 6 |
 | Garchompite | Garchomp | The Skyline's highest weather station | Postgame | Postgame |
+| Sharpedonite | Sharpedo | Fathom — the Long Shoal gym, after the badge | **Story-given** | Postgame, Badge 7 |
+| Metagrossite | Metagross | Cairn — the Drowned Archive gym, after the badge | **Story-given** | Postgame, Badge 8 |
 
-Big story moments as sources: Absolite (K2) and Gengarite (U2) are handed over by the plot. Everything else rewards playing the world.
+Big story moments as sources: Absolite (K2), Gengarite (U2), Banettite (Halcyon), Sharpedonite (Fathom) and Metagrossite (Cairn) are handed over by the plot — the last three follow the same precedent Obsidian set (a new gym leader's own stone is a badge reward, not a rematch reward, since the player only gets the one shot at a first badge). Everything else rewards playing the world.
 
 ## Trainer Megas
 
 - **Dario** Mega Evolves from the Underlight onward (V2), and in every postgame rematch. Halloran gave him a stone as a gift; the story makes clear it was meant as one.
 - **Vance** does not Mega Evolve. He has the energy and no bond; that's the point of him.
-- **Gym leader rematches** (postgame) use Megas — Cameruptite/Pinsirite are *their* rewards for a reason.
+- **Gym leader rematches** (postgame) use Megas — all eight leaders now, not five; Cameruptite/Pinsirite remain the two *rematch*-earned stones (Ashgrave and Thistle's badges were won before Mega Evolution existed for the player to show them, so their stone comes later, on the rematch). Halcyon/Fathom/Cairn's stones are handed over on the *first* badge instead, since they're all met after the player already has a Key Stone.
+- **Postgame Verdanyx (unleashed)** is the true final fight, past all 8 badges — see STORY.md's postgame section. No new stone; it's the mechanic's darkest mirror, not another Mega.
 - Requires the engine to support enemy Megas (currently player-only) — part of the implementation pass when Act 3 is built.
 
 ## Presentation (owed, part of the animation pass)

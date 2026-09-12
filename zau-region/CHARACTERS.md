@@ -100,6 +100,10 @@ Each district has a shop, a gym, and four to six named people. Flavor NPCs are h
 
 ### The Undercity
 - **Leader Obsidian** (she/her) — Dark. Dry, unbothered, has seen stranger things than a trainer walking in. The one leader who touches the plot: she knows the Warden exists and won't say more until after the badge. Gives the player the Gengarite: "You'll need it down there."
+- **Leader Halcyon** (they/them) — Ghost. Runs the Terminus, a dead-end transit platform nobody sealed off, like the line never closed — announces stops that don't exist anymore, apologises to the platform for the delay. Not unwell, not performing; genuinely believes the Old Lines never really closed, just stopped letting the living ride. Keeps a conductor's punch-clock from before the Incident, still stamps it once a day. The one leader who treats losing and winning the same way: "Line's still running. You'll catch the next one." Gives the player the Banettite right after the badge — "you'll need it, further down" (echoing Obsidian's own handoff).
+  - **Role**: the last gate before the Warden. Beating Halcyon is the moment the Old Lines stop being a dungeon and start being a place someone still tends.
+  - **Voice**: soft, unhurried, speaks in transit-announcement cadence even off the clock ("Mind the gap. Mind the years."). Never explains the bit — it's just how they talk.
+  - **Says when**: First encounter — greets the player like a passenger, not a challenger. Mid-badge — mentions Halvard by name, calls him "the man who still marks the platform." Post-badge — the only line that breaks cadence: quiet, direct, "She's close now. Go careful."
 - **The Warden** — Elena Voss (see main cast).
 - **Tunnel dwellers (trainer class)** — people who chose the Undercity over the stack. Not villains, not victims. "You're the first one from up top who's asked instead of told."
 - **Kestrel** (she/her) — runs the Vault-adjacent trading post; the Undercity's shop. Knows every rumour and sells half of them.
@@ -118,6 +122,17 @@ Each district has a shop, a gym, and four to six named people. Flavor NPCs are h
 ### The Skyline (postgame)
 - **The weather-station keeper (Iven)** — the last person who watched the storms form from above. Guides the player to Verdanyx at rest.
 
+### The Islands (postgame)
+Small, and each with a clear reason to exist rather than being fully populated towns — the region's true endgame, not more optional filler. See `districts/islands.md`.
+- **Leader Fathom** (they/them) — Water/Dark, on the Long Shoal, the open-ocean island Zau's stacked geography structurally can't have. Talks like someone who's spent more time reading weather off the water than off a screen; unhurried about winning or losing the same way the tide is unhurried. Ace: Mega Sharpedo.
+  - **Role**: the first island badge, and Zau's furthest thing from a corporate gym — no sponsor, no building, just open water and a boat.
+  - **Voice**: plain, weathered, measures time in tides and storms rather than dates.
+  - **Says when**: greets every challenger the same regardless of badge count — "Sea doesn't care how many of these you've got." Post-badge: "Current's with you now."
+- **Leader Cairn** (he/him) — Psychic/Steel, in the Drowned Archive, ruins that predate Zau itself — the physical proof of Ambrose's "it was down first." Careful, a little reverent, treats the ruins as a colleague rather than a curiosity. Ace: Mega Metagross. The Archive is also home to the region's one true rarity outside Verdanyx: a wild **Latios**, a single, real, catchable encounter, guarded rather than owned by the ruins.
+  - **Role**: the second island badge, and the answer to "what was Zau built on top of" that the main story deliberately never fully closes.
+  - **Voice**: precise, a little formal, treats old things with the same care Elena treats Verdanyx.
+  - **Says when**: pre-badge — talks about the ruins more than himself. Post-badge — mentions the Latios directly for the first time, and that it chose to stay this long "same as some other things do."
+
 ---
 
 ## Trainer classes (for the trainer-data pass)
@@ -130,6 +145,7 @@ Each district has a shop, a gym, and four to six named people. Flavor NPCs are h
 | Allotment Gardener | Greenline | Competitive about tomatoes |
 | Meridian Technician | Signal | Doesn't want to be asked about power draw |
 | Tunnel Dweller | Undercity | Chose down over up |
+| Terminus Regular | Undercity (the Terminus) | Rides Halcyon's line out of habit, not necessity |
 | Sprawl Resident | Sprawl | Ordinary, content |
 | Meridian Executive | Tower | Apologises for winning |
 

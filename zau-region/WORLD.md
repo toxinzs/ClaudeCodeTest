@@ -22,7 +22,7 @@ Zau isn't a spread of separate towns connected by routes — it's **one city, bu
 | 4 | **Ember Quarter** | **Fleshed out** — see [`districts/ember.md`](districts/ember.md) | Old industrial/factory district, still running hot. | Fire, Rock, Steel |
 | 3 | **Harbor District** | **Fleshed out** — see [`districts/harbor.md`](districts/harbor.md) | Where the city meets water — docks, piers, the one place that opens outward instead of stacking. Natural home for eventual water travel/surfing. | Water, Flying |
 | 2 | **The Outskirts / Wild Zone** | **Fully built** — Zau Outskirts (start), Underpass Loop, Harbor Steps, Midblock Plaza, Rooftop District (Act 1 trail) | Street level, least developed, where wild Pokémon and unlicensed trainers cluster. Your starting point. | Whatever's currently in `WILD_SPECIES` — broad early-game mix |
-| 1 | **The Undercity** | **Fully built** — [`districts/undercity.md`](districts/undercity.md) | Forgotten tunnels, old transit lines, sewers — the layer everyone built over and forgot. The Old Lines dungeon, Obsidian's Vault, and the Warden. Where the truth is. | Dark, Ghost, Poison, Ground |
+| 1 | **The Undercity** | **Fully built, gaining a stop** — [`districts/undercity.md`](districts/undercity.md) | Forgotten tunnels, old transit lines, sewers — the layer everyone built over and forgot. The Old Lines dungeon, Obsidian's Vault, **the Terminus (Leader Halcyon)**, and the Warden. Where the truth is. | Dark, Ghost, Poison, Ground |
 | 0 | **The Underlight** | **Fully built** — the ending | Pre-city ruins, whatever Zau was actually built on top of. Verdanyx's domain. Final dungeon. | Grass/Dragon (Verdanyx), otherwise unknown |
 
 ## The player's route through the stack
@@ -32,21 +32,28 @@ The story doesn't go straight up. It climbs, then drops, then climbs to the top,
 | Order | Stratum | Gate | Team level | Story beat |
 |---|---|---|---|---|
 | 1 | Outskirts / Wild Zone Trail | — | 5–18 | Act 1, Dario |
-| 2 | Harbor District | Dario beaten (Harbor Steps) | 18–22 | *cargo* — Cargo Row break-in; Badge 1 |
-| 3 | Ember Quarter | Badge 1 (Harbor Ramp) | 22–26 | *power* — the blackout, Boiler Tunnels; Badge 2 |
-| 4 | Greenline Terraces | Badge 2 (Freight Lift) | 26–29 | *water* — the storm on the Overlook, the Absol; Badge 3 |
-| 5 | The Key Stone | Badge 3 | 28–32 | Elena's cache behind the Ember service tunnel; the gift Absol; Mega Evolution unlocks |
-| 6 | Signal District | Badge 3 (Service Stair) | 30–34 | *signal* — the pulse; Dario sponsored; Badge 4 |
-| 7 | The Undercity | Badge 4 + the Drowned Stair drained | 33–36 | *the truth* — the Old Lines, Obsidian, the Warden; Badge 5 |
-| 8 | The Sprawl | Badge 5 (Sprawl Bridge) | 36–38 | Dario's choice; Halloran |
-| 9 | Meridian Tower | Halloran's badge | 38–42 | Vance |
-| 10 | The Underlight | The freight core | 42–48 | Verdanyx |
-| 11 | The Skyline | Ending | 50+ | Postgame |
+| 2 | Harbor District | Dario beaten (Harbor Steps) | 18–23 | *cargo* — Cargo Row break-in; Badge 1 |
+| 3 | Ember Quarter | Badge 1 (Harbor Ramp) | 23–28 | *power* — the blackout, Boiler Tunnels; Badge 2 |
+| 4 | Greenline Terraces | Badge 2 (Freight Lift) | 28–32 | *water* — the storm on the Overlook, the Absol; Badge 3 |
+| 5 | The Key Stone | Badge 3 | 31–35 | Elena's cache behind the Ember service tunnel; the gift Absol; Mega Evolution unlocks |
+| 6 | Signal District | Badge 3 (Service Stair) | 33–38 | *signal* — the pulse; Dario sponsored; Badge 4 |
+| 7 | The Undercity — Obsidian's Vault | Badge 4 + the Drowned Stair drained | 37–40 | *the truth begins* — the Old Lines, Obsidian; Badge 5 |
+| 8 | The Undercity — the Terminus | Badge 5 | 40–43 | *the truth, further down* — Leader Halcyon; Badge 6 |
+| 9 | The Warden's Reach | Badge 6 | ~43 | Elena, the whole history; Act 2 close |
+| 10 | The Sprawl | Act 2 close (Sprawl Bridge) | 43–47 | Dario's choice; Halloran; the Rooftops gauntlet |
+| 11 | Meridian Tower | Halloran's badge | 47–53 | Vance; a real multi-floor climb, not two chokepoints |
+| 12 | The Underlight | The freight core | 53–60 | Verdanyx — the story's climactic fight |
+| 13 | The Skyline | Ending | 55–65 | Postgame — Iven, Verdanyx at rest, leader/Dario rematches |
+| 14 | The Islands | Ending, ferry running | 60–70 | Postgame — Badges 7–8 (Fathom, Cairn), the region's true endgame |
+| — | Postgame Verdanyx (unleashed) | All 8 badges + the Skyline's Verdanyx found | 68–75 | The hardest fight in the game |
+
+Badge count is **6 in the main story** (Coral, Ashgrave, Thistle, Prism, Obsidian, Halcyon) and **8 total** once the postgame islands open (Fathom, Cairn) — see [`districts/islands.md`](districts/islands.md). The jump from a Lv.36-ish Act 1/2 pace to a Lv.53–75 postgame is deliberate: it's paid for with *more real content* in the back half (the Terminus as a genuine new stop, a longer Tower, more of the Underlight, the islands themselves) rather than a faster EXP curve — the formula in `mon.js` doesn't change.
 
 ## How they connect
 
 - **Vertically, mostly**: elevators, stairwells, freight lifts, and maintenance shafts link adjacent strata. Going from The Sprawl to Meridian Tower means a guarded lobby elevator; going from the Outskirts down to the Undercity means finding an unlocked access tunnel, not a front door.
-- **Harbor is the one horizontal exception** — it's the edge of the stack, where the city meets open water. Everything else stacks; Harbor spreads out.
+- **Harbor is the one horizontal exception in the main story** — it's the edge of the stack, where the city meets open water. Everything else stacks; Harbor spreads out.
+- **The Islands are the postgame's horizontal exception**, and the first time anyone in-story leaves the stack sideways rather than climbing or dropping it — mirrors Verdanyx's own arc (contained underneath, freed to rest at the top) with the player's (contained in the stack, free to leave it). Reached once Harbormaster Rossi's ferry actually runs — the full payoff of *The Ferry That Never Left* (SIDEQUESTS.md #2), not just its Gyaradosite reward. Ambrose's line that "Zau wasn't always up, it was down first" is the seed: the islands are older than the stack, same as the Undercity is older than the surface.
 - **The caves and tunnels are a network, not a list.** The Boiler Tunnels (Ember), the Ember service tunnel (Key Stone cache), the Cable Risers (Signal), the Drowned Stair (Harbor) and the Old Lines (Undercity) all connect into the same pre-city tunnel system, and every Meridian installation in every district — the cargo, the trunk cable, the pump intake, the fibre trunk — runs down into it. That's the region's one big secret told as geography: four districts, four different oddities, one hole.
 - Skipping strata isn't really possible — you can't get from the Outskirts to Meridian Tower without passing through the districts in between, mirroring the existing League's "beat what's in front of you" structure.
 
@@ -54,7 +61,7 @@ The story doesn't go straight up. It climbs, then drops, then climbs to the top,
 
 - **Fully built (walkable + battles)**: Outskirts/Wild Zone (Act 1), Harbor District (walkable map in the Phaser build — Coral's gym, Fish Market, and the other sub-locations from [`districts/harbor.md`](districts/harbor.md) as step triggers; its story-hook spots are flavor until the Undercity/water-travel systems exist), Ember Quarter (same treatment — Ashgrave's Foundry Gym, the Scrapyard Exchange, and the hooks from [`districts/ember.md`](districts/ember.md); reached up the Harbor Ramp behind Coral's badge), Greenline Terraces (same again — Thistle's Canopy Gym, the Seed Bank, and the hooks from [`districts/greenline.md`](districts/greenline.md); reached up the Ember Freight Lift behind Ashgrave's badge), Signal District (Prism's tower, the Relay, the Data Centre → Cable Risers dungeon, the Antenna Farm, with its cast and beats S1–S3 from day one; reached up the Greenline Service Stair behind Thistle's badge), The Undercity (the Old Lines dungeon down from the drained Drowned Stair, Kestrel's Post, Halvard's Platform, Obsidian's Vault, the Warden's Reach — beats U1–U3 and Act 2's close; the Underlight hatch sealed until Act 3), The Sprawl (Halloran's office, the Concourse, the rooftops, the Tower lobby elevator — beats SP1–SP2 and Sloane's offer; reached over the Signal Sprawl Bridge once Act 2 is closed), Meridian Tower (the core corridor: Site Security, an Executive, Amara, Vance's office — T2 the conversation and battle, T3 the rig; then the freight core), The Underlight (V1 the descent cutscene, V2 Dario's Mega, V3 the Verdanyx fight as stopping the rig, V4 the revert ending → the credits).
 - **Named + has a gym battle, still just a name otherwise**: Meridian Tower. (The League hub map currently represents all 5 gyms as one shared space — eventually each could get its own real district map.)
-- **Brand new, not in the game at all yet**: The Sprawl, The Skyline.
+- **Brand new, not in the game at all yet**: The Sprawl, The Skyline, the Undercity's Terminus (Halcyon), the Islands (Fathom, Cairn).
 
 ## Using this doc
 

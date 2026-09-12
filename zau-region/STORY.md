@@ -36,11 +36,11 @@ Not an ancient guardian, not something that was always down there waiting. It us
 | Act | Where | Badges | Team level band | What it's about |
 |---|---|---|---|---|
 | Act 1 — The Outskirts | Home, Outskirts, Wild Zone Trail | — | 5–18 | Learning to be a trainer. Dario. The storms are background. |
-| Act 2 — The Stack | Harbor → Ember → Greenline → *(Key Stone)* → Signal → Undercity | 1–5 | 18–35 | Meridian's reach, district by district. Each district's hook points down. Ends with the truth. |
-| Act 3 — The Descent | The Sprawl → Meridian Tower → the Undercity again → the Underlight | — | 35–48 | Vance. Dario's choice. Verdanyx. |
-| Postgame — The Skyline | Above the tower | — | 50+ | Rematches, the Skyline, Verdanyx at rest, water travel. |
+| Act 2 — The Stack | Harbor → Ember → Greenline → *(Key Stone)* → Signal → Undercity (Obsidian) → the Terminus (Halcyon) | 1–6 | 18–43 | Meridian's reach, district by district. Each district's hook points down. Ends with the truth. |
+| Act 3 — The Descent | The Sprawl → Meridian Tower → the Underlight | — | 43–60 | Vance. Dario's choice. Verdanyx — the story's real climax, not a quick final boss. |
+| Postgame — The Skyline & the Islands | Above the tower; two new islands once the ferry runs | 7–8 | 55–75 | Rematches with Megas, the Skyline, Verdanyx at rest (and, past all 8 badges, a far harder Verdanyx unleashed), the region's true endgame. |
 
-Real Pokémon games pace roughly one main-story beat *between* every gym, not just the gym — that's the rule here. Every district has at least one thing that happens in it that isn't the badge.
+Real Pokémon games pace roughly one main-story beat *between* every gym, not just the gym — that's the rule here. Every district has at least one thing that happens in it that isn't the badge. **The badge count is 6 in the main story, 8 once the postgame islands open** — added deliberately so the back half of the game (previously three thin stops covering twelve levels) earns a team in the high 50s/60s by the credits and a real 60s–70s ceiling after, through *more to actually do*, not a faster EXP curve.
 
 ---
 
@@ -100,13 +100,14 @@ This is the beat the whole first half builds to. Team level ~28–32.
 - **S3 — Dario, sponsored.** Rival battle 3. He's in Meridian colours, Halloran on the sidelines. He's better than he's ever been. He's also visibly not sure why the player looks at him like that. **If the player has Mega Evolved, this is where Dario sees it for the first time.** He wants one. Halloran, quietly, would very much like to be the one who gives it to him.
 - **Gym.** Prism, for whom losing is data.
 
-### The Undercity — *the truth* (Badge 5: Obsidian)
+### The Undercity — *the truth* (Badge 5: Obsidian; Badge 6: Halcyon, further down)
 
 Getting down is its own beat: the **Drowned Stair** in the Harbor is flooded, and draining it is a job for Rossi's old ferry pumps and Kettering's crew — a small cross-district quest that pays off two districts' placeholder spots at once.
 
 - **U1 — Descent.** The Drowned Stair opens into the Old Lines — Zau's forgotten transit tunnels, the game's biggest dungeon so far. Ghost/Dark/Poison wilds, tunnel-dweller trainers, and the first *shrines*: places where something has been kept company, for a long time — old blankets, a kettle, chalk marks counting years.
 - **U2 — Obsidian.** The Undercity Vault gym is a converted bank vault. Obsidian has seen stranger things than a trainer walking in. Rumours: "the Warden." Someone has lived down here longer than anyone, and she's the reason the deep tunnels are *quiet*. Obsidian won't say more until after the badge. Gym.
-- **U3 — The Warden.** Past the Vault, down: Elena Voss. She's been expecting the Absol's choice for years. She tells the player everything — the seam, the drill, the transformation, why she stayed. That Verdanyx is not a monster; it's a Pokémon that has been in mid-transformation for eighteen years with no one on the other end of the bond. That she's kept it calm but it's *growing*, and that Vance's rig — which she can hear now, through the rock — will wake it fully. She asks about her son. The player has to decide whether to tell Dario.
+- **U2b — the Terminus.** Past the Vault, the tunnels open into a platform nobody sealed off, because nobody who runs Zau remembers it's there: a dead-end transit terminus, trains still parked at the platform, destination boards still lit for stops that don't exist anymore. **Leader Halcyon** runs it like the line never closed — announces arrivals, apologises to the empty platform for delays, stamps a conductor's punch-clock once a day out of habit older than the Incident. Halvard knows them by name ("the man who still marks the platform," Halcyon calls him back). This is deliberately a real place to walk through, not a battle dropped into the existing dungeon — a few more tunnel-dweller trainers ride the line with Halcyon, and the shrines continue this far down. Gym.
+- **U3 — The Warden.** Past the Terminus, further down: Elena Voss. She's been expecting the Absol's choice for years. She tells the player everything — the seam, the drill, the transformation, why she stayed. That Verdanyx is not a monster; it's a Pokémon that has been in mid-transformation for eighteen years with no one on the other end of the bond. That she's kept it calm but it's *growing*, and that Vance's rig — which she can hear now, through the rock — will wake it fully. She asks about her son. The player has to decide whether to tell Dario.
 - **Act 2 close.** Vance activates the first stage of the rig. The biggest storm yet. The Old Lines shake. Elena: "Go up. Find whoever's doing this. And bring my son, if he'll come."
 
 ---
@@ -119,14 +120,17 @@ The Sprawl is Meridian's public face — the mid-city where the company is a lan
 
 - **SP1 — Dario.** The player finds him at Halloran's community office, about to sign a longer contract: Meridian will fund a public review "clearing the Voss family name." It's real — Halloran means it, and Vance approved it, because a grateful, famous young Voss is exactly the story Meridian wants told when the excavation goes public as a success. The player tells him his mother is alive and where. He doesn't believe it. Rival battle 4 — the angriest one. He loses. He goes quiet and short, the way he does when something lands. He leaves. He doesn't say where.
 - **SP2 — Halloran.** Alone, Halloran asks the player what they said to him. The player tells her. She didn't know. It's on her face that she didn't know. She gives the player a Meridian Tower access badge and doesn't say why.
+- **The Rooftops.** No gym here on purpose, but it shouldn't be one screen with one trainer — a short, informal gauntlet of Sprawl residents (Resident Jae and two or three neighbours, the kind of people the district's whole point is built around: "ordinary, content") gives the district enough to actually walk through before the elevator. Mrs. Oyelaran's kitchen-window view of Meridian Tower is the quiet gut-punch at the end of it.
 
 ### Meridian Tower — *Vance*
 
-- **T1 — The lobby, the elevator, the floors.** Site Security trainers, executives, the company as a place where most people are just doing infrastructure work. The thing on Vance's desk from the original excavation: it's a drill-bit fragment, resonance-scarred, that glows very faintly when the player's Key Stone is near it.
+- **T1 — The lobby, the elevator, the floors.** Not two chokepoints and done — several real floors of Site Security and Executives (the trainer class that apologises for winning), the company as a place where most people are just doing infrastructure work, with Amara letting the player up floor by floor rather than all at once. Long enough that reaching Vance's office feels like a climb through the whole company, not a hallway. The thing on his desk from the original excavation: a drill-bit fragment, resonance-scarred, that glows very faintly when the player's Key Stone is near it.
 - **T2 — Vance.** Not a reveal — a *conversation*. He knows who the player is. He believes he is ending the energy divide, ending the storms, redeeming a mistake the company spent eighteen years pretending never happened. He is wrong for a reason worth arguing with. The player says the word "who." He says the word "what." Battle. He loses.
 - **T3 — He does it anyway.** Losing a Pokémon battle doesn't stop a man with a rig and a conviction. He activates the full sequence from the desk. The Tower's windows go white. "If you're right about it," he says, "then go and be right. I'll be here when the lights come back."
 
 ### The Underlight — *Verdanyx*
+
+By here the added floors of the Tower and the Terminus back in Act 2 have done their job: a team that's actually played through all of it lands in the high 50s, not the low 40s, which is what makes V3 a real climactic fight rather than a formality.
 
 - **V1 — The way down.** The Tower's freight core drops the player to the Undercity in one long elevator cutscene — the whole stack passing by, every district's lights flickering. At the bottom, the Old Lines are lit for the first time: Meridian's rig, running.
 - **V2 — Dario.** He's there. He found her. Mother and son, eighteen years, with a legendary waking up in the next chamber — the scene is short because there's no time, and that's right. Elena: "Later. Go." Dario, to the player: "Bet you can't do this without me." He's not carrying Meridian's pin anymore. **Dario's Pokémon can Mega Evolve from here** (Halloran gave him a stone, once — it turns out she meant it as a gift, not a leash).
@@ -136,12 +140,13 @@ The Sprawl is Meridian's public face — the mid-city where the company is a lan
 
 ---
 
-## POSTGAME — The Skyline
+## POSTGAME — The Skyline & the Islands
 
 - The Skyline opens (above the Tower): weather stations, sky bridges, the League's real elite as rematches with full teams and Megas.
 - **Verdanyx** rests in the Skyline's highest weather station, where the storms used to form. It can be encountered and — with Elena's blessing and a real fight — caught. Its stable form is the one the player battles.
-- Water travel: the ferry runs; where it goes is the next expansion's question.
-- Trainer rematches, gym leader rematches with Megas, Dario as a recurring rival with a full Mega team.
+- **The ferry runs** — the full payoff of *The Ferry That Never Left*, not just its Gyaradosite. Where it goes is no longer an open question: **the Islands**, the region's true endgame (see `districts/islands.md`). Two named islands, each anchoring one of the final two gym leaders — **Fathom** on the open water of the Long Shoal, **Cairn** among the pre-city ruins of the Drowned Archive. Neither gates the other, and neither gates the Skyline; a postgame save can pursue all three in any order.
+- Trainer rematches, gym leader rematches (all eight, not just the original five) with full Mega teams, Dario as a recurring rival with a full Mega team.
+- **Verdanyx, unleashed.** Past all 8 badges, returning to the Skyline's highest station finds Verdanyx changed again — not the story's stable, reverted form, but something closer to what it actually was at its worst, before Elena's bond gave it somewhere to land. This is deliberately the hardest fight in the game (Lv.68–75), framed as: the revert holds because someone's there for it, and the game's true final challenge is what it would have been without that. Beating it doesn't undo the ending — Verdanyx settles again after, same as before. It's a superboss, not a retcon.
 
 ---
 
