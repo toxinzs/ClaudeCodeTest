@@ -18,9 +18,9 @@ export default class DescentScene extends Phaser.Scene {
   create() {
     fadeIn(this);
     this.add.rectangle(GAME_W / 2, GAME_H / 2, GAME_W, GAME_H, 0x03040a);
-    this.add.text(GAME_W / 2, 40, 'FREIGHT CORE', { fontFamily: 'sans-serif', fontSize: '12px', color: '#5a5a70', letterSpacing: 4 }).setOrigin(0.5);
-    this.label = this.add.text(GAME_W / 2, GAME_H / 2, '', { fontFamily: 'sans-serif', fontSize: '22px', fontStyle: 'bold', color: '#e8e8f0' }).setOrigin(0.5).setAlpha(0);
-    this.depth = this.add.text(GAME_W / 2, GAME_H / 2 + 34, '', { fontFamily: 'sans-serif', fontSize: '12px', color: '#8a8aa0' }).setOrigin(0.5);
+    this.add.text(GAME_W / 2, 40, 'FREIGHT CORE', { fontFamily: 'Nunito, sans-serif', fontSize: '12px', color: '#5a5a70', letterSpacing: 4 }).setOrigin(0.5);
+    this.label = this.add.text(GAME_W / 2, GAME_H / 2, '', { fontFamily: 'Nunito, sans-serif', fontSize: '22px', fontStyle: 'bold', color: '#e8e8f0' }).setOrigin(0.5).setAlpha(0);
+    this.depth = this.add.text(GAME_W / 2, GAME_H / 2 + 34, '', { fontFamily: 'Nunito, sans-serif', fontSize: '12px', color: '#8a8aa0' }).setOrigin(0.5);
     // The elevator's rails: two lines that scroll upward while we drop.
     this.rails = [];
     for (let i = 0; i < 14; i++) {
@@ -44,7 +44,7 @@ export default class DescentScene extends Phaser.Scene {
     };
     next();
 
-    const skip = this.add.text(GAME_W - 16, GAME_H - 16, 'Skip ▸', { fontFamily: 'sans-serif', fontSize: '12px', color: '#8a8aa0' }).setOrigin(1, 1).setInteractive({ useHandCursor: true });
+    const skip = this.add.text(GAME_W - 16, GAME_H - 16, 'Skip ▸', { fontFamily: 'Nunito, sans-serif', fontSize: '12px', color: '#8a8aa0' }).setOrigin(1, 1).setInteractive({ useHandCursor: true });
     skip.on('pointerdown', () => goToScene(this, 'Underlight'));
   }
 

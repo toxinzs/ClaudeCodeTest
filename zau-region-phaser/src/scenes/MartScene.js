@@ -20,7 +20,7 @@ export default class MartScene extends Phaser.Scene {
     this.children.removeAll(true);
     drawModalBackdrop(this, 'Zau Poké Mart');
     addCloseButton(this, () => this.scene.stop());
-    this.add.text(GAME_W / 2, 42, `Balance: ₽${state.money}`, { fontFamily: 'sans-serif', fontSize: '12px', color: '#8a8aa0' }).setOrigin(0.5);
+    this.add.text(GAME_W / 2, 42, `Balance: ₽${state.money}`, { fontFamily: 'Nunito, sans-serif', fontSize: '12px', color: '#8a8aa0' }).setOrigin(0.5);
 
     const badgeCount = state.leagueBeaten.filter(Boolean).length;
     const keys = availableItems(badgeCount);

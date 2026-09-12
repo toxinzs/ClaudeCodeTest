@@ -32,7 +32,7 @@ export default class BagScene extends Phaser.Scene {
     const inBattle = !!state.battle;
     const owned = Object.keys(state.items).filter(k => state.items[k] > 0);
     if (!owned.length) {
-      this.add.text(GAME_W / 2, GAME_H / 2, 'Your bag is empty.', { fontFamily: 'sans-serif', fontSize: '13px', color: '#8a8aa0' }).setOrigin(0.5);
+      this.add.text(GAME_W / 2, GAME_H / 2, 'Your bag is empty.', { fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#8a8aa0' }).setOrigin(0.5);
       return;
     }
     owned.forEach((key, i) => {
@@ -82,7 +82,7 @@ export default class BagScene extends Phaser.Scene {
     const anyEligible = state.party.some(eligible);
     if (!anyEligible) {
       this.add.text(GAME_W / 2, GAME_H / 2, "None of your Pokémon can use that right now.", {
-        fontFamily: 'sans-serif', fontSize: '13px', color: '#8a8aa0', wordWrap: { width: GAME_W - 60 }, align: 'center'
+        fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#8a8aa0', wordWrap: { width: GAME_W - 60 }, align: 'center'
       }).setOrigin(0.5);
       return;
     }
@@ -91,8 +91,8 @@ export default class BagScene extends Phaser.Scene {
       const can = eligible(m);
       const d = currentMonDisplay(m);
       addMonIcon(this, 36, y, d, 22);
-      this.add.text(64, y - 10, d.name, { fontFamily: 'sans-serif', fontSize: '13px', color: can ? '#e8e8f0' : '#5a5a6a' });
-      this.add.text(64, y + 7, `Lv.${m.level} · ${d.type}`, { fontFamily: 'sans-serif', fontSize: '11px', color: '#8a8aa0' });
+      this.add.text(64, y - 10, d.name, { fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: can ? '#e8e8f0' : '#5a5a6a' });
+      this.add.text(64, y + 7, `Lv.${m.level} · ${d.type}`, { fontFamily: 'Nunito, sans-serif', fontSize: '11px', color: '#8a8aa0' });
       if (can) {
         this.add.rectangle(GAME_W / 2, y, GAME_W - 48, 34, 0xffffff, 0.001)
           .setInteractive({ useHandCursor: true })
@@ -122,16 +122,16 @@ export default class BagScene extends Phaser.Scene {
     drawModalBackdrop(this, `Give ${item.name} to...`);
     addCloseButton(this, () => this.scene.stop());
     if (!state.party.length) {
-      this.add.text(GAME_W / 2, GAME_H / 2, "You don't have any Pokémon yet.", { fontFamily: 'sans-serif', fontSize: '13px', color: '#8a8aa0' }).setOrigin(0.5);
+      this.add.text(GAME_W / 2, GAME_H / 2, "You don't have any Pokémon yet.", { fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#8a8aa0' }).setOrigin(0.5);
       return;
     }
     state.party.forEach((m, i) => {
       const y = 56 + i * 40;
       const d = currentMonDisplay(m);
       addMonIcon(this, 36, y, d, 22);
-      this.add.text(64, y - 10, d.name, { fontFamily: 'sans-serif', fontSize: '13px', color: '#e8e8f0' });
+      this.add.text(64, y - 10, d.name, { fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#e8e8f0' });
       const heldLabel = m.heldItem ? `Holding: ${ITEMS[m.heldItem].name}` : 'Holding: nothing';
-      this.add.text(64, y + 7, heldLabel, { fontFamily: 'sans-serif', fontSize: '11px', color: '#8a8aa0' });
+      this.add.text(64, y + 7, heldLabel, { fontFamily: 'Nunito, sans-serif', fontSize: '11px', color: '#8a8aa0' });
       this.add.rectangle(GAME_W / 2, y, GAME_W - 48, 34, 0xffffff, 0.001)
         .setInteractive({ useHandCursor: true })
         .on('pointerdown', () => this.giveItem(key, i));
@@ -156,7 +156,7 @@ export default class BagScene extends Phaser.Scene {
     const eligible = (mon) => item.revive ? mon.hp <= 0 : (mon.hp > 0 && mon.hp < mon.maxHp);
     const anyEligible = state.party.some(eligible);
     if (!anyEligible) {
-      this.add.text(GAME_W / 2, GAME_H / 2, 'No Pokémon need that right now.', { fontFamily: 'sans-serif', fontSize: '13px', color: '#8a8aa0' }).setOrigin(0.5);
+      this.add.text(GAME_W / 2, GAME_H / 2, 'No Pokémon need that right now.', { fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#8a8aa0' }).setOrigin(0.5);
       return;
     }
     state.party.forEach((m, i) => {
@@ -164,8 +164,8 @@ export default class BagScene extends Phaser.Scene {
       const can = eligible(m);
       const d = currentMonDisplay(m);
       addMonIcon(this, 36, y, d, 22);
-      this.add.text(64, y - 10, d.name, { fontFamily: 'sans-serif', fontSize: '13px', color: can ? '#e8e8f0' : '#5a5a6a' });
-      this.add.text(64, y + 7, `${m.hp}/${m.maxHp} HP`, { fontFamily: 'sans-serif', fontSize: '11px', color: '#8a8aa0' });
+      this.add.text(64, y - 10, d.name, { fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: can ? '#e8e8f0' : '#5a5a6a' });
+      this.add.text(64, y + 7, `${m.hp}/${m.maxHp} HP`, { fontFamily: 'Nunito, sans-serif', fontSize: '11px', color: '#8a8aa0' });
       if (can) {
         this.add.rectangle(GAME_W / 2, y, GAME_W - 48, 34, 0xffffff, 0.001)
           .setInteractive({ useHandCursor: true })

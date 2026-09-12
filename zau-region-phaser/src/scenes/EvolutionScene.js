@@ -21,13 +21,13 @@ export default class EvolutionScene extends Phaser.Scene {
     inputLock.acquire();
     (window.__zauAnims ??= []).push('evolve');
     this.add.rectangle(GAME_W / 2, GAME_H / 2, GAME_W, GAME_H, 0x05060c, 0.92);
-    this.title = this.add.text(GAME_W / 2, 70, `What? ${this.from.name} is evolving!`, { fontFamily: 'sans-serif', fontSize: '16px', fontStyle: 'bold', color: '#e8e8f0' }).setOrigin(0.5);
+    this.title = this.add.text(GAME_W / 2, 70, `What? ${this.from.name} is evolving!`, { fontFamily: 'Nunito, sans-serif', fontSize: '16px', fontStyle: 'bold', color: '#e8e8f0' }).setOrigin(0.5);
     this.holder = this.add.container(GAME_W / 2, 220);
     this.glyph = this.add.text(0, 0, this.from.emoji || '❓', { fontSize: '72px' }).setOrigin(0.5);
     this.img = this.add.image(0, 0, '__DEFAULT').setOrigin(0.5).setVisible(false).setDisplaySize(128, 128);
     this.holder.add([this.glyph, this.img]);
     this.flash = this.add.rectangle(GAME_W / 2, GAME_H / 2, GAME_W, GAME_H, 0xffffff, 1).setAlpha(0);
-    this.hint = this.add.text(GAME_W / 2, GAME_H - 60, '', { fontFamily: 'sans-serif', fontSize: '12px', color: '#8a8aa0' }).setOrigin(0.5);
+    this.hint = this.add.text(GAME_W / 2, GAME_H - 60, '', { fontFamily: 'Nunito, sans-serif', fontSize: '12px', color: '#8a8aa0' }).setOrigin(0.5);
     this.done = false;
 
     // The sequence starts on the glyph immediately; the artwork swaps in

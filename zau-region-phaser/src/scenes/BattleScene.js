@@ -17,9 +17,9 @@ const STATUS_BADGE = { burn: ['BRN', '#e57373'], poison: ['PSN', '#ba68c8'], par
 class MonCard {
   constructor(scene, x, y, spriteY) {
     this.scene = scene;
-    this.nameText = scene.add.text(x, y, '', { fontFamily: 'sans-serif', fontSize: '15px', color: '#e8e8f0' });
-    this.abilityText = scene.add.text(x, y + 30, '', { fontFamily: 'sans-serif', fontSize: '10px', color: '#6a6a80' });
-    this.statusText = scene.add.text(x + HP_BAR_W, y, '', { fontFamily: 'sans-serif', fontSize: '10px', fontStyle: 'bold' }).setOrigin(1, 0);
+    this.nameText = scene.add.text(x, y, '', { fontFamily: 'Nunito, sans-serif', fontSize: '15px', color: '#e8e8f0' });
+    this.abilityText = scene.add.text(x, y + 30, '', { fontFamily: 'Nunito, sans-serif', fontSize: '10px', color: '#6a6a80' });
+    this.statusText = scene.add.text(x + HP_BAR_W, y, '', { fontFamily: 'Nunito, sans-serif', fontSize: '10px', fontStyle: 'bold' }).setOrigin(1, 0);
     this.hpBg = scene.add.rectangle(x, y + 22, HP_BAR_W, 10, 0x222430).setOrigin(0, 0.5);
     this.hpFill = scene.add.rectangle(x, y + 22, HP_BAR_W, 10, 0x4caf50).setOrigin(0, 0.5);
     // The sprite lives in a container so lunges, hit-flashes, faints and
@@ -84,7 +84,7 @@ export default class BattleScene extends Phaser.Scene {
     this.playerCard = new MonCard(this, 24, 258, 196);
 
     this.logText = this.add.text(GAME_W / 2, 296, 'What will you do?', {
-      fontFamily: 'sans-serif', fontSize: '13px', color: '#c8c8d8',
+      fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#c8c8d8',
       wordWrap: { width: GAME_W - 40 }, align: 'center'
     }).setOrigin(0.5, 0);
 
@@ -137,7 +137,7 @@ export default class BattleScene extends Phaser.Scene {
 
   makeButton(x, y, w, h, label, onClick) {
     const bg = this.add.rectangle(x, y, w, h, 0x232640).setOrigin(0, 0.5).setStrokeStyle(1, 0x3a3d5c).setInteractive({ useHandCursor: true });
-    const text = this.add.text(x + w / 2, y, label, { fontFamily: 'sans-serif', fontSize: '13px', color: '#e8e8f0' }).setOrigin(0.5);
+    const text = this.add.text(x + w / 2, y, label, { fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#e8e8f0' }).setOrigin(0.5);
     bg.on('pointerdown', onClick);
     return { bg, text };
   }

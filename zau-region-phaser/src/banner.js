@@ -11,7 +11,7 @@ export function showBanner(scene, text, { y = 56, hold = 1100, color = '#e8e8f0'
   const startX = GAME_W + w / 2 + 10;
   const bg = scene.add.rectangle(startX, y, w, size + 22, 0x0d0f18, 0.94).setStrokeStyle(2, accent).setDepth(200);
   const stripe = scene.add.rectangle(startX - w / 2 + 3, y, 4, size + 22, accent).setDepth(201);
-  const label = scene.add.text(startX, y, text, { fontFamily: 'sans-serif', fontSize: `${size}px`, fontStyle: 'bold', color, letterSpacing: 2 }).setOrigin(0.5).setDepth(202);
+  const label = scene.add.text(startX, y, text, { fontFamily: 'Nunito, sans-serif', fontSize: `${size}px`, fontStyle: 'bold', color, letterSpacing: 2 }).setOrigin(0.5).setDepth(202);
   const objects = [bg, stripe, label];
   const dx = -(GAME_W / 2 + w / 2 + 10); // land centred
   scene.tweens.add({ targets: objects, x: `+=${dx}`, duration: 320, ease: 'Cubic.easeOut' });

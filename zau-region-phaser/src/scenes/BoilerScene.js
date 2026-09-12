@@ -54,9 +54,9 @@ export default class BoilerScene extends Phaser.Scene {
     drawDecor(this, decor, { offsetX: this.offsetX, offsetY: this.offsetY });
     this.drawPlayer();
 
-    const header = this.add.text(GAME_W / 2, 0, 'BOILER TUNNELS', { fontFamily: 'sans-serif', fontSize: '13px', color: '#8a8aa0' }).setOrigin(0.5, 0);
+    const header = this.add.text(GAME_W / 2, 0, 'BOILER TUNNELS', { fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#8a8aa0' }).setOrigin(0.5, 0);
     this.toastText = this.add.text(GAME_W / 2, GAME_H - 52, this.pendingToast, {
-      fontFamily: 'sans-serif', fontSize: '13px', color: '#e8e8f0', wordWrap: { width: GAME_W - 20 }, align: 'center'
+      fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#e8e8f0', wordWrap: { width: GAME_W - 20 }, align: 'center'
     }).setOrigin(0.5, 0);
 
     this.walker = createWalker(this, {

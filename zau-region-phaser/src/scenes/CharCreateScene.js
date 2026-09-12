@@ -46,7 +46,7 @@ export default class CharCreateScene extends Phaser.Scene {
     this.appearance = normalizeAppearance(state.player.appearance);
     this.categoryIdx = 0;
 
-    this.add.text(GAME_W / 2, 8, 'Choose Your Look', { fontFamily: 'sans-serif', fontSize: '16px', color: '#e8e8f0' }).setOrigin(0.5, 0);
+    this.add.text(GAME_W / 2, 8, 'Choose Your Look', { fontFamily: 'Nunito, sans-serif', fontSize: '16px', color: '#e8e8f0' }).setOrigin(0.5, 0);
 
     this.previewCtrl = createPlayerSprite(this, PREVIEW_X, PREVIEW_Y, this.appearance);
     this.previewCtrl.container.setScale(PREVIEW_SCALE);
@@ -56,7 +56,7 @@ export default class CharCreateScene extends Phaser.Scene {
     CATEGORIES.forEach((cat, i) => {
       const x = tabW * i + tabW / 2;
       const bg = this.add.rectangle(x, TAB_Y, tabW - 4, 22, 0x232640).setStrokeStyle(1, 0x3a3d5c).setInteractive({ useHandCursor: true });
-      const label = this.add.text(x, TAB_Y, cat.label, { fontFamily: 'sans-serif', fontSize: '11px', color: '#8a8aa0' }).setOrigin(0.5);
+      const label = this.add.text(x, TAB_Y, cat.label, { fontFamily: 'Nunito, sans-serif', fontSize: '11px', color: '#8a8aa0' }).setOrigin(0.5);
       bg.on('pointerdown', () => this.selectCategory(i));
       this.tabTexts.push({ bg, label });
     });
@@ -64,7 +64,7 @@ export default class CharCreateScene extends Phaser.Scene {
     this.gridGroup = this.add.container(0, 0);
     this.selectCategory(0);
 
-    this.add.text(GAME_W / 2, GRID_TOP + 2 * CELL + 8, 'Trainer Name', { fontFamily: 'sans-serif', fontSize: '13px', color: '#8a8aa0' }).setOrigin(0.5, 0);
+    this.add.text(GAME_W / 2, GRID_TOP + 2 * CELL + 8, 'Trainer Name', { fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#8a8aa0' }).setOrigin(0.5, 0);
     this.nameInput = this.add.dom(GAME_W / 2, GRID_TOP + 2 * CELL + 34, 'input',
       'width: 220px; height: 28px; font-size: 15px; text-align: center; border-radius: 6px; border: 1px solid #3a3d5c; background: #12141f; color: #e8e8f0;'
     );
@@ -73,12 +73,12 @@ export default class CharCreateScene extends Phaser.Scene {
     if (state.player.name) this.nameInput.node.value = state.player.name;
 
     this.errorText = this.add.text(GAME_W / 2, GRID_TOP + 2 * CELL + 66, '', {
-      fontFamily: 'sans-serif', fontSize: '12px', color: '#e57373'
+      fontFamily: 'Nunito, sans-serif', fontSize: '12px', color: '#e57373'
     }).setOrigin(0.5, 0);
 
     const confirmY = GRID_TOP + 2 * CELL + 96;
     const confirmBg = this.add.rectangle(GAME_W / 2, confirmY, 220, 34, 0x2d6a4f).setStrokeStyle(1, 0x3fa373).setInteractive({ useHandCursor: true });
-    this.add.text(GAME_W / 2, confirmY, 'Confirm', { fontFamily: 'sans-serif', fontSize: '14px', color: '#e8e8f0' }).setOrigin(0.5);
+    this.add.text(GAME_W / 2, confirmY, 'Confirm', { fontFamily: 'Nunito, sans-serif', fontSize: '14px', color: '#e8e8f0' }).setOrigin(0.5);
     confirmBg.on('pointerdown', () => this.confirm());
   }
 
@@ -106,7 +106,7 @@ export default class CharCreateScene extends Phaser.Scene {
         this.gridGroup.add(this.add.circle(x, y - 8, 12, opt.swatch));
       }
       this.gridGroup.add(this.add.text(x, y + (opt.swatch !== undefined ? 14 : 0), opt.label, {
-        fontFamily: 'sans-serif', fontSize: '11px', color: '#e8e8f0', align: 'center', wordWrap: { width: CELL - 12 }
+        fontFamily: 'Nunito, sans-serif', fontSize: '11px', color: '#e8e8f0', align: 'center', wordWrap: { width: CELL - 12 }
       }).setOrigin(0.5));
       box.on('pointerdown', () => this.pick(cat.key, opt.id));
     });

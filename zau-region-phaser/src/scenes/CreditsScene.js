@@ -57,6 +57,8 @@ export default class CreditsScene extends Phaser.Scene {
       sp(6);
     }
     sp();
+    h('Fonts', 16); p('Silkscreen by Jason Kottke · Nunito by Vernon Adams, Cyreal & Jacques Le Bailly'); p('Both under the SIL Open Font License 1.1.');
+    sp();
     h('Engine', 16); p('Phaser 3 · Vite');
     sp();
     h('Playtested by', 16); p('a very patient headless browser.');
@@ -68,7 +70,7 @@ export default class CreditsScene extends Phaser.Scene {
     this.items = [];
     for (const l of lines) {
       if (l.t) {
-        const txt = this.add.text(GAME_W / 2, y, l.t, { fontFamily: 'sans-serif', fontSize: `${l.size}px`, color: l.color, fontStyle: l.bold ? 'bold' : 'normal', wordWrap: { width: GAME_W - 60 }, align: 'center' }).setOrigin(0.5, 0);
+        const txt = this.add.text(GAME_W / 2, y, l.t, { fontFamily: 'Nunito, sans-serif', fontSize: `${l.size}px`, color: l.color, fontStyle: l.bold ? 'bold' : 'normal', wordWrap: { width: GAME_W - 60 }, align: 'center' }).setOrigin(0.5, 0);
         this.items.push(txt);
         y += txt.height + l.gap;
       } else {
@@ -79,7 +81,7 @@ export default class CreditsScene extends Phaser.Scene {
     this.scrolled = 0;
 
     const btn = this.add.rectangle(GAME_W - 66, GAME_H - 22, 112, 26, 0x232640).setStrokeStyle(1, 0x3a3d5c).setInteractive({ useHandCursor: true }).setDepth(10);
-    this.add.text(GAME_W - 66, GAME_H - 22, 'Back to Title', { fontFamily: 'sans-serif', fontSize: '11px', color: '#e8e8f0' }).setOrigin(0.5).setDepth(11);
+    this.add.text(GAME_W - 66, GAME_H - 22, 'Back to Title', { fontFamily: 'Nunito, sans-serif', fontSize: '11px', color: '#e8e8f0' }).setOrigin(0.5).setDepth(11);
     btn.on('pointerdown', () => goToScene(this, 'Title'));
     // Hold Space to scroll faster.
     this.fast = false;

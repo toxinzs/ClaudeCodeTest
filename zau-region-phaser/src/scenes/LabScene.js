@@ -20,7 +20,7 @@ export default class LabScene extends Phaser.Scene {
     fadeIn(this);
     this.add.rectangle(GAME_W / 2, GAME_H / 2, GAME_W, GAME_H, 0x12192e);
     this.add.text(GAME_W / 2, 24, "Professor Mabosso's Lab", {
-      fontFamily: 'sans-serif', fontSize: '16px', color: '#e8e8f0'
+      fontFamily: 'Nunito, sans-serif', fontSize: '16px', color: '#e8e8f0'
     }).setOrigin(0.5);
 
     const hasStarter = state.party.length > 0;
@@ -29,7 +29,7 @@ export default class LabScene extends Phaser.Scene {
       ? `Good to see you again, ${name}. Your team's looking solid — the Wild Zone trail is open whenever you're ready.`
       : `Ah, ${name}! Right on time. Every trainer heading into the Wild Zone needs a partner first. Take a look — which one calls out to you?`;
     this.add.text(GAME_W / 2, 60, dialogue, {
-      fontFamily: 'sans-serif', fontSize: '13px', color: '#c8c8d8',
+      fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#c8c8d8',
       wordWrap: { width: GAME_W - 60 }, align: 'center'
     }).setOrigin(0.5, 0);
 
@@ -42,7 +42,7 @@ export default class LabScene extends Phaser.Scene {
         const y = GAME_H / 2 + 40;
         const box = this.add.rectangle(x, y, 120, 120, 0x232640).setStrokeStyle(1, 0x3a3d5c).setInteractive({ useHandCursor: true });
         this.add.text(x, y - 20, chain.stages[0].emoji, { fontSize: '44px' }).setOrigin(0.5);
-        this.add.text(x, y + 38, chain.stages[0].name, { fontFamily: 'sans-serif', fontSize: '13px', color: '#e8e8f0' }).setOrigin(0.5);
+        this.add.text(x, y + 38, chain.stages[0].name, { fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#e8e8f0' }).setOrigin(0.5);
         box.on('pointerdown', () => this.chooseStarter(key));
       });
     }
@@ -50,7 +50,7 @@ export default class LabScene extends Phaser.Scene {
 
   makeButton(x, y, w, h, label, onClick) {
     const bg = this.add.rectangle(x, y, w, h, 0x232640).setStrokeStyle(1, 0x3a3d5c).setInteractive({ useHandCursor: true });
-    this.add.text(x, y, label, { fontFamily: 'sans-serif', fontSize: '13px', color: '#e8e8f0' }).setOrigin(0.5);
+    this.add.text(x, y, label, { fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#e8e8f0' }).setOrigin(0.5);
     bg.on('pointerdown', onClick);
   }
 

@@ -23,19 +23,19 @@ export default class MoveLearnScene extends Phaser.Scene {
   create() {
     drawModalBackdrop(this, `${this.mon.nickname} wants to learn ${this.newMove.name}!`);
     this.add.text(GAME_W / 2, 46, 'But it already knows 4 moves. Forget one to make room, or skip.', {
-      fontFamily: 'sans-serif', fontSize: '12px', color: '#8a8aa0', wordWrap: { width: GAME_W - 60 }, align: 'center'
+      fontFamily: 'Nunito, sans-serif', fontSize: '12px', color: '#8a8aa0', wordWrap: { width: GAME_W - 60 }, align: 'center'
     }).setOrigin(0.5, 0);
 
     this.mon.moves.forEach((m, i) => {
       const y = 90 + i * 36;
       const bg = this.add.rectangle(GAME_W / 2, y, GAME_W - 48, 30, 0x232640).setStrokeStyle(1, 0x3a3d5c).setInteractive({ useHandCursor: true });
-      this.add.text(GAME_W / 2, y, `${m.name} (${m.type})`, { fontFamily: 'sans-serif', fontSize: '13px', color: '#e8e8f0' }).setOrigin(0.5);
+      this.add.text(GAME_W / 2, y, `${m.name} (${m.type})`, { fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#e8e8f0' }).setOrigin(0.5);
       bg.on('pointerdown', () => this.confirmForget(i));
     });
 
     const skipY = 90 + this.mon.moves.length * 36 + 12;
     const skipBg = this.add.rectangle(GAME_W / 2, skipY, GAME_W - 48, 30, 0x232640).setStrokeStyle(1, 0x3a3d5c).setInteractive({ useHandCursor: true });
-    this.add.text(GAME_W / 2, skipY, `Don't learn ${this.newMove.name}`, { fontFamily: 'sans-serif', fontSize: '13px', color: '#e8e8f0' }).setOrigin(0.5);
+    this.add.text(GAME_W / 2, skipY, `Don't learn ${this.newMove.name}`, { fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#e8e8f0' }).setOrigin(0.5);
     skipBg.on('pointerdown', () => this.finish());
   }
 
