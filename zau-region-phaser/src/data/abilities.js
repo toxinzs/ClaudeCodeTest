@@ -100,6 +100,25 @@ const ABILITIES = {
   houndour: { name: 'Flash Fire', effect: 'flash_fire' },
   houndoom: { name: 'Flash Fire', effect: 'flash_fire' },
 
+  // Greenline Terraces roster + evolutions
+  oddish: { name: 'Chlorophyll', effect: null },
+  gloom: { name: 'Chlorophyll', effect: null },
+  hoppip: { name: 'Chlorophyll', effect: null },
+  skiploom: { name: 'Chlorophyll', effect: null },
+  jumpluff: { name: 'Chlorophyll', effect: null },
+  sewaddle: { name: 'Swarm', effect: 'low_hp_boost', boostType: 'Bug' },
+  swadloon: { name: 'Leaf Guard', effect: null },
+  leavanny: { name: 'Swarm', effect: 'low_hp_boost', boostType: 'Bug' },
+  combee: { name: 'Honey Gather', effect: null },
+  vespiquen: { name: 'Pressure', effect: null },
+  flabébé: { name: 'Flower Veil', effect: null },
+  floette: { name: 'Flower Veil', effect: null },
+  ralts: { name: 'Synchronize', effect: 'synchronize' },
+  kirlia: { name: 'Synchronize', effect: 'synchronize' },
+  gardevoir: { name: 'Synchronize', effect: 'synchronize' },
+  heracross: { name: 'Guts', effect: 'guts' },
+  pinsir: { name: 'Hyper Cutter', effect: null },
+
   // Custom/fictional final legendary — hand-authored, same precedent as its stats/moveset/sprite
   verdanyx: { name: 'Verdant Surge', effect: 'verdant_surge', boostType: 'Grass' }
 };

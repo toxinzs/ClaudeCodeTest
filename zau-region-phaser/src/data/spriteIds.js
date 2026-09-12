@@ -90,7 +90,26 @@ export const SPRITE_IDS = {
   magnemite: 81,
   magneton: 82,
   houndour: 228,
-  houndoom: 229
+  houndoom: 229,
+
+  // Greenline Terraces roster + evolutions
+  oddish: 43,
+  gloom: 44,
+  hoppip: 187,
+  skiploom: 188,
+  jumpluff: 189,
+  sewaddle: 540,
+  swadloon: 541,
+  leavanny: 542,
+  combee: 415,
+  vespiquen: 416,
+  flabébé: 669,
+  floette: 670,
+  ralts: 280,
+  kirlia: 281,
+  gardevoir: 282,
+  heracross: 214,
+  pinsir: 127
 };
 
 export function spriteIdFor(speciesName) {

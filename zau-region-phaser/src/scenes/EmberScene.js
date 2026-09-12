@@ -25,14 +25,14 @@ const SPOTS = {
   substation: { x: 1, y: 1 },
   exchange:   { x: 4, y: 3 },
   kilns:      { x: 1, y: 5 },
-  lift:       { x: 7, y: 5 },
+  lift:       { x: EMBER_MAP.liftX, y: EMBER_MAP.liftY },
   ramp:       { x: EMBER_MAP.rampX, y: EMBER_MAP.rampY }
 };
 
 const SPOT_TEXT = {
   substation: "Meridian Substation. New, clean, fenced. A technician taps a badge and doesn't look up: \"Grid stabilisation. That's all I'm cleared to say.\" The trunk cable runs down, not up.",
   kilns: "The Kilns. Foreman Kettering wipes his hands: \"Brownouts started the month that substation went live. We draw less than we did ten years ago. So who's drawing?\"",
-  lift: "The Freight Lift — caged, chained, the call button dead. Stencilled above it: GREENLINE TERRACES. Locked from the top side."
+  lift: "The Freight Lift — caged, the call button dead until you're badged. Stencilled above it: GREENLINE TERRACES. \"Ashgrave's badge opens it. Nothing else does.\""
 };
 
 export default class EmberScene extends Phaser.Scene {
@@ -118,8 +118,14 @@ export default class EmberScene extends Phaser.Scene {
       }
       return;
     }
+    // The Freight Lift up to the Greenline Terraces — gated on Ashgrave's badge.
+    if (at('lift')) {
+      if (state.leagueBeaten[ASHGRAVE_IDX]) goToScene(this, 'Greenline');
+      else this.toastText.setText(SPOT_TEXT.lift);
+      return;
+    }
     if (at('exchange')) { this.toastText.setText('The Scrapyard Exchange — everything off a pallet, the till a coffee tin.'); this.scene.launch('Mart'); return; }
-    for (const key of ['substation', 'kilns', 'lift']) {
+    for (const key of ['substation', 'kilns']) {
       if (at(key)) { this.toastText.setText(SPOT_TEXT[key]); return; }
     }
     if (state.party.length && Math.random() < WILD_ENCOUNTER_CHANCE) {

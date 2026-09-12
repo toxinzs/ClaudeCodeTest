@@ -8,7 +8,8 @@
 // Only Gen 1-6 species ever got Megas, which is why this roster is what
 // Phase 10 deliberately seeded (Gyarados/Alakazam/Gengar/Lucario/
 // Garchomp/Absol) and not the Gen 9 starters. Phase 13's Ember Quarter
-// added Aggron/Camerupt/Houndoom the same way.
+// added Aggron/Camerupt/Houndoom the same way, and Phase 14's Greenline
+// Terraces added Gardevoir/Heracross/Pinsir.
 //
 // Of the six Mega abilities, only Adaptability is wired mechanically (STAB
 // 2x instead of 1.5x); the rest carry their real names flavor-only, same
@@ -59,6 +60,22 @@ const MEGAS = {
     megaName: 'Mega Houndoom', stone: 'houndoominite', type: 'Dark/Fire', spriteId: 10048,
     baseStats: { hp: 75, atk: 90, def: 90, spAtk: 140, spDef: 90, spe: 115 },
     ability: { name: 'Solar Power', effect: null }
+  },
+  // Greenline Terraces lines (Phase 14) — Ralts/Heracross/Pinsir seeded there.
+  gardevoir: {
+    megaName: 'Mega Gardevoir', stone: 'gardevoirite', type: 'Psychic/Fairy', spriteId: 10051,
+    baseStats: { hp: 68, atk: 85, def: 65, spAtk: 165, spDef: 135, spe: 100 },
+    ability: { name: 'Pixilate', effect: null }
+  },
+  heracross: {
+    megaName: 'Mega Heracross', stone: 'heracronite', type: 'Bug/Fighting', spriteId: 10047,
+    baseStats: { hp: 80, atk: 185, def: 115, spAtk: 40, spDef: 105, spe: 75 },
+    ability: { name: 'Skill Link', effect: null }
+  },
+  pinsir: {
+    megaName: 'Mega Pinsir', stone: 'pinsirite', type: 'Bug/Flying', spriteId: 10040,
+    baseStats: { hp: 65, atk: 155, def: 120, spAtk: 65, spDef: 90, spe: 105 },
+    ability: { name: 'Aerilate', effect: null }
   }
 };
 

@@ -121,6 +121,7 @@ export const EMBER_MAP = {
     [1,1,1,1,1,1,1,1,1]
   ],
   rampX: 4, rampY: 7,
+  liftX: 7, liftY: 5,
   decor: [
     {x:7,y:1,emoji:"🔥",tileKey:"door"},    // Ashgrave's Foundry Gym
     {x:1,y:1,emoji:"⚡",tileKey:"window"},  // Meridian Substation
@@ -128,5 +129,36 @@ export const EMBER_MAP = {
     {x:1,y:5,emoji:"🧱"},                    // The Kilns (Foreman Kettering)
     {x:7,y:5,emoji:"🛗"},                    // The Freight Lift (locked)
     {x:4,y:7,emoji:"🛤️"}                     // The Harbor Ramp (exit)
+  ]
+};
+
+// Greenline Terraces (stratum 5, zau-region/districts/greenline.md) —
+// four garden terraces stepping up the stratum face, each hedge row
+// (tree tiles) broken by a single ramp so the walk zigzags upward. The
+// exit down is the Freight Lift at the bottom-left; the way up is the
+// (locked) Service Stair at the bottom-right.
+export const GREENLINE_MAP = {
+  w: 9, h: 9,
+  bg: "#0a1a0e",
+  layout: [
+    [1,1,1,1,1,1,1,1,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,1,1,1,1,1,0,1,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,1,0,1,1,1,1,1,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,1,1,1,1,1,0,1,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1,1,1]
+  ],
+  liftX: 1, liftY: 7,
+  decor: [
+    {x:7,y:1,emoji:"🌿",tileKey:"door"},    // Thistle's Canopy Gym
+    {x:1,y:1,emoji:"🌱",tileKey:"window"},  // The Seed Bank
+    {x:1,y:3,emoji:"💧",tileKey:"window"},  // Meridian Irrigation Works
+    {x:4,y:3,emoji:"🥕"},                    // The Allotments
+    {x:7,y:5,emoji:"🌩️"},                    // The Overlook (Old Sato)
+    {x:7,y:7,emoji:"🪜"},                    // The Service Stair (locked)
+    {x:1,y:7,emoji:"🛗"}                     // The Freight Lift (exit)
   ]
 };
