@@ -52,6 +52,15 @@ export const SPRITE_IDS = {
   gabite: 444,
   garchomp: 445,
 
+  // Harbor District roster
+  wingull: 278,
+  tentacool: 72,
+  krabby: 98,
+  horsea: 116,
+  chinchou: 170,
+  buizel: 418,
+  pelipper: 279,
+
   // Trainers, rival, league leaders, Director Vance
   kadabra: 64,
   charjabug: 737,

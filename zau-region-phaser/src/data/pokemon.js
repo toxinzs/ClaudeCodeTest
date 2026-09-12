@@ -128,13 +128,31 @@ export const WILD_SPECIES = [
   { name: "Gible", emoji: "🦖", type: "Dragon/Ground", baseLvl: [16,22],
     moves: [moveFor("Rock Throw"), moveFor("Bite")] },
   { name: "Absol", emoji: "🐺", type: "Dark", baseLvl: [18,25],
-    moves: [moveFor("Night Slash"), moveFor("Bite")] }
+    moves: [moveFor("Night Slash"), moveFor("Bite")] },
+
+  // Harbor District roster (zau-region/districts/harbor.md) — real
+  // Water-district species, level band 14-22 (post-Act 1, pre-Coral).
+  { name: "Wingull", emoji: "🕊️", type: "Water/Flying", baseLvl: [14,20],
+    moves: [moveFor("Water Gun"), moveFor("Peck")] },
+  { name: "Tentacool", emoji: "🪼", type: "Water/Poison", baseLvl: [15,21],
+    moves: [moveFor("Poison Sting"), moveFor("Water Gun")] },
+  { name: "Krabby", emoji: "🦀", type: "Water", baseLvl: [14,20],
+    moves: [moveFor("Tackle"), moveFor("Water Gun")] },
+  { name: "Horsea", emoji: "🐴", type: "Water", baseLvl: [15,21],
+    moves: [moveFor("Water Gun"), moveFor("Tackle")] },
+  { name: "Chinchou", emoji: "🔦", type: "Water/Electric", baseLvl: [16,22],
+    moves: [moveFor("Thunder Shock"), moveFor("Water Gun")] },
+  { name: "Buizel", emoji: "🦦", type: "Water", baseLvl: [14,20],
+    moves: [moveFor("Aqua Jet"), moveFor("Quick Attack")] },
+  { name: "Pelipper", emoji: "🦆", type: "Water/Flying", baseLvl: [19,22],
+    moves: [moveFor("Water Gun"), moveFor("Aerial Ace")] }
 ];
 
 // Wild encounter tables per zone (by index in WILD_SPECIES)
 export const WILD_ZONE_TABLE = {
   outskirts: [0,1,2,3,4,5,6,7,23,24,25],
   underpass: [8,9,10,13],
-  harbor: [7,13,17,3],
+  // Wingull/Buizel common (listed twice), Pelipper the rare "you got lucky" spawn.
+  harbor: [26,26,27,28,29,30,31,31,7,32],
   district: [11,12,14,15,16,18,19,20,21,22]
 };
