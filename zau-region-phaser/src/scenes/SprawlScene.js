@@ -111,7 +111,7 @@ export default class SprawlScene extends Phaser.Scene {
     if (at('elevator')) {
       if (hasFlag('towerBadge')) {
         setFlag('towerOpen');
-        this.toastText.setText("Halloran's badge. The reader thinks about it, then the elevator opens. Meridian Tower — all floors. (The Tower is the next stop.)");
+        goToScene(this, 'Tower');
       } else {
         this.toastText.setText('The Tower Lobby Elevator. Two Site Security guards, one badge reader, and a polite "Not today."');
       }

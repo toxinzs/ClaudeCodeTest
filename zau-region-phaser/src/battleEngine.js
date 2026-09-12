@@ -580,10 +580,10 @@ export class BattleEngine extends Emitter {
         : `${LEAGUE_LEADERS[state.currentLeagueIdx].locationName} cleared! (${cleared}/5 leaders)`;
     } else if (ctx === 'vance') {
       state.vanceBeaten = true;
-      msg = `You beat Director Vance! The Underlight has opened beneath the city.`;
+      msg = `Vance sets his Poké Ball down. "Well argued." He doesn't look beaten.`;
     } else if (ctx === 'verdanyx') {
       state.verdanyxBeaten = true;
-      msg = `You defeated Verdanyx!`; // the real end-screen flow lands in a later phase
+      msg = `The rig fails. Verdanyx sways, enormous, still transformed — but the pulse slows.`;
     }
     this.revertAllMegas();
     saveGame();

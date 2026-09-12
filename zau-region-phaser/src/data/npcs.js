@@ -14,7 +14,9 @@ import { grantKeyStone } from '../keystone.js';
 // pulseDecoded, signalDario (Signal S1–S3); ferryAsked, ferryCrew,
 // stairDrained, oldlinesNyx, oldlinesCass, houndoominiteFound,
 // gengariteGiven, wardenMet, act2Close (Undercity U1–U3); sprawlDario,
-// towerBadge, sloaneDecided, sprawlJae, towerOpen (Sprawl SP1–SP2).
+// towerBadge, sloaneDecided, sprawlJae, towerOpen (Sprawl SP1–SP2);
+// towerRask, towerMarlowe, vanceTalked, rigActivated, underlightDario,
+// ending (Tower T1–T3, Underlight V1–V4).
 // Placement rule: a character must never stand in a one-tile corridor (the
 // Greenline's rows are exactly that), so there they stand ON their landmark
 // tile and carry its description — talking to Wren opens the Seed Bank.
@@ -678,4 +680,131 @@ export const SPRAWL_NPCS = [
       { say: ['Mrs. Oyelaran', "Building manager, forty years. Meridian's the landlord. Rent's fair, lifts work, heating's on. People up top say the company's up to something — down here it's just the name on the cheque.", "That's not a defence. It's just what it looks like from a kitchen window."] }
     ]
   }
+];
+
+export const TOWER_NPCS = [
+  {
+    id: 'rask', name: 'Rask', x: 2, y: 8, facing: 'down',
+    when: (s) => !s.story.towerRask,
+    appearance: { skin: 'bronze', hair: 'buzzcut', hairColor: 'black', outfit: 'formal' },
+    script: () => [
+      { say: ['Rask', "Site Security. That's a real badge — Dr. Halloran's, in fact. Which means I have to ask why you have it, and I'd rather not.", "Restricted floors. I'm going to have to ask you to leave. …After."] },
+      { battle: { trainerKey: 'secRask', returnTo: 'Tower' } }
+    ]
+  },
+  {
+    id: 'marlowe', name: 'Marlowe', x: 2, y: 4, facing: 'down',
+    when: (s) => !s.story.towerMarlowe,
+    appearance: { skin: 'light', hair: 'buzzcut', hairColor: 'gray', outfit: 'formal' },
+    script: () => [
+      { say: ['Marlowe', "Executive floor. You're not on the calendar. I apologise in advance for winning — it's nothing personal, it's quarterly."] },
+      { battle: { trainerKey: 'execMarlowe', returnTo: 'Tower' } }
+    ]
+  },
+  {
+    id: 'amara', name: 'Amara', x: 1, y: 1, facing: 'right',
+    appearance: { skin: 'black', hair: 'braid', hairColor: 'black', outfit: 'formal' },
+    script: (s) => {
+      if (s.story.ending) return [{ say: ['Amara', "He resigned this morning. Wrote it himself, by hand. The fragment's gone from the desk.", "I've worked for him nine years. I think that's the first honest thing I've watched him do."] }];
+      if (s.story.rigActivated) return [{ say: ['Amara', "The freight core's through his office. It goes all the way down. He had it built that way.", "Go. I'll keep the floor clear."] }];
+      if (s.vanceBeaten) return [{ say: ['Amara', "…He's still in there."] }];
+      return [{ say: ['Amara', "He's expecting you. He's been expecting you for about three districts.", "Go in. I'm not going to stop you, and I want you to notice that I'm not."] }];
+    }
+  }
+];
+
+// STORY.md T2 — the conversation. Not a reveal; an argument.
+export const VANCE_TALK = [
+  { say: ['Vance', "Sit, if you like. You won't. Nobody does.", "I know who you are. Five badges, Halloran's badge, and the Voss woman's Key Stone — yes, I know where you got it. I've known where she was for eleven years."] },
+  { if: (s) => s.hasKeyStone, then: [
+    { say: ['', "On the desk: a drill-bit fragment, resonance-scarred. It glows, faintly, the closer your Key Stone gets."] }
+  ] },
+  { say: ['Vance', "That's from the original bore. The day the division stopped drilling because one engineer lost her nerve.", "Eighteen years. Half this city stacked in the dark under the other half, because a company got frightened of the only thing that could have ended the divide. I've spent my career on one idea: they gave up too soon.", "The rig finishes what they started. Harness it — *safely*, this time — and the storms stop, the grid's free, and nobody stacks under anybody again. I think about the people at the bottom of this city every day. Do you believe that?"] },
+  { choice: { name: 'Vance', prompt: "Well?", options: [
+    { label: "It's not a what. It's a who.", then: [
+      { say: ['Vance', "…What.", "No. Listen to me. It's a *what*. It's an energy event with a shape. Sentiment is exactly the mistake she made."] }
+    ] },
+    { label: "You can't harness a person.", then: [
+      { say: ['Vance', "A *person*. …Eighteen years of data and you've decided it's a person.", "That's the word she used. In the last report she ever filed."] }
+    ] }
+  ] } },
+  { say: ['Vance', "Then we disagree, and there's a way to settle that in this region."] },
+  { set: 'vanceTalked' },
+  { battle: { kind: 'vance', returnTo: 'Tower' } }
+];
+
+// STORY.md T3 — losing doesn't stop a man with a rig and a conviction.
+export const TOWER_RIG = [
+  { say: ['Vance', "Well argued. Genuinely.", "It changes nothing. The sequence is on the desk; it always was."] },
+  { call: (scene) => scene.rigFlash?.() },
+  { flash: 500 },
+  { shake: 800 },
+  { say: ['', "The Tower's windows go white. Far below, every district's lights stutter at once."] },
+  { say: ['Vance', "If you're right about it — then go and be right. The freight core's through that door. It goes all the way down.", "I'll be here when the lights come back."] },
+  { set: 'rigActivated' }
+];
+
+export const UNDERLIGHT_NPCS = [
+  // STORY.md V2 — Dario found her. The scene is short because there's no time.
+  {
+    id: 'darioUnder', name: 'Dario Voss', x: 3, y: 4, facing: 'down',
+    when: (s) => !s.story.underlightDario,
+    appearance: { skin: 'taupe', hair: 'afro', hairColor: 'black', outfit: 'trainer' },
+    script: () => [
+      { say: ['Dario', "…You were right. I found her. She's at the controls with your friend — she looked at me for about one second and said \"later.\"", "*Later.* Eighteen years and I get *later*."] },
+      { say: ['Elena', "Later, Dario. I mean it. It's waking up."] },
+      { say: ['Dario', "…Yeah.", "No pin. Threw it in the core on the way down. Halloran gave me a stone though — turns out she meant it.", "Bet you can't do this without me."] },
+      { call: (scene) => scene.showDarioMega?.() },
+      { flash: 200 },
+      { say: ['', "Dario's Lucario Mega Evolves. He doesn't look at it — he's looking at his mother."] },
+      { set: 'underlightDario' }
+    ]
+  },
+  {
+    id: 'darioUnderAfter', name: 'Dario Voss', x: 1, y: 3, facing: 'right',
+    when: (s) => s.story.underlightDario && !s.story.ending,
+    appearance: { skin: 'taupe', hair: 'afro', hairColor: 'black', outfit: 'trainer' },
+    script: () => [{ say: ['Dario', "I'll hold the rig's guards. You hold *that*. Go."] }]
+  },
+  {
+    id: 'priyaUnder', name: 'Priya', x: 4, y: 2, facing: 'left',
+    when: (s) => !s.story.ending,
+    appearance: { skin: 'amber', hair: 'braid', hairColor: 'black', outfit: 'casual' },
+    script: () => [{ say: ['Priya', "I've got the controls. Eleven seconds — it's faster now. Nine. Whatever you're going to do, do it before it's five."] }]
+  },
+  {
+    id: 'elenaUnder', name: 'Elena', x: 2, y: 2, facing: 'right',
+    when: (s) => !s.story.ending,
+    appearance: { skin: 'light', hair: 'long', hairColor: 'gray', outfit: 'explorer' },
+    script: () => [{ say: ['Elena', "The rig is *driving* it. Every second it runs, it hurts more, and it hits harder. Hold it until Priya can cut the feed. Don't try to win. Hold."] }]
+  }
+];
+
+// STORY.md V3 — the battle is stopping the rig.
+export const UNDERLIGHT_RIG = [
+  { say: ['Priya', "Cutting the feed — it's fighting me. Thirty seconds. Keep it off the rig!"] },
+  { say: ['Elena', "Here it comes. Hold it."] },
+  { shake: 600 },
+  { battle: { kind: 'verdanyx', returnTo: 'Underlight' } }
+];
+
+// STORY.md V4 — the revert. Not defeated. Held.
+export const ENDING = [
+  { say: ['Priya', "Feed's cut! Rig's — the rig's *dead*, it's—"] },
+  { call: (scene) => scene.rigDies?.() },
+  { shake: 900 },
+  { flash: 300 },
+  { say: ['', "The rig's hum drops out. What's left in the chamber is exhausted, enormous, and still transformed — a Pokémon that has been mid-change for eighteen years with nothing to change back to."] },
+  { say: ['Elena', "Your Key Stone. Give it here — quickly.", "A Mega comes back because someone's holding the other end. It's never had anyone holding the other end. It's had me. That'll have to do."] },
+  { call: (scene) => scene.revertStart?.() },
+  { flash: 150 }, { wait: 300 }, { flash: 150 }, { wait: 300 }, { flash: 400 },
+  { call: (scene) => scene.revertEnd?.() },
+  { wait: 800 },
+  { say: ['', "It doesn't become what it was. That's gone. It becomes *still* — a shape that holds, breathing slow, the green in it settling like a storm blowing out.", "Somewhere far above, over the Outskirts, it stops raining."] },
+  { say: ['Elena', "…There. There you are.", "Keep the stone. It knows you now."] },
+  { say: ['Dario', "Mum.", "…Later?"] },
+  { say: ['Elena', "No. Now."] },
+  { say: ['', "The truth surfaces: Prism's data, Priya's samples, Halloran's testimony, and Elena Voss — alive, and the only person in Zau who ever told Meridian to stop.", "Director Vance resigns rather than lie about it. It's the one honest thing he does, and he does it by hand.", "The Voss name is cleared by the truth instead of a press release. The ferry runs. Alma gets a phone call from the bottom of the city."] },
+  { set: 'ending' },
+  { call: (scene) => goToScene(scene, 'Credits') }
 ];

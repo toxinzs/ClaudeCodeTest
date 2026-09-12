@@ -43,15 +43,37 @@ export function makeActor(scene, ctrl, pos, offsetX, offsetY) {
 // the scene's createWalker result (for facing). Filters NPCs by `when`
 // (a state predicate) so a character can be present only during a beat.
 export function placeNPCs(scene, { npcs, offsetX, offsetY, player, walker, posRef }) {
-  const placed = npcs.filter(n => !n.when || n.when(state)).map(def => {
+  const placed = [];
+  function spawn(def) {
     const pos = { x: def.x, y: def.y };
     const ctrl = createPlayerSprite(scene, offsetX + pos.x * TILE + TILE / 2, offsetY + pos.y * TILE + TILE / 2, def.appearance);
     ctrl.setDirection(def.facing || 'down');
     ctrl.container.setInteractive(new Phaser.Geom.Rectangle(-32, -32, 64, 64), Phaser.Geom.Rectangle.Contains);
     const npc = { def, pos, ctrl, actor: makeActor(scene, ctrl, pos, offsetX, offsetY) };
     ctrl.container.on('pointerdown', () => { if (isAdjacent(posRef, pos)) talk(npc); });
+    if (scene.hudCam) scene.hudCam.ignore(ctrl.container);
+    placed.push(npc);
+    actors[def.id] = npc.actor;
     return npc;
-  });
+  }
+  // Presence (`when`) is re-evaluated after every script, so a character
+  // whose beat just ended leaves the map now — not after the next scene
+  // load — and one whose beat just began appears.
+  function refresh() {
+    for (const npc of [...placed]) {
+      if (npc.def.when && !npc.def.when(state)) {
+        npc.ctrl.destroy();
+        placed.splice(placed.indexOf(npc), 1);
+        delete actors[npc.def.id];
+      }
+    }
+    for (const def of npcs) {
+      if (placed.some(n => n.def === def)) continue;
+      if (!def.when || def.when(state)) spawn(def);
+    }
+  }
+  const actors = { player: player };
+  npcs.filter(n => !n.when || n.when(state)).forEach(spawn);
 
   // Draw order: lower on the map = drawn later, so a character walking
   // below another overlaps correctly. Player is included via its container.
@@ -62,9 +84,6 @@ export function placeNPCs(scene, { npcs, offsetX, offsetY, player, walker, posRe
   sortDepth();
   scene.events.on('update', sortDepth);
 
-  const actors = { player: player };
-  placed.forEach(n => { actors[n.def.id] = n.actor; });
-
   async function talk(npc) {
     if (inputLock.locked) return;
     // Face each other.
@@ -74,7 +93,7 @@ export function placeNPCs(scene, { npcs, offsetX, offsetY, player, walker, posRe
     player.ctrl.setDirection(OPPOSITE[toward]);
     const steps = typeof npc.def.script === 'function' ? npc.def.script(state) : npc.def.script;
     await runScript(scene, steps, actors);
-    if (scene.sys.settings.status !== Phaser.Scenes.SHUTDOWN) npc.ctrl.setDirection(npc.def.facing || 'down');
+    if (scene.sys.settings.status !== Phaser.Scenes.SHUTDOWN) { if (npc.ctrl.container.active) npc.ctrl.setDirection(npc.def.facing || 'down'); refresh(); }
   }
 
   const onInteract = () => {
@@ -98,7 +117,8 @@ export function placeNPCs(scene, { npcs, offsetX, offsetY, player, walker, posRe
     npcs: placed,
     isBlocked: (x, y) => placed.some(n => n.pos.x === x && n.pos.y === y),
     // Run a scene-level script (an on-map cutscene) with these actors.
-    run: (steps) => runScript(scene, steps, actors)
+    run: async (steps) => { await runScript(scene, steps, actors); if (scene.sys.settings.status !== Phaser.Scenes.SHUTDOWN) refresh(); },
+    refresh
   };
 }
 

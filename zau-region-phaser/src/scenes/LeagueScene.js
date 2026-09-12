@@ -107,10 +107,8 @@ export default class LeagueScene extends Phaser.Scene {
       const clearedCount = state.leagueBeaten.filter(Boolean).length;
       if (clearedCount < 5) {
         this.toastText.setText('The tower is sealed until all 5 League Leaders are defeated.');
-      } else if (!state.vanceBeaten) {
-        goToScene(this, 'Battle', { kind: 'vance', returnTo: 'League' });
       } else if (!state.verdanyxBeaten) {
-        goToScene(this, 'Battle', { kind: 'verdanyx', returnTo: 'League' });
+        this.toastText.setText("Meridian Tower's real door is the Sprawl's lobby elevator. Halloran's badge opens it.");
       } else {
         this.toastText.setText('Zau has no more challenges left for you. Legendary run.');
       }
