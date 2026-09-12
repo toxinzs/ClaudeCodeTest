@@ -71,7 +71,26 @@ export const SPRITE_IDS = {
   honchkrow: 430,
   haunter: 93,
   sandslash: 28,
-  froslass: 478
+  froslass: 478,
+
+  // Ember Quarter roster + evolutions
+  slugma: 218,
+  magcargo: 219,
+  numel: 322,
+  camerupt: 323,
+  aron: 304,
+  lairon: 305,
+  aggron: 306,
+  rolycoly: 837,
+  carkol: 838,
+  coalossal: 839,
+  litwick: 607,
+  lampent: 608,
+  torkoal: 324,
+  magnemite: 81,
+  magneton: 82,
+  houndour: 228,
+  houndoom: 229
 };
 
 export function spriteIdFor(speciesName) {

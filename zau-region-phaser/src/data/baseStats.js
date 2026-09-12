@@ -75,6 +75,25 @@ const BASE_STATS = {
   sandslash:    { hp: 75, atk: 100, def: 110, spAtk: 45,  spDef: 55,  spe: 65 },
   froslass:     { hp: 70, atk: 80,  def: 70,  spAtk: 80,  spDef: 70,  spe: 110 },
 
+  // Ember Quarter roster + evolutions
+  slugma:       { hp: 40, atk: 40,  def: 40,  spAtk: 70,  spDef: 40,  spe: 20 },
+  magcargo:     { hp: 60, atk: 50,  def: 120, spAtk: 90,  spDef: 80,  spe: 30 },
+  numel:        { hp: 60, atk: 60,  def: 40,  spAtk: 65,  spDef: 45,  spe: 35 },
+  camerupt:     { hp: 70, atk: 100, def: 70,  spAtk: 105, spDef: 75,  spe: 40 },
+  aron:         { hp: 50, atk: 70,  def: 100, spAtk: 40,  spDef: 40,  spe: 30 },
+  lairon:       { hp: 60, atk: 90,  def: 140, spAtk: 50,  spDef: 50,  spe: 40 },
+  aggron:       { hp: 70, atk: 110, def: 180, spAtk: 60,  spDef: 60,  spe: 50 },
+  rolycoly:     { hp: 30, atk: 40,  def: 50,  spAtk: 40,  spDef: 50,  spe: 30 },
+  carkol:       { hp: 80, atk: 60,  def: 90,  spAtk: 60,  spDef: 70,  spe: 50 },
+  coalossal:    { hp: 110,atk: 80,  def: 120, spAtk: 80,  spDef: 90,  spe: 30 },
+  litwick:      { hp: 50, atk: 30,  def: 55,  spAtk: 65,  spDef: 55,  spe: 20 },
+  lampent:      { hp: 60, atk: 40,  def: 60,  spAtk: 95,  spDef: 60,  spe: 55 },
+  torkoal:      { hp: 70, atk: 85,  def: 140, spAtk: 85,  spDef: 70,  spe: 20 },
+  magnemite:    { hp: 25, atk: 35,  def: 70,  spAtk: 95,  spDef: 55,  spe: 45 },
+  magneton:     { hp: 50, atk: 60,  def: 95,  spAtk: 120, spDef: 70,  spe: 70 },
+  houndour:     { hp: 45, atk: 60,  def: 30,  spAtk: 80,  spDef: 50,  spe: 65 },
+  houndoom:     { hp: 75, atk: 90,  def: 50,  spAtk: 110, spDef: 80,  spe: 95 },
+
   // Custom/fictional final legendary — not a real species, hand-authored
   verdanyx:     { hp: 100,atk: 110, def: 90,  spAtk: 120, spDef: 100, spe: 95 }
 };

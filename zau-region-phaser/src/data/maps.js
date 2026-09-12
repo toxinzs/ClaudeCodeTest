@@ -84,18 +84,49 @@ export const HARBOR_MAP = {
   layout: [
     [1,1,1,1,1,1,1,1,1],
     [1,0,0,0,0,0,0,0,1],
-    [1,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0],  // (8,2): the Harbor Ramp up to the Ember Quarter
     [1,0,0,0,0,0,0,0,1],
     [1,0,0,0,0,0,0,0,1],
     [1,1,0,0,0,0,0,1,1],
     [1,1,1,1,1,1,1,1,1]
   ],
+  rampX: 8, rampY: 2,
   decor: [
+    {x:8,y:2,emoji:"🛤️"},                   // Harbor Ramp (to Ember Quarter)
     {x:7,y:1,emoji:"🐠",tileKey:"door"},   // Coral's Reef Gym
     {x:4,y:1,emoji:"🐟",tileKey:"window"}, // Fish Market
     {x:1,y:1,emoji:"📦",tileKey:"wallBrick"}, // Cargo Row
     {x:7,y:4,emoji:"⛵"},                   // Ferry Terminal
     {x:1,y:4,emoji:"🗼"},                   // Lighthouse Point
     {x:4,y:5,emoji:"🌀"}                    // Drowned Stair
+  ]
+};
+
+// Ember Quarter (stratum 4, zau-region/districts/ember.md) — the first
+// stratum that stacks instead of spreading. Brick mill blocks split the
+// floor into three haul-roads; the district's exit is the Harbor Ramp at
+// the bottom edge, its (locked) way up is the Freight Lift.
+export const EMBER_MAP = {
+  w: 9, h: 9,
+  bg: "#1a0e0a",
+  layout: [
+    [1,1,1,1,1,1,1,1,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,0,1,1,0,1,1,0,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,0,1,1,0,1,1,0,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,1],
+    [1,1,1,1,0,1,1,1,1],
+    [1,1,1,1,1,1,1,1,1]
+  ],
+  rampX: 4, rampY: 7,
+  decor: [
+    {x:7,y:1,emoji:"🔥",tileKey:"door"},    // Ashgrave's Foundry Gym
+    {x:1,y:1,emoji:"⚡",tileKey:"window"},  // Meridian Substation
+    {x:4,y:3,emoji:"🛠️",tileKey:"window"},  // The Scrapyard Exchange
+    {x:1,y:5,emoji:"🧱"},                    // The Kilns (Foreman Kettering)
+    {x:7,y:5,emoji:"🛗"},                    // The Freight Lift (locked)
+    {x:4,y:7,emoji:"🛤️"}                     // The Harbor Ramp (exit)
   ]
 };

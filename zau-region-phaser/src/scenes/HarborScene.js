@@ -25,7 +25,8 @@ const SPOTS = {
   cargo:      { x: 1, y: 1 },
   ferry:      { x: 7, y: 4 },
   lighthouse: { x: 1, y: 4 },
-  stair:      { x: 4, y: 5 }
+  stair:      { x: 4, y: 5 },
+  ramp:       { x: HARBOR_MAP.rampX, y: HARBOR_MAP.rampY }
 };
 
 const SPOT_TEXT = {
@@ -106,6 +107,13 @@ export default class HarborScene extends Phaser.Scene {
         state.currentLeagueIdx = CORAL_IDX;
         goToScene(this, 'Battle', { kind: 'league', returnTo: 'Harbor' });
       }
+      return;
+    }
+    // The Harbor Ramp up to the Ember Quarter — gated on Coral's badge,
+    // the same "beat what's in front of you" rule as every other stratum.
+    if (at('ramp')) {
+      if (state.leagueBeaten[CORAL_IDX]) goToScene(this, 'Ember');
+      else this.toastText.setText("The Harbor Ramp. Foundry security waves you off: \"Coral's badge or nothing. Quarter's not a shortcut.\"");
       return;
     }
     if (at('market')) { this.toastText.setText('The Fish Market — loud, crowded, alive.'); this.scene.launch('Mart'); return; }

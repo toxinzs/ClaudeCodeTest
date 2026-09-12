@@ -81,6 +81,25 @@ const ABILITIES = {
   sandslash: { name: 'Sand Veil', effect: null },
   froslass: { name: 'Snow Cloak', effect: null },
 
+  // Ember Quarter roster + evolutions
+  slugma: { name: 'Flame Body', effect: 'flame_body' },
+  magcargo: { name: 'Flame Body', effect: 'flame_body' },
+  numel: { name: 'Oblivious', effect: null },
+  camerupt: { name: 'Magma Armor', effect: null },
+  aron: { name: 'Sturdy', effect: 'sturdy' },
+  lairon: { name: 'Sturdy', effect: 'sturdy' },
+  aggron: { name: 'Sturdy', effect: 'sturdy' },
+  rolycoly: { name: 'Steam Engine', effect: null },
+  carkol: { name: 'Steam Engine', effect: null },
+  coalossal: { name: 'Steam Engine', effect: null },
+  litwick: { name: 'Flash Fire', effect: 'flash_fire' },
+  lampent: { name: 'Flash Fire', effect: 'flash_fire' },
+  torkoal: { name: 'White Smoke', effect: null },
+  magnemite: { name: 'Sturdy', effect: 'sturdy' },
+  magneton: { name: 'Sturdy', effect: 'sturdy' },
+  houndour: { name: 'Flash Fire', effect: 'flash_fire' },
+  houndoom: { name: 'Flash Fire', effect: 'flash_fire' },
+
   // Custom/fictional final legendary — hand-authored, same precedent as its stats/moveset/sprite
   verdanyx: { name: 'Verdant Surge', effect: 'verdant_surge', boostType: 'Grass' }
 };

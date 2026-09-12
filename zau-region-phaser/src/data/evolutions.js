@@ -25,7 +25,21 @@ const EVOLUTIONS = {
   riolu: { evolvesTo: 'Lucario', type: 'Fighting/Steel', emoji: '🥋', method: 'level', level: 20 },
   gible: { evolvesTo: 'Gabite', type: 'Dragon/Ground', emoji: '🐲', method: 'level', level: 24 },
   gabite: { evolvesTo: 'Garchomp', type: 'Dragon/Ground', emoji: '🦈', method: 'level', level: 48 },
-  wingull: { evolvesTo: 'Pelipper', type: 'Water/Flying', emoji: '🦆', method: 'level', level: 25 }
+  wingull: { evolvesTo: 'Pelipper', type: 'Water/Flying', emoji: '🦆', method: 'level', level: 25 },
+
+  // Ember Quarter lines — real level thresholds. Lampent->Chandelure
+  // (Dusk Stone) and Magneton->Magnezone (Thunder Stone in SV) are real
+  // stone evolutions with no stone item in the game yet, so those two
+  // lines stop at their middle stage until evolution stones exist.
+  slugma: { evolvesTo: 'Magcargo', type: 'Fire/Rock', emoji: '🌋', method: 'level', level: 38 },
+  numel: { evolvesTo: 'Camerupt', type: 'Fire/Ground', emoji: '🐪', method: 'level', level: 33 },
+  aron: { evolvesTo: 'Lairon', type: 'Steel/Rock', emoji: '🦏', method: 'level', level: 32 },
+  lairon: { evolvesTo: 'Aggron', type: 'Steel/Rock', emoji: '🦏', method: 'level', level: 42 },
+  rolycoly: { evolvesTo: 'Carkol', type: 'Rock/Fire', emoji: '🪨', method: 'level', level: 18 },
+  carkol: { evolvesTo: 'Coalossal', type: 'Rock/Fire', emoji: '🌋', method: 'level', level: 34 },
+  litwick: { evolvesTo: 'Lampent', type: 'Ghost/Fire', emoji: '🕯️', method: 'level', level: 41 },
+  magnemite: { evolvesTo: 'Magneton', type: 'Electric/Steel', emoji: '🧲', method: 'level', level: 30 },
+  houndour: { evolvesTo: 'Houndoom', type: 'Dark/Fire', emoji: '🐕‍🦺', method: 'level', level: 24 }
 };
 
 export function evolutionFor(speciesName) {

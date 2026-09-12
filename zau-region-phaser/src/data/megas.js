@@ -7,7 +7,8 @@
 //
 // Only Gen 1-6 species ever got Megas, which is why this roster is what
 // Phase 10 deliberately seeded (Gyarados/Alakazam/Gengar/Lucario/
-// Garchomp/Absol) and not the Gen 9 starters.
+// Garchomp/Absol) and not the Gen 9 starters. Phase 13's Ember Quarter
+// added Aggron/Camerupt/Houndoom the same way.
 //
 // Of the six Mega abilities, only Adaptability is wired mechanically (STAB
 // 2x instead of 1.5x); the rest carry their real names flavor-only, same
@@ -42,6 +43,22 @@ const MEGAS = {
     megaName: 'Mega Absol', stone: 'absolite', type: 'Dark', spriteId: 10057,
     baseStats: { hp: 65, atk: 150, def: 60, spAtk: 115, spDef: 60, spe: 115 },
     ability: { name: 'Magic Bounce', effect: null }
+  },
+  // Ember Quarter lines (Phase 13) — Aron/Numel/Houndour seeded there.
+  aggron: {
+    megaName: 'Mega Aggron', stone: 'aggronite', type: 'Steel', spriteId: 10053,
+    baseStats: { hp: 70, atk: 140, def: 230, spAtk: 60, spDef: 80, spe: 50 },
+    ability: { name: 'Filter', effect: null }
+  },
+  camerupt: {
+    megaName: 'Mega Camerupt', stone: 'cameruptite', type: 'Fire/Ground', spriteId: 10087,
+    baseStats: { hp: 70, atk: 120, def: 100, spAtk: 145, spDef: 105, spe: 20 },
+    ability: { name: 'Sheer Force', effect: null }
+  },
+  houndoom: {
+    megaName: 'Mega Houndoom', stone: 'houndoominite', type: 'Dark/Fire', spriteId: 10048,
+    baseStats: { hp: 75, atk: 90, def: 90, spAtk: 140, spDef: 90, spe: 115 },
+    ability: { name: 'Solar Power', effect: null }
   }
 };
 

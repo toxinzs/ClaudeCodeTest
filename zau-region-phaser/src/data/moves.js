@@ -52,7 +52,10 @@ const MOVES = {
   "ice shard":   { type: "Ice",      power: 40,  category: "Physical" },
   "metal claw":  { type: "Steel",    power: 50,  category: "Physical" },
   "fairy wind":  { type: "Fairy",    power: 40,  category: "Special" },
-  "dragon breath":{ type: "Dragon",  power: 60,  category: "Special",   status: "paralyze", statusChance: 0.3 }
+  "dragon breath":{ type: "Dragon",  power: 60,  category: "Special",   status: "paralyze", statusChance: 0.3 },
+  smog:          { type: "Poison",   power: 30,  category: "Special",   status: "poison",  statusChance: 0.4 },
+  astonish:      { type: "Ghost",    power: 30,  category: "Physical" },
+  "smack down":  { type: "Rock",     power: 50,  category: "Physical" }
 };
 
 export function moveFor(name) {
