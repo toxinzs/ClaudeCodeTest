@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { state, activeMon, MAX_PARTY } from '../state.js';
-import { currentMonDisplay } from '../mon.js';
+import { currentMonDisplay, ivSummary } from '../mon.js';
 import { saveGame } from '../save.js';
 import { GAME_W, GAME_H } from '../config.js';
 import { drawModalBackdrop, addCloseButton } from '../uiHelpers.js';
@@ -80,7 +80,8 @@ export default class PartyScene extends Phaser.Scene {
     this.add.text(64, y - 16, label, { fontFamily: 'sans-serif', fontSize: '13px', color: isFainted ? '#e57373' : '#e8e8f0' });
     this.add.text(64, y + 1, `Lv.${m.level} · ${d.type} · ${m.hp}/${m.maxHp} HP`, { fontFamily: 'sans-serif', fontSize: '11px', color: '#8a8aa0' });
     const heldLabel = m.heldItem ? ` · @ ${ITEMS[m.heldItem].name}` : '';
-    this.add.text(64, y + 15, `${m.ability.name}${heldLabel}`, { fontFamily: 'sans-serif', fontSize: '10px', color: '#6a6a80' });
+    const iv = ivSummary(m);
+    this.add.text(64, y + 15, `${m.ability.name}${heldLabel} · IV ${iv.total} (${iv.word})`, { fontFamily: 'sans-serif', fontSize: '10px', color: '#6a6a80' });
 
     if (this.switchMode) {
       const clickable = !isFainted && idx !== state.activeIdx;
