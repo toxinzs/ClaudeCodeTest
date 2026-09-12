@@ -11,8 +11,7 @@ import { preloadPlayerLayers, createPlayerSprite } from '../playerSprite.js';
 import { preloadNPCLayers, placeNPCs, makeActor } from '../npcs.js';
 import { ensureStoryState } from '../story.js';
 import { GREENLINE_NPCS } from '../data/npcs.js';
-import { loadMonSprite } from '../spriteLoader.js';
-import { spriteUrlForId } from '../sprites.js';
+import { addMonSpriteAt } from '../spriteLoader.js';
 
 // Greenline Terraces — stratum 5 in WORLD.md, designed in
 // zau-region/districts/greenline.md. Same shape as Harbor/Ember: Thistle's
@@ -109,21 +108,13 @@ export default class GreenlineScene extends Phaser.Scene {
   }
   showAbsol() {
     const { x, y } = this.panTarget();
-    // Real artwork if it loads, the emoji glyph if not — same fallback as battle.
-    this.absol = this.add.text(x, y, '🐺', { fontSize: '36px' }).setOrigin(0.5).setDepth(40).setAlpha(0);
-    this.hudCam.ignore(this.absol); // created after setupHUD, so it isn't in the HUD cam's ignore list
-    this.tweens.add({ targets: this.absol, alpha: 1, duration: 500 });
-    loadMonSprite(this, spriteUrlForId(359), (key) => {
-      if (!key || !this.absol?.active) return;
-      const img = this.add.image(x, y, key).setOrigin(0.5).setDisplaySize(TILE * 1.3, TILE * 1.3).setDepth(40).setAlpha(1);
-      this.hudCam.ignore(img);
-      this.absol.destroy();
-      this.absol = img;
-    });
+    this.absol = addMonSpriteAt(this, x, y, { id: 359, emoji: '🐺', size: TILE * 1.3, hudCam: this.hudCam });
+    this.absol.obj.setAlpha(0);
+    this.tweens.add({ targets: this.absol.obj, alpha: 1, duration: 500 });
   }
   hideAbsol() {
     if (!this.absol) return;
-    const a = this.absol;
+    const a = this.absol.obj;
     this.tweens.add({ targets: a, alpha: 0, duration: 400, onComplete: () => a.destroy() });
     this.absol = null;
   }

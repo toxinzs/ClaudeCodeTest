@@ -9,7 +9,9 @@ import { goToScene, fadeIn } from '../transitions.js';
 import { preloadPlayerLayers, createPlayerSprite } from '../playerSprite.js';
 import { preloadNPCLayers, placeNPCs, makeActor } from '../npcs.js';
 import { ensureStoryState, hasFlag } from '../story.js';
-import { BOILER_NPCS, BOILER_BREAKER, BOILER_STONE } from '../data/npcs.js';
+import { BOILER_NPCS, BOILER_BREAKER, BOILER_STONE, KEYSTONE_BEAT } from '../data/npcs.js';
+import { badgeCount } from '../story.js';
+import { addMonSpriteAt } from '../spriteLoader.js';
 
 // Boiler Tunnels — the first real dungeon (STORY.md E3), under the Ember
 // Quarter's Kilns. A Trail-style corridor: two mill-worker chokepoints
@@ -18,6 +20,11 @@ import { BOILER_NPCS, BOILER_BREAKER, BOILER_STONE } from '../data/npcs.js';
 // stone). Dark: the Quarter's power is out while you're down here.
 const WILD_ENCOUNTER_CHANCE = 0.15;
 const SPAWN = { x: 2, y: 11 };
+const DOOR = { x: 1, y: 0 }; // the Meridian keycard door beside the breaker
+
+function keyStoneReady() {
+  return hasFlag('lineRestored') && badgeCount() >= 3 && !hasFlag('keyStone');
+}
 
 export default class BoilerScene extends Phaser.Scene {
   constructor() {
@@ -43,6 +50,7 @@ export default class BoilerScene extends Phaser.Scene {
     drawTiles(this, BOILER_MAP, { offsetX: this.offsetX, offsetY: this.offsetY, floorKey: 'dirt', blockedKey: 'wallBrick' });
     const decor = [...BOILER_MAP.decor];
     if (!hasFlag('aggroniteFound')) decor.push({ x: BOILER_MAP.stoneX, y: BOILER_MAP.stoneY, emoji: '💎' });
+    decor.push({ x: DOOR.x, y: DOOR.y, emoji: hasFlag('keyStone') ? '🚪' : '🔒' });
     drawDecor(this, decor, { offsetX: this.offsetX, offsetY: this.offsetY });
     this.drawPlayer();
 
@@ -72,7 +80,18 @@ export default class BoilerScene extends Phaser.Scene {
       { label: 'Climb Out', onClick: () => this.leave() }
     ], GAME_H - 16);
 
-    setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])]);
+    this.hudCam = setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])]);
+
+    // STORY.md K1: after Badge 3 the Absol waits at the door.
+    if (keyStoneReady()) {
+      this.absol = addMonSpriteAt(this, this.offsetX + DOOR.x * TILE + TILE / 2, this.offsetY + DOOR.y * TILE + TILE / 2,
+        { id: 359, emoji: '🐺', size: TILE * 1.2, hudCam: this.hudCam });
+    }
+  }
+
+  openDoor() {
+    this.tweens.add({ targets: this.darkRect, alpha: 0, duration: 300 });
+    if (this.absol) { const a = this.absol.obj; this.tweens.add({ targets: a, alpha: 0, duration: 600, delay: 1200, onComplete: () => a.destroy() }); this.absol = null; }
   }
 
   drawPlayer() {
@@ -99,8 +118,17 @@ export default class BoilerScene extends Phaser.Scene {
   handleStep(nx, ny) {
     this.toastText.setText('');
     saveGame();
-    if (nx === BOILER_MAP.breakerX && ny === BOILER_MAP.breakerY) {
-      if (hasFlag('lineRestored')) this.toastText.setText('The breaker hums. The keycard door beside it still blinks red.');
+    const atDoor = nx === DOOR.x && ny === DOOR.y;
+    const atBreaker = nx === BOILER_MAP.breakerX && ny === BOILER_MAP.breakerY;
+    if ((atDoor || atBreaker) && keyStoneReady()) { this.npcLayer.run(KEYSTONE_BEAT); return; }
+    if (atDoor) {
+      this.toastText.setText(hasFlag('keyStone')
+        ? "E. Voss's locker stands open and empty. The old lines beyond are dark, and quiet in a way that feels like somebody's doing."
+        : (hasFlag('lineRestored') ? 'A Meridian keycard door. The reader blinks red at you.' : 'A sealed door in the dark.'));
+      return;
+    }
+    if (atBreaker) {
+      if (hasFlag('lineRestored')) this.toastText.setText('The breaker hums. The keycard door beside it ' + (hasFlag('keyStone') ? 'stands open.' : 'still blinks red.'));
       else this.npcLayer.run(BOILER_BREAKER);
       return;
     }

@@ -7,18 +7,68 @@ import { spriteUrlFor, spriteUrlForId } from './sprites.js';
 
 export function xpNeededForLevel(lvl) { return 20 + lvl * 12; }
 
-// Simplified real stat formula (IV=0, EV=0, neutral nature — an exact
-// reduction of the official formula with those terms zeroed out).
-export function computeStats(baseStats, level) {
-  const other = (base) => Math.floor(2 * base * level / 100) + 5;
-  const maxHp = Math.floor(2 * baseStats.hp * level / 100) + level + 10;
+// Individual Values — the real games' hidden 0–31 per-stat roll that makes
+// two Pokémon of the same species differ. Rolled once when a Pokémon is
+// created (wild, starter, trainer, gift) and kept for life; a caught
+// Pokémon keeps the roll it had in the wild. Story gifts can be given
+// perfect IVs (MEGA.md: the Key Stone Absol). Old saves' Pokémon have no
+// ivs field and are treated as all-zero, which is exactly the stats they
+// were computed with before this existed — nothing shifts on load.
+export const STAT_KEYS = ['hp', 'atk', 'def', 'spAtk', 'spDef', 'spe'];
+export const ZERO_IVS = Object.freeze({ hp: 0, atk: 0, def: 0, spAtk: 0, spDef: 0, spe: 0 });
+export const MAX_IV_TOTAL = 31 * 6;
+
+export function rollIVs() {
+  const ivs = {};
+  for (const k of STAT_KEYS) ivs[k] = Math.floor(Math.random() * 32);
+  return ivs;
+}
+
+export function perfectIVs() {
+  const ivs = {};
+  for (const k of STAT_KEYS) ivs[k] = 31;
+  return ivs;
+}
+
+export function ivsFor(mon) {
+  return mon.ivs || ZERO_IVS;
+}
+
+// The real games' judge phrasing for the total, so a summary can say
+// "Outstanding" instead of a bare number.
+export function ivSummary(mon) {
+  const ivs = ivsFor(mon);
+  const total = STAT_KEYS.reduce((n, k) => n + ivs[k], 0);
+  const word = total >= 151 ? 'Outstanding' : total >= 121 ? 'Very good' : total >= 91 ? 'Pretty good' : total >= 61 ? 'Decent' : 'Average';
+  return { total, word };
+}
+
+// Real stat formula with IVs (EV=0, neutral nature — an exact reduction of
+// the official formula with those two terms zeroed out).
+export function computeStats(baseStats, level, ivs = ZERO_IVS) {
+  const other = (base, iv) => Math.floor((2 * base + iv) * level / 100) + 5;
+  const maxHp = Math.floor((2 * baseStats.hp + ivs.hp) * level / 100) + level + 10;
   return {
     maxHp,
-    atk: other(baseStats.atk),
-    def: other(baseStats.def),
-    spAtk: other(baseStats.spAtk),
-    spDef: other(baseStats.spDef),
-    spe: other(baseStats.spe)
+    atk: other(baseStats.atk, ivs.atk),
+    def: other(baseStats.def, ivs.def),
+    spAtk: other(baseStats.spAtk, ivs.spAtk),
+    spDef: other(baseStats.spDef, ivs.spDef),
+    spe: other(baseStats.spe, ivs.spe)
+  };
+}
+
+// A story-gift Pokémon: fully built like a caught one, with chosen IVs and
+// (optionally) a held item already equipped. Used by the Key Stone beat.
+export function makeGiftMon({ speciesName, emoji, type, level, moves, ivs = rollIVs(), heldItem = null }) {
+  const stats = computeStats(baseStatsFor(speciesName), level, ivs);
+  return {
+    speciesName, emoji, type, level, ivs,
+    xp: 0, xpNext: xpNeededForLevel(level),
+    hp: stats.maxHp, ...stats,
+    moves: moves.map(m => ({ ...m })),
+    nickname: speciesName, fainted: false, isWild: false, status: null,
+    heldItem, ability: abilityFor(speciesName)
   };
 }
 
@@ -29,10 +79,12 @@ export function movesKnownAtLevel(learnset, level) {
 export function makeStarterMon(key) {
   const chain = STARTER_CHAINS[key];
   const level = 5;
-  const stats = computeStats(baseStatsFor(chain.stages[0].name), level);
+  const ivs = rollIVs();
+  const stats = computeStats(baseStatsFor(chain.stages[0].name), level, ivs);
   return {
     key: key,
     stageIdx: 0,
+    ivs,
     nickname: chain.stages[0].name,
     type: chain.type,
     level: level,
@@ -49,9 +101,11 @@ export function makeStarterMon(key) {
 }
 
 export function buildWildMon(species, lvl) {
-  const stats = computeStats(baseStatsFor(species.name), lvl);
+  const ivs = rollIVs();
+  const stats = computeStats(baseStatsFor(species.name), lvl, ivs);
   return {
     isWild: true,
+    ivs,
     speciesName: species.name,
     emoji: species.emoji,
     type: species.type,
@@ -105,7 +159,7 @@ export function currentMonDisplay(mon) {
 export function statsForMon(mon) {
   const species = currentMonDisplay(mon).species;
   const mega = mon.megaActive ? megaFor(species) : null;
-  return computeStats(mega ? mega.baseStats : baseStatsFor(species), mon.level);
+  return computeStats(mega ? mega.baseStats : baseStatsFor(species), mon.level, ivsFor(mon));
 }
 
 // Mega Evolution transform/revert. HP is untouched (a Mega form's HP base

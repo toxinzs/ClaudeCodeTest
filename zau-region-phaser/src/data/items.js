@@ -56,7 +56,9 @@ const MART_TIERS = [
   { minBadges: 0, items: ["pokeball", "potion"] },
   { minBadges: 1, items: ["greatball", "superpotion"] },
   { minBadges: 3, items: ["ultraball", "hyperpotion", "revive", "charcoal", "mysticwater", "miracleseed", "magnet", "blackbelt", "lumberry"] },
-  { minBadges: 5, items: ["maxpotion", "maxrevive", "leftovers", "linkingcord", "gyaradosite", "alakazite", "gengarite", "lucarionite", "garchompite", "absolite", "aggronite", "cameruptite", "houndoominite", "gardevoirite", "heracronite", "pinsirite"] }
+  // Mega Stones are never sold — each is found, earned or story-given
+  // (MEGA.md has the source of every one).
+  { minBadges: 5, items: ["maxpotion", "maxrevive", "leftovers", "linkingcord"] }
 ];
 
 export function availableItems(badgeCount) {

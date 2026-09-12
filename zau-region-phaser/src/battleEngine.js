@@ -1,7 +1,7 @@
 import { state, activeMon, firstHealthyIdx, MAX_PARTY } from './state.js';
 import { trainerFor } from './data/trainers.js';
 import { setFlag } from './story.js';
-import { currentMonDisplay, computeStats, statsForMon, evolveIfReady, rollWildEncounter, xpNeededForLevel, applyMega, revertMega } from './mon.js';
+import { currentMonDisplay, computeStats, statsForMon, evolveIfReady, rollWildEncounter, xpNeededForLevel, applyMega, revertMega, rollIVs } from './mon.js';
 import { baseStatsFor } from './data/baseStats.js';
 import { abilityFor } from './data/abilities.js';
 import { ITEMS } from './data/items.js';
@@ -110,8 +110,9 @@ function effectiveSpeed(mon) {
 }
 
 function buildBattleMon(speciesName, emoji, type, level, moves) {
-  const stats = computeStats(baseStatsFor(speciesName), level);
-  return { isWild: false, speciesName, emoji, type, level, hp: stats.maxHp, ...stats, moves: moves.map(m => ({...m})), status: null, heldItem: null, ability: abilityFor(speciesName) };
+  const ivs = rollIVs();
+  const stats = computeStats(baseStatsFor(speciesName), level, ivs);
+  return { isWild: false, speciesName, emoji, type, level, ivs, hp: stats.maxHp, ...stats, moves: moves.map(m => ({...m})), status: null, heldItem: null, ability: abilityFor(speciesName) };
 }
 
 // Minimal dependency-free emitter — battleEngine has no DOM/Phaser coupling
@@ -517,7 +518,7 @@ export class BattleEngine extends Emitter {
     setTimeout(() => {
       if (Math.random() < catchChance) {
         const caughtMon = {
-          speciesName: e.speciesName, emoji: e.emoji, type: e.type, level: e.level,
+          speciesName: e.speciesName, emoji: e.emoji, type: e.type, level: e.level, ivs: e.ivs,
           xp: 0, xpNext: xpNeededForLevel(e.level),
           hp: e.hp, maxHp: e.maxHp, atk: e.atk, def: e.def, spAtk: e.spAtk, spDef: e.spDef, spe: e.spe,
           moves: e.moves.map(m => ({...m})), nickname: e.speciesName, fainted: false,
@@ -563,9 +564,10 @@ export class BattleEngine extends Emitter {
       state.trainerIndex++;
       msg = `Beat ${state.battle.enemyName}! +₽${moneyRewardFor('lineup')}`;
     } else if (ctx === 'dario') {
+      // The Key Stone is a story beat after Badge 3 now (MEGA.md), not a
+      // rival-battle drop.
       state.darioBeaten = true;
-      state.hasKeyStone = true;
-      msg = `You beat Dario Voss! He tosses you a Key Stone — "You'll need this more than me." The Zau League is open.`;
+      msg = `You beat Dario Voss! He goes quiet, then: "…Fine. Harbor Steps are open. Don't get comfortable." The Zau League is open.`;
     } else if (ctx === 'trainer') {
       const t = trainerFor(state.battle.trainerKey);
       if (t.winFlag) setFlag(t.winFlag);

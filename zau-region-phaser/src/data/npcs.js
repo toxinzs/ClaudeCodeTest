@@ -1,5 +1,6 @@
 import { TOWN_MAP } from './maps.js';
 import { goToScene } from '../transitions.js';
+import { grantKeyStone } from '../keystone.js';
 
 // Every placed character in the game, per map, straight from
 // zau-region/CHARACTERS.md. An NPC is { id, name, x, y, facing, appearance,
@@ -352,4 +353,24 @@ export const GREENLINE_STORM = [
   { call: (scene) => scene.stormEnd?.() },
   { say: ['Old Sato', "…Forty years. It's never come that close.", "It wasn't looking at the storm, child. It was looking at *you*."] },
   { set: 'stormSeen' }
+];
+
+// STORY.md K1–K4 / MEGA.md — the Key Stone. After Badge 3, the Absol from
+// the storm waits at the keycard door behind the Boiler Tunnels' breaker
+// with an eighteen-year-old Meridian keycard in its mouth. Behind the
+// door: the original excavation's cache and E. Voss's locker.
+export const KEYSTONE_BEAT = [
+  { say: ['', "The Absol from the Overlook is waiting at the keycard door. Something's in its mouth — a keycard, eighteen years old. MERIDIAN DYNAMICS · FIELD ENGINEERING."] },
+  { call: (scene) => scene.openDoor?.() },
+  { flash: 150 },
+  { shake: 300 },
+  { say: ['', "The reader blinks green. The door grinds open onto the old lines — and, just inside, a supply cache from the original excavation. Crates. A cold kettle. A field engineer's locker.", "The name plate on the locker: E. VOSS."] },
+  { say: ['Note', "\"If you're reading this, it sent you. It only brings people it trusts.\"", "\"Take the stone. Learn what it does. Then come find me. — E.V.\""] },
+  { say: ['', "Inside the locker: a Key Stone on a cord, and a stone with a black-and-white core. An Absolite.", "The Absol looks at you. It doesn't move. It's decided."] },
+  { call: () => grantKeyStone() },
+  { if: (s) => s.story.absolToBox,
+    then: [{ say: ['', "You received the Key Stone! Absol joined you, holding the Absolite — it was sent to your PC Box (party's full)."] }],
+    else: [{ say: ['', "You received the Key Stone! Absol joined your party, holding the Absolite."] }] },
+  { say: ['Mabosso (call)', "…Alma called me. Said you'd gone under the Quarter and come back with something on a cord. A Key Stone. Then listen, because I was there.", "Meridian's division called it deep resonance. It's the energy Mega Stones are made of. A Key Stone lets a trainer's bond reach a Pokémon holding its own stone — and the Pokémon changes, past its natural form, for as long as the battle lasts.", "Then it comes back. That's the part that matters. It comes *back*.", "E. Voss was the engineer who ordered the drill stopped, eighteen years ago. She was blamed when it wasn't. I signed nothing and I left. I have never told Dario. Please — not yet.", "In battle, when your Absol's out and holding that stone, you'll see the Mega button light. Use it. And be careful who sees you use it."] },
+  { set: 'mabossoExplained' }
 ];

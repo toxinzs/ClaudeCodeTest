@@ -144,7 +144,7 @@ export default class EmberScene extends Phaser.Scene {
       return;
     }
     if (at('exchange')) { this.toastText.setText('The Scrapyard Exchange — everything off a pallet, the till a coffee tin.'); this.scene.launch('Mart'); return; }
-    if (at('kilns') && hasFlag('blackout') && !hasFlag('lineRestored')) {
+    if (at('kilns') && hasFlag('blackout')) {
       goToScene(this, 'Boiler');
       return;
     }
