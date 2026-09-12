@@ -29,6 +29,25 @@ export const TRAINERS = {
   }
 };
 
+// STORY.md E3 — off-shift mill workers in the Boiler Tunnels, battling
+// because there's nothing else to do in a blackout.
+TRAINERS.millIla = {
+  name: 'Mill Worker Ila', emoji: '🔧', reward: 90, winFlag: 'boilerIla',
+  winMsg: 'Ila shrugs, grinning: "Fine. Breaker\'s past Dev. He\'s worse than me."',
+  team: [
+    { speciesName: 'Slugma', emoji: '🌋', type: 'Fire', level: 22, moves: [moveFor('Ember'), moveFor('Rock Throw')] },
+    { speciesName: 'Rolycoly', emoji: '🪨', type: 'Rock', level: 22, moves: [moveFor('Smack Down'), moveFor('Tackle')] }
+  ]
+};
+TRAINERS.millDev = {
+  name: 'Mill Worker Dev', emoji: '🔧', reward: 100, winFlag: 'boilerDev',
+  winMsg: 'Dev, wiping his hands: "Breaker\'s at the end. Don\'t touch the big cable. Nobody knows where it goes."',
+  team: [
+    { speciesName: 'Aron', emoji: '🦏', type: 'Steel/Rock', level: 23, moves: [moveFor('Metal Claw'), moveFor('Headbutt')] },
+    { speciesName: 'Torkoal', emoji: '🐢', type: 'Fire', level: 24, moves: [moveFor('Ember'), moveFor('Smog')] }
+  ]
+};
+
 export function trainerFor(key) {
   const t = TRAINERS[key];
   if (!t) throw new Error(`Unknown trainer "${key}" — add it to data/trainers.js`);

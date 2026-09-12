@@ -1,4 +1,5 @@
 import { TOWN_MAP } from './maps.js';
+import { goToScene } from '../transitions.js';
 
 // Every placed character in the game, per map, straight from
 // zau-region/CHARACTERS.md. An NPC is { id, name, x, y, facing, appearance,
@@ -6,7 +7,9 @@ import { TOWN_MAP } from './maps.js';
 // so lines change as the story advances ("says when"), and `when(state)`
 // decides whether the character is even present for the current beat.
 // Story flags used here (state.story.*): introDone, marenTip, harborDario,
-// cargoRow — see STORY.md Act 2, Harbor beats H1–H3.
+// cargoRow (Harbor H1–H3); emberHalloran, blackout, boilerIla, boilerDev,
+// aggroniteFound, lineRestored, emberDarioPin (Ember E2–E3); priyaSamples,
+// stormSeen (Greenline G2–G3) — see STORY.md Act 2.
 // Placement rule: a character must never stand in a one-tile corridor (the
 // Greenline's rows are exactly that), so there they stand ON their landmark
 // tile and carry its description — talking to Wren opens the Seed Bank.
@@ -168,6 +171,13 @@ export const EMBER_NPCS = [
       if (badges(s) >= 4) return [
         { say: ['Kettering', "Rossi wants my crew for his pumps? Fine. He can have them the day my lights stay on for a whole night."] }
       ];
+      if (s.story.lineRestored) return [
+        { say: ['Kettering', "Line's back. Furnace held. You saw the cable down there, didn't you.", "Runs *down*. Not up to the Tower — down. So who's drawing?"] }
+      ];
+      if (s.story.blackout) return [
+        { say: ['Kettering', "Breaker. Tunnels. Under the Kilns. The furnace cracks in an hour — go!"] }
+      ];
+      if (s.story.emberHalloran) return EMBER_BLACKOUT;
       return [
         { say: ['Kettering', "Brownouts started the month that substation went live. Every night, like clockwork.", "We draw less than we did ten years ago. So who's drawing?"] }
       ];
@@ -194,22 +204,113 @@ export const EMBER_NPCS = [
     script: (s) => [
       { say: ['Dr. Halloran', "Ines Halloran, Meridian community relations. We fund the Exchange's repairs, sponsor local trainers — the boring good stuff.", "You're the one clearing the League. I know your name. I make a point of it."] },
       { if: (st) => st.story.cargoRow, then: [
-        { say: ['Dr. Halloran', "I heard there was an incident at the Harbor yard. Security overreacts. I'll have a word.", "And your friend Dario — a Voss, in the League. I'd like to see that go somewhere."] }
+        { say: ['Dr. Halloran', "I heard there was an incident at the Harbor yard. Security overreacts. I'll have a word.", "And your friend Dario — a Voss, in the League. I'd like to see that go somewhere."] },
+        { set: 'emberHalloran' }
       ] }
+    ]
+  },
+  // STORY.md E2/E3 — Dario, being noticed for the first time; then the pin.
+  {
+    id: 'darioEmber', name: 'Dario Voss', x: 6, y: 3, facing: 'left',
+    when: (s) => s.story.cargoRow && badges(s) >= 1 && !s.story.emberDarioPin,
+    appearance: { skin: 'taupe', hair: 'afro', hairColor: 'black', outfit: 'trainer' },
+    script: (s) => {
+      if (s.story.lineRestored) return [
+        { say: ['Dario', "Halloran offered me a sponsorship. A real one — funding, gear, the works.", "She said the name Voss like it was worth something. Nobody's ever said it like that.", "I said yes. Don't look at me like that. …Why are you looking at me like that?"] },
+        { set: 'emberDarioPin' }
+      ];
+      if (s.story.blackout) return [
+        { say: ['Dario', "Whole Quarter's dark. Kettering's yelling about a breaker. You going down there? …Bet you can't do it faster than I could."] }
+      ];
+      return [
+        { say: ['Dario', "That's Halloran. Meridian. She knows my *name*. Knew it before I said it.", "She's funding the Exchange's roof. Sponsoring trainers. Real money."] },
+        { set: 'emberHalloran' }
+      ];
+    }
+  }
+];
+
+// STORY.md E3 — the Quarter goes dark mid-conversation.
+export const EMBER_BLACKOUT = [
+  { say: ['Kettering', "You want to know what the substation's really—"] },
+  { call: (scene) => scene.setBlackout?.(true) },
+  { flash: 120 },
+  { shake: 500 },
+  { wait: 400 },
+  { say: ['Kettering', "—there it goes. Whole line. That's not a brownout, that's a *cut*.", "Furnace cracks in an hour without the line. The breaker's at the far end of the Boiler Tunnels — under the Kilns, ladder's behind me.", "Go. I'll keep the crew on the furnace."] },
+  { set: 'blackout' }
+];
+
+export const BOILER_NPCS = [
+  {
+    id: 'ila', name: 'Ila', x: 2, y: 8, facing: 'down',
+    when: (s) => !s.story.boilerIla,
+    appearance: { skin: 'bronze', hair: 'ponytail', hairColor: 'black', outfit: 'sporty' },
+    script: () => [
+      { say: ['Ila', "Off shift, lights out, nothing to do. You want past? Earn it."] },
+      { battle: { trainerKey: 'millIla', returnTo: 'Boiler' } }
+    ]
+  },
+  {
+    id: 'dev', name: 'Dev', x: 2, y: 4, facing: 'down',
+    when: (s) => !s.story.boilerDev,
+    appearance: { skin: 'black', hair: 'buzzcut', hairColor: 'black', outfit: 'explorer' },
+    script: () => [
+      { say: ['Dev', "Ila let you through? She's going soft. I'm not."] },
+      { battle: { trainerKey: 'millDev', returnTo: 'Boiler' } }
     ]
   }
 ];
 
+// The breaker at the tunnel's end — and the first sight of where the
+// substation's trunk cable actually goes.
+export const BOILER_BREAKER = [
+  { say: ['', "The breaker panel. Every switch is down — thrown, not tripped."] },
+  { call: (scene) => scene.throwBreaker?.() },
+  { flash: 150 },
+  { shake: 300 },
+  { say: ['', "The line hums back to life.", "Behind the panel a trunk cable as thick as your arm runs on — *down* — through a door with a Meridian keycard reader. The reader blinks red."] },
+  { set: 'lineRestored' },
+  { call: (scene) => { Object.assign(scene.spawn(), {}); goToScene(scene, 'Ember', { toastMsg: "The Quarter's lights come back on, block by block." }); } }
+];
+
+export const BOILER_STONE = [
+  { say: ['', "Wedged behind a cold pipe: a stone with a jagged steel-grey core. An Aggronite!"] },
+  { give: { item: 'aggronite' } },
+  { set: 'aggroniteFound' }
+];
+
 export const GREENLINE_NPCS = [
+  // STORY.md G2 — Priya's samples, and the Absol before every storm.
+  {
+    id: 'priyaGreen', name: 'Priya', x: 4, y: 3, facing: 'down',
+    when: (s) => badges(s) >= 2,
+    appearance: { skin: 'amber', hair: 'braid', hairColor: 'black', outfit: 'casual' },
+    script: (s) => {
+      if (s.story.stormSeen) return [
+        { say: ['Priya', "That wasn't a wild Pokémon. It looked at you. It *waited* for you.", "That was a message. I just don't know who from yet."] }
+      ];
+      if (s.story.priyaSamples) return [
+        { say: ['Priya', "Talk to Sato at the Overlook. He's seen it too. And watch the edge when the sky goes green."] }
+      ];
+      return [
+        { say: ['Priya', "The Allotments! Everyone's growing tomatoes and arguing about them. I love it here.", "Okay — the ferns by the pump intake. I took cuttings. They're *twice* the size they should be and the soil can't explain it.", "And there's this: a white Pokémon with a curved horn has been seen on the Overlook before every storm this year. An Absol. The disaster Pokémon.", "Sato's seen it. He says it looks at the Outskirts. Then it looks *down*."] },
+        { set: 'priyaSamples' }
+      ];
+    }
+  },
   {
     id: 'sato', name: 'Old Sato', x: 7, y: 5, facing: 'left',
     appearance: { skin: 'amber', hair: 'none', hairColor: 'white', outfit: 'explorer' },
-    script: (s) => [
-      { say: ['Old Sato', "The Overlook. From this bench you can watch the storms gather over the Outskirts before anyone down there knows it's raining.", "Planted every terrace here. Forty years. Stopped planting near the pump.", "Nobody asked why, so I stopped saying."] },
-      { if: (st) => badges(st) >= 3, then: [
-        { say: ['Old Sato', "The white one with the horn. On the edge, before every storm this year. It looks at the Outskirts. Then it looks *down*."] }
-      ] }
-    ]
+    script: (s) => {
+      if (s.story.stormSeen) return [
+        { say: ['Old Sato', "It's never come that close before. It's never looked at anyone but me.", "Whatever it's waiting for — I think it's decided it's you."] }
+      ];
+      if (s.story.priyaSamples) return GREENLINE_STORM;
+      return [
+        { say: ['Old Sato', "The Overlook. From this bench you can watch the storms gather over the Outskirts before anyone down there knows it's raining.", "Planted every terrace here. Forty years. Stopped planting near the pump.", "Nobody asked why, so I stopped saying."] }
+      ];
+    }
   },
   {
     id: 'kess', name: 'Dr. Kess', x: 1, y: 3, facing: 'right',
@@ -226,4 +327,29 @@ export const GREENLINE_NPCS = [
       { call: (scene) => scene.scene.launch('Mart') }
     ]
   }
+];
+
+// STORY.md G3 — the storm on the Overlook. The game's first weather
+// cutscene: the sky goes dark, lightning over the Outskirts, and the Absol
+// on the terrace edge, watching the player. Scene hooks (GreenlineScene):
+// stormStart/stormEnd (the tint), showAbsol/hideAbsol (a real sprite).
+export const GREENLINE_STORM = [
+  { say: ['Old Sato', "Priya's girl told you about the white one. Good. Then you'll want to see this.", "Sky's going green. Watch the edge."] },
+  { call: (scene) => scene.stormStart?.() },
+  { wait: 600 },
+  { flash: 90 },
+  { shake: 250 },
+  { wait: 500 },
+  { flash: 140 },
+  { shake: 400 },
+  { call: (scene) => scene.showAbsol?.() },
+  { pan: { x: 0, y: 0, ms: 700, toEdge: true } },
+  { wait: 1400 },
+  { say: ['', "On the terrace edge, rain sheeting off its horn: an Absol. It looks at the Outskirts far below. Then it looks down — through the terraces, through the Quarter, through the harbor — at something under all of it.", "Then it looks at you."] },
+  { flash: 120 },
+  { call: (scene) => scene.hideAbsol?.() },
+  { wait: 500 },
+  { call: (scene) => scene.stormEnd?.() },
+  { say: ['Old Sato', "…Forty years. It's never come that close.", "It wasn't looking at the storm, child. It was looking at *you*."] },
+  { set: 'stormSeen' }
 ];

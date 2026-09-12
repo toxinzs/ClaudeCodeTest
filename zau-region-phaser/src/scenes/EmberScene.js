@@ -11,6 +11,7 @@ import { preloadPlayerLayers, createPlayerSprite } from '../playerSprite.js';
 import { preloadNPCLayers, placeNPCs, makeActor } from '../npcs.js';
 import { ensureStoryState } from '../story.js';
 import { EMBER_NPCS } from '../data/npcs.js';
+import { hasFlag } from '../story.js';
 
 // Ember Quarter — stratum 4 in WORLD.md, designed in
 // zau-region/districts/ember.md. Same shape as HarborScene: Ashgrave's
@@ -89,7 +90,16 @@ export default class EmberScene extends Phaser.Scene {
       { label: 'Harbor', onClick: () => this.leaveToHarbor() }
     ], GAME_H - 16);
 
+    // STORY.md E3: while the blackout is on, the Quarter is dark.
+    this.blackoutRect = this.add.rectangle(GAME_W / 2, this.offsetY + EMBER_MAP.h * TILE / 2, GAME_W * 3, EMBER_MAP.h * TILE * 3, 0x05030a, 1)
+      .setAlpha(0).setDepth(50);
+    if (hasFlag('blackout') && !hasFlag('lineRestored')) this.blackoutRect.setAlpha(0.55);
+
     setupHUD(this, [header, this.toastText, ...bar.flatMap(b => [b.bg, b.label])]);
+  }
+
+  setBlackout(on) {
+    this.tweens.add({ targets: this.blackoutRect, alpha: on ? 0.55 : 0, duration: 400 });
   }
 
   drawPlayer() {
@@ -134,6 +144,10 @@ export default class EmberScene extends Phaser.Scene {
       return;
     }
     if (at('exchange')) { this.toastText.setText('The Scrapyard Exchange — everything off a pallet, the till a coffee tin.'); this.scene.launch('Mart'); return; }
+    if (at('kilns') && hasFlag('blackout') && !hasFlag('lineRestored')) {
+      goToScene(this, 'Boiler');
+      return;
+    }
     for (const key of ['substation', 'kilns']) {
       if (at(key)) { this.toastText.setText(SPOT_TEXT[key]); return; }
     }
