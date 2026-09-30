@@ -130,3 +130,10 @@ export function evolutionFor(speciesName) {
 export function itemEvolutionsFor(speciesName) {
   return entries(speciesName).filter(e => e.method === 'item');
 }
+
+// Every evolution as a flat list — for reverse lookups (the Pokédex's
+// "evolves from" line, the roster audit) that the species-keyed table
+// can't answer directly.
+export function allEvolutions() {
+  return Object.keys(EVOLUTIONS).flatMap(from => entries(from).map(e => ({ ...e, from })));
+}
