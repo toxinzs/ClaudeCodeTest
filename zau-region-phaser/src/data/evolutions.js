@@ -72,6 +72,18 @@ const EVOLUTIONS = {
   drilbur: { evolvesTo: 'Excadrill', type: 'Ground/Steel', emoji: '🐹', method: 'level', level: 31 },
   koffing: { evolvesTo: 'Weezing', type: 'Poison', emoji: '☁️', method: 'level', level: 35 },
   shuppet: { evolvesTo: 'Banette', type: 'Ghost', emoji: '🎭', method: 'level', level: 37 },
+  // Phase 29 — the evolved forms the trainers already field, which the player
+  // could catch the base of but never evolve (real thresholds; the two item
+  // evolutions use stones that exist, Snorunt's real Dawn Stone is new).
+  psyduck:    { evolvesTo: 'Golduck',   type: 'Water',         emoji: '🦆', method: 'level', level: 33 },
+  pikachu:    { evolvesTo: 'Raichu',    type: 'Electric',      emoji: '🐿️', method: 'item', item: 'thunderstone' },
+  sandshrew:  { evolvesTo: 'Sandslash', type: 'Ground',        emoji: '🐢', method: 'level', level: 22 },
+  bronzor:    { evolvesTo: 'Bronzong',  type: 'Steel/Psychic', emoji: '🥉', method: 'level', level: 33 },
+  grubbin:    { evolvesTo: 'Charjabug', type: 'Bug/Electric',  emoji: '🪲', method: 'level', level: 20 },
+  snorunt:    { evolvesTo: 'Froslass',  type: 'Ice/Ghost',     emoji: '❄️', method: 'item', item: 'dawnstone' },
+  scatterbug: { evolvesTo: 'Spewpa',    type: 'Bug',           emoji: '🐛', method: 'level', level: 9 },
+  spewpa:     { evolvesTo: 'Vivillon',  type: 'Bug/Flying',    emoji: '🦋', method: 'level', level: 12 },
+  ekans:      { evolvesTo: 'Arbok',     type: 'Poison',        emoji: '🐍', method: 'level', level: 22 },
   duskull: { evolvesTo: 'Dusclops', type: 'Ghost', emoji: '👁️', method: 'level', level: 37 },
 
   snubbull: { evolvesTo: 'Granbull', type: 'Fairy', emoji: '🐶', method: 'level', level: 23 },
