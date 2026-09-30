@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { state } from '../state.js';
 import { LEAGUE_MAP } from '../data/maps.js';
 import { LEAGUE_LEADERS, DIRECTOR_VANCE } from '../data/story.js';
+import { MAIN_BADGES } from '../story.js';
 import { TILE, GAME_W, GAME_H } from '../config.js';
 import { drawTiles, drawDecor, createWalker, setupFollowCamera, setupHUD } from '../mapRenderer.js';
 import { addActionBar } from '../uiHelpers.js';
@@ -10,13 +11,13 @@ import { preloadPlayerLayers, createPlayerSprite } from '../playerSprite.js';
 
 // Unlike the Trail, leaders can be challenged in any order, so they're
 // placed around a hub rather than along a corridor. The tower starts
-// sealed, opens to Director Vance once all 5 are beaten, then to the
+// sealed, opens to Director Vance once all six are beaten, then to the
 // Underlight (Verdanyx) once Vance is beaten too — ported from
 // the DOM version's ui/league.js.
 const LEADER_POS = [
   { x: 1, y: 1 }, { x: 5, y: 1 },
   { x: 1, y: 5 }, { x: 5, y: 5 },
-  { x: 3, y: 3 }
+  { x: 3, y: 3 }, { x: 1, y: 3 }
 ];
 const TOWER_POS = { x: 3, y: 1 };
 
@@ -44,7 +45,7 @@ export default class LeagueScene extends Phaser.Scene {
 
     const header = this.add.text(GAME_W / 2, 4, 'ZAU LEAGUE', { fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#8a8aa0' }).setOrigin(0.5, 0);
     const clearedCount = state.leagueBeaten.filter(Boolean).length;
-    const initialToast = this.pendingToast || (clearedCount < 5 ? `${clearedCount}/5 leaders cleared` : '');
+    const initialToast = this.pendingToast || (clearedCount < MAIN_BADGES ? `${clearedCount}/${MAIN_BADGES} leaders cleared` : '');
     this.toastText = this.add.text(GAME_W / 2, GAME_H - 52, initialToast, {
       fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#e8e8f0', wordWrap: { width: GAME_W - 20 }, align: 'center'
     }).setOrigin(0.5, 0);
@@ -69,13 +70,14 @@ export default class LeagueScene extends Phaser.Scene {
   }
 
   buildDecor() {
-    const decor = LEAGUE_LEADERS.map((l, i) => ({
+    // Postgame leaders (the islands) won't have a hub spot; only place those that do.
+    const decor = LEAGUE_LEADERS.slice(0, LEADER_POS.length).map((l, i) => ({
       x: LEADER_POS[i].x, y: LEADER_POS[i].y,
       emoji: state.leagueBeaten[i] ? '✅' : l.emoji
     }));
     const clearedCount = state.leagueBeaten.filter(Boolean).length;
     let towerEmoji = '🏙️';
-    if (clearedCount >= 5) {
+    if (clearedCount >= MAIN_BADGES) {
       towerEmoji = !state.vanceBeaten ? DIRECTOR_VANCE.emoji : (!state.verdanyxBeaten ? '🕳️' : '🏆');
     }
     decor.push({ x: TOWER_POS.x, y: TOWER_POS.y, emoji: towerEmoji });
@@ -105,8 +107,8 @@ export default class LeagueScene extends Phaser.Scene {
     }
     if (nx === TOWER_POS.x && ny === TOWER_POS.y) {
       const clearedCount = state.leagueBeaten.filter(Boolean).length;
-      if (clearedCount < 5) {
-        this.toastText.setText('The tower is sealed until all 5 League Leaders are defeated.');
+      if (clearedCount < MAIN_BADGES) {
+        this.toastText.setText(`The tower is sealed until all ${MAIN_BADGES} League Leaders are defeated.`);
       } else if (!state.verdanyxBeaten) {
         this.toastText.setText("Meridian Tower's real door is the Sprawl's lobby elevator. Halloran's badge opens it.");
       } else {

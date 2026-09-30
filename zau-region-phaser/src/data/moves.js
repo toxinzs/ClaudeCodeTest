@@ -73,6 +73,9 @@ const MOVES = {
   "dragon claw": { type: "Dragon", power: 80, category: "Physical" },
   "steel wing":  { type: "Steel",    power: 70,  category: "Physical" },
   "shadow sneak":{ type: "Ghost",    power: 40,  category: "Physical" },
+  // The Terminus (Phase 28): real Ghost moves for Halcyon's line.
+  "shadow claw": { type: "Ghost",    power: 70,  category: "Physical" },
+  "shadow ball": { type: "Ghost",    power: 80,  category: "Special" },
   "take down":   { type: "Normal",   power: 90,  category: "Physical" },
   pound:         { type: "Normal",   power: 40,  category: "Physical" }
 };

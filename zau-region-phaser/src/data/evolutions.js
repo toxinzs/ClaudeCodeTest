@@ -72,6 +72,7 @@ const EVOLUTIONS = {
   drilbur: { evolvesTo: 'Excadrill', type: 'Ground/Steel', emoji: '🐹', method: 'level', level: 31 },
   koffing: { evolvesTo: 'Weezing', type: 'Poison', emoji: '☁️', method: 'level', level: 35 },
   shuppet: { evolvesTo: 'Banette', type: 'Ghost', emoji: '🎭', method: 'level', level: 37 },
+  duskull: { evolvesTo: 'Dusclops', type: 'Ghost', emoji: '👁️', method: 'level', level: 37 },
 
   snubbull: { evolvesTo: 'Granbull', type: 'Fairy', emoji: '🐶', method: 'level', level: 23 },
 

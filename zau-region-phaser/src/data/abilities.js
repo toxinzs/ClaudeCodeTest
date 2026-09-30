@@ -145,6 +145,9 @@ const ABILITIES = {
   weezing: { name: 'Levitate', effect: 'levitate' },
   shuppet: { name: 'Insomnia', effect: 'insomnia' },
   banette: { name: 'Insomnia', effect: 'insomnia' },
+  // The Terminus (Phase 28). Levitate is a mechanically wired full immunity.
+  duskull: { name: 'Levitate', effect: 'levitate' },
+  dusclops: { name: 'Pressure', effect: null },
   mawile: { name: 'Hyper Cutter', effect: null },
 
   // The Sprawl roster + evolutions

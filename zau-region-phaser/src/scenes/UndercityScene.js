@@ -2,7 +2,6 @@ import Phaser from 'phaser';
 import { state } from '../state.js';
 import { saveGame } from '../save.js';
 import { UNDERCITY_MAP } from '../data/maps.js';
-import { LEAGUE_LEADERS } from '../data/story.js';
 import { TILE, GAME_W, GAME_H } from '../config.js';
 import { drawTiles, drawDecor, createWalker, setupFollowCamera, setupHUD } from '../mapRenderer.js';
 import { addActionBar } from '../uiHelpers.js';
@@ -15,8 +14,8 @@ import { UNDERCITY_NPCS, OBSIDIAN_AFTER } from '../data/npcs.js';
 // The Undercity — stratum 1 in WORLD.md, designed in
 // zau-region/districts/undercity.md. Where the oddities resolve: Obsidian's
 // Vault (league index 4) hands over the Gengarite and the Warden's name,
-// and past the Vault the Warden herself — Elena Voss — tells the truth
-// and closes Act 2 (U3). The Underlight below stays sealed until Act 3.
+// and past the Vault lies the Terminus (Halcyon, league index 5), and past
+// that the Warden herself — Elena Voss — tells the truth and closes Act 2 (U3). The Underlight below stays sealed until Act 3.
 const WILD_ENCOUNTER_CHANCE = 0.1;
 const OBSIDIAN_IDX = 4;
 const SPAWN = { x: 4, y: 7 };
@@ -99,6 +98,16 @@ export default class UndercityScene extends Phaser.Scene {
     );
   }
 
+  // Past the Vault (STORY.md U2b): once Obsidian has handed over the Gengarite,
+  // her vault door stands open and the tunnel behind it runs on to the Terminus.
+  enterTerminus() {
+    Object.assign(state.pos.undercity, { x: 7, y: 2 });
+    // Always start at the platform's foot, not wherever an earlier visit was saved.
+    state.pos.terminus = { x: 2, y: 11 };
+    saveGame();
+    goToScene(this, 'Terminus');
+  }
+
   leaveDown() {
     Object.assign(state.pos.undercity, SPAWN);
     saveGame();
@@ -114,7 +123,7 @@ export default class UndercityScene extends Phaser.Scene {
     if (at('gym')) {
       if (state.leagueBeaten[OBSIDIAN_IDX]) {
         if (!hasFlag('gengariteGiven')) this.npcLayer.run(OBSIDIAN_AFTER);
-        else this.toastText.setText(`Undercity Vault. You already beat ${LEAGUE_LEADERS[OBSIDIAN_IDX].name} — the vault door stands open; she's reading.`);
+        else this.enterTerminus();
       } else if (!state.party.length) {
         this.toastText.setText("Undercity Vault. Obsidian doesn't look up: \"Come back with a team.\"");
       } else {

@@ -1,6 +1,6 @@
 import { state, activeMon, firstHealthyIdx, MAX_PARTY } from './state.js';
 import { trainerFor } from './data/trainers.js';
-import { setFlag } from './story.js';
+import { setFlag, MAIN_BADGES } from './story.js';
 import { currentMonDisplay, computeStats, statsForMon, evolveIfReady, rollWildEncounter, buildWildMon, xpNeededForLevel, applyMega, revertMega, rollIVs } from './mon.js';
 import { baseStatsFor } from './data/baseStats.js';
 import { abilityFor } from './data/abilities.js';
@@ -616,9 +616,9 @@ export class BattleEngine extends Emitter {
     } else if (ctx === 'league') {
       state.leagueBeaten[state.currentLeagueIdx] = true;
       const cleared = state.leagueBeaten.filter(Boolean).length;
-      msg = cleared >= 5
-        ? `All 5 League Leaders defeated! Meridian Tower is open.`
-        : `${LEAGUE_LEADERS[state.currentLeagueIdx].locationName} cleared! (${cleared}/5 leaders)`;
+      msg = cleared >= MAIN_BADGES
+        ? `All ${MAIN_BADGES} League Leaders defeated! Meridian Tower is open.`
+        : `${LEAGUE_LEADERS[state.currentLeagueIdx].locationName} cleared! (${cleared}/${MAIN_BADGES} leaders)`;
     } else if (ctx === 'vance') {
       state.vanceBeaten = true;
       msg = `Vance sets his Poké Ball down. "Well argued." He doesn't look beaten.`;

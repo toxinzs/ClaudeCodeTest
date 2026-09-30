@@ -33,7 +33,7 @@ const SPOTS = {
 
 const SPOT_TEXT = {
   antenna: "The Antenna Farm. The district's edge, where the wind is. Up here the storms are audible before they're visible — a low hum under the thunder.",
-  bridge: "The Sprawl Bridge — a sky bridge up to the mid-city. Meridian security at the far end waves you off: League business ends at five badges."
+  bridge: "The Sprawl Bridge — a sky bridge up to the mid-city. Meridian security at the far end waves you off: League business ends at six badges, and the Warden's word."
 };
 
 export default class SignalScene extends Phaser.Scene {
@@ -132,7 +132,9 @@ export default class SignalScene extends Phaser.Scene {
       if (at('bridge') && !hasFlag('song3')) { setFlag('song3'); this.toastText.setText('You stand on the bridge and listen. The note again — and something turning over inside it. Recorded.'); return; }
     }
     if (at('bridge')) {
-      if (state.leagueBeaten.every(Boolean) && hasFlag('act2Close')) goToScene(this, 'Sprawl');
+      // act2Close can only be set after Halcyon's badge now (the Warden is past the Terminus),
+      // and an older save already past Act 2 must not be locked out by the new sixth slot.
+      if (hasFlag('act2Close')) goToScene(this, 'Sprawl');
       else this.toastText.setText(SPOT_TEXT.bridge);
       return;
     }

@@ -258,7 +258,12 @@ export const WILD_SPECIES = [
   { name: "Dragonair", emoji: "🐉", type: "Dragon", baseLvl: [52,55],
     moves: [moveFor("Dragon Breath"), moveFor("Slam")] },
   { name: "Dragonite", emoji: "🐲", type: "Dragon/Flying", baseLvl: [56,60],
-    moves: [moveFor("Dragon Claw"), moveFor("Wing Attack")] }
+    moves: [moveFor("Dragon Claw"), moveFor("Wing Attack")] },
+  // ============ The Terminus (Phase 28) ============
+  // Ghost-leaning, per districts/undercity.md. Gastly (9), Shuppet (60)
+  // and Murkrow (14) are shared with the Undercity; Duskull is new.
+  { name: "Duskull", emoji: "👁️", type: "Ghost", baseLvl: [35,40],
+    moves: [moveFor("Astonish"), moveFor("Lick")] }
 ];
 
 // Wild encounter tables per zone (by index in WILD_SPECIES)
@@ -270,7 +275,12 @@ export const WILD_SPECIES = [
 // would spawn the Outskirts' Lv.18 Bagon next to a Lv.60 Verdanyx.
 // Zones without an entry just use each species' own baseLvl.
 export const WILD_ZONE_LEVELS = {
-  skyline: [48, 60]
+  skyline: [48, 60],
+  terminus: [35, 40],
+  // Undercity band per districts/undercity.md (31-36): its shared species
+  // (Gastly, Murkrow) otherwise spawn at their Outskirts levels.
+  oldlines: [31, 36],
+  undercity: [31, 36]
 };
 
 export const WILD_ZONE_TABLE = {
@@ -291,12 +301,14 @@ export const WILD_ZONE_TABLE = {
   risers: [51,51,39,39,50,52],
   // The Old Lines (dungeon) and the Undercity hub: Gastly (9) and Murkrow
   // (14) shared; Shuppet uncommon, Mawile rare.
-  oldlines: [56,56,57,58,59,9,14,60,61],
+  oldlines: [56,56,57,58,59,9,15,60,61],
   undercity: [56,57,59,9,60,61],
   // The Sprawl: mostly a place, not a hunting ground — Kangaskhan rare.
   sprawl: [62,62,63,63,64,65,67,67,66],
   // The Skyline (postgame, band 48-60): Swablu common, Bagon (22) shared
   // with the Outskirts, Skarmory (55) shared with Signal, Dratini rare.
   skyline: [68,68,68,22,22,55,72,72,70,73],
+  // The Terminus: Gastly/Shuppet common, Duskull (76) the local specialty, Murkrow (15) rare.
+  terminus: [9,9,60,60,76,76,15],
   district: [11,12,14,15,16,18,19,20,21,22]
 };
