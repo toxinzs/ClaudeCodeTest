@@ -3,6 +3,8 @@ import { baseStatsFor } from './data/baseStats.js';
 import { abilityFor } from './data/abilities.js';
 import { evolutionFor, itemEvolutionsFor } from './data/evolutions.js';
 import { megaFor } from './data/megas.js';
+import { movesAtLevel } from './data/learnsets.js';
+import { moveFor } from './data/moves.js';
 import { markCaught } from './dex.js';
 import { spriteUrlFor, spriteUrlForId } from './sprites.js';
 
@@ -103,6 +105,19 @@ export function makeStarterMon(key) {
   };
 }
 
+// A wild Pokémon's moves: its real learnset at that level (up to four), padded
+// from the species' hand-picked moves, else a bare Tackle (so nothing ever
+// spawns unable to act).
+export function wildMovesFor(species, lvl) {
+  if (species.fixed) return species.moves; // a named encounter (Verdanyx) keeps its authored moves
+  const moves = movesAtLevel(species.name, lvl).map(moveFor);
+  // Pad to at least two from the species' hand-picked moves, so a species whose
+  // real level-up list is thin at low level (Geodude starts with only Tackle)
+  // keeps the moveset it always had.
+  for (const m of species.moves || []) if (moves.length < 2 && !moves.some(x => x.name === m.name)) moves.push(m);
+  return moves.length ? moves : [moveFor('Tackle')];
+}
+
 export function buildWildMon(species, lvl) {
   const ivs = rollIVs();
   const stats = computeStats(baseStatsFor(species.name), lvl, ivs);
@@ -115,7 +130,7 @@ export function buildWildMon(species, lvl) {
     level: lvl,
     hp: stats.maxHp,
     ...stats,
-    moves: species.moves.map(m => ({...m})),
+    moves: wildMovesFor(species, lvl).map(m => ({...m})),
     caughtId: null,
     status: null,
     heldItem: null,

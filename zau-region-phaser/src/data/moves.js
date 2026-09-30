@@ -10,6 +10,8 @@
 // change (Growl, Sand Attack, String Shot, Mud Slap) or a non-implemented
 // condition (flinch, confusion) are left without one — that's a separate,
 // not-yet-built system, not a data gap.
+import { GENERATED_MOVES } from './movesGenerated.js';
+
 const MOVES = {
   tackle:        { type: "Normal",   power: 40,  category: "Physical" },
   growl:         { type: "Normal",   power: 0,   category: "Status" },
@@ -80,8 +82,12 @@ const MOVES = {
   pound:         { type: "Normal",   power: 40,  category: "Physical" }
 };
 
+// Hand-registered entries above win; everything else in a real learnset comes
+// from data/movesGenerated.js (tools/roster/gen-learnsets.mjs).
+const REGISTRY = { ...GENERATED_MOVES, ...MOVES };
+
 export function moveFor(name) {
-  const m = MOVES[name.toLowerCase()];
+  const m = REGISTRY[name.toLowerCase()];
   if (!m) throw new Error(`Unknown move "${name}" — add it to data/moves.js`);
   return { name, ...m };
 }

@@ -16,6 +16,8 @@ import { STARTER_CHAINS, WILD_SPECIES, WILD_ZONE_TABLE, WILD_ZONE_LEVELS, SPECIE
 import { baseStatsFor } from '../src/data/baseStats.js';
 import { SPRITE_IDS } from '../src/data/spriteIds.js';
 import { abilityFor } from '../src/data/abilities.js';
+import { movesAtLevel, learnsetFor } from '../src/data/learnsets.js';
+import { moveFor } from '../src/data/moves.js';
 import { allEvolutions } from '../src/data/evolutions.js';
 import { megaFor } from '../src/data/megas.js';
 import { ITEMS } from '../src/data/items.js';
@@ -37,7 +39,7 @@ for (const sp of WILD_SPECIES) {
   if (seenWild.has(sp.name)) err(`WILD_SPECIES lists ${sp.name} twice`);
   seenWild.add(sp.name);
   known.add(sp.name.toLowerCase());
-  if (!sp.moves?.length) err(`${sp.name}: no moves`);
+  if (!sp.moves?.length && !movesAtLevel(sp.name, sp.baseLvl[0]).length) err(`${sp.name}: no moves (neither static nor learnset)`);
   if (!Array.isArray(sp.baseLvl) || sp.baseLvl[0] > sp.baseLvl[1]) err(`${sp.name}: bad baseLvl`);
   if (!sp.type || !sp.emoji) err(`${sp.name}: missing type/emoji`);
 }
@@ -60,6 +62,11 @@ for (const k of needData) {
   if (k !== 'verdanyx' && !SPRITE_IDS[k]) err(`${k}: no dex ID (data/spriteIds.js)`);
 }
 for (const k of Object.keys(SPRITE_IDS)) if (!known.has(k)) warn(`${k}: has a dex ID but the game never references it`);
+
+// ---- 1b. learnsets name real registry moves ----
+for (const k of known) for (const [lvl, name] of learnsetFor(k) || []) {
+  if (!has(moveFor, name)) err(`${k}: learnset move "${name}" (Lv.${lvl}) is not in the move registry`);
+}
 
 // ---- 2. dex IDs unique ----
 const byId = {};
