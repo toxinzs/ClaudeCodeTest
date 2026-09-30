@@ -263,7 +263,10 @@ export const WILD_SPECIES = [
   // Ghost-leaning, per districts/undercity.md. Gastly (9), Shuppet (60)
   // and Murkrow (14) are shared with the Undercity; Duskull is new.
   { name: "Duskull", emoji: "👁️", type: "Ghost", baseLvl: [35,40],
-    moves: [moveFor("Astonish"), moveFor("Lick")] }
+    moves: [moveFor("Astonish"), moveFor("Lick")] },
+  // Phase 29: Thistle fields Vivillon, so the line has to be catchable.
+  { name: "Scatterbug", emoji: "🐛", type: "Bug", baseLvl: [9,14],
+    moves: [moveFor("Tackle"), moveFor("String Shot")] }
 ];
 
 // Wild encounter tables per zone (by index in WILD_SPECIES)
@@ -277,6 +280,9 @@ export const WILD_SPECIES = [
 export const WILD_ZONE_LEVELS = {
   skyline: [48, 60],
   terminus: [35, 40],
+  // The Wild Zone Trail's two stages (TrailScene): Act 1 is 5-18.
+  underpass: [5, 13],
+  district: [9, 18],
   // Undercity band per districts/undercity.md (31-36): its shared species
   // (Gastly, Murkrow) otherwise spawn at their Outskirts levels.
   oldlines: [31, 36],
@@ -285,7 +291,8 @@ export const WILD_ZONE_LEVELS = {
 
 export const WILD_ZONE_TABLE = {
   outskirts: [0,1,2,3,4,5,6,7,23,24,25],
-  underpass: [8,9,10,13],
+  // Ekans (17) was in no zone at all, so it could never be caught.
+  underpass: [8,9,10,13,17],
   // Wingull/Buizel common (listed twice), Pelipper the rare "you got lucky" spawn.
   harbor: [26,26,27,28,29,30,31,31,7,32],
   // Slugma/Rolycoly common, Torkoal uncommon, Houndour the rare spawn.
@@ -310,5 +317,5 @@ export const WILD_ZONE_TABLE = {
   skyline: [68,68,68,22,22,55,72,72,70,73],
   // The Terminus: Gastly/Shuppet common, Duskull (76) the local specialty, Murkrow (15) rare.
   terminus: [9,9,60,60,76,76,15],
-  district: [11,12,14,15,16,18,19,20,21,22]
+  district: [11,12,14,15,16,18,19,20,21,22,77]
 };

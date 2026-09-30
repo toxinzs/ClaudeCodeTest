@@ -65,7 +65,8 @@ export const ITEMS = {
   sunstone:     { name: "Sun Stone",     price: 3000, category: "evolution" },
   moonstone:    { name: "Moon Stone",    price: 3000, category: "evolution" },
   duskstone:    { name: "Dusk Stone",    price: 3000, category: "evolution" },
-  shinystone:   { name: "Shiny Stone",   price: 3000, category: "evolution" }
+  shinystone:   { name: "Shiny Stone",   price: 3000, category: "evolution" },
+  dawnstone:    { name: "Dawn Stone",    price: 3000, category: "evolution" }
 };
 
 // Which items the Mart carries at a given League badge count — same shape
@@ -73,7 +74,7 @@ export const ITEMS = {
 const MART_TIERS = [
   { minBadges: 0, items: ["pokeball", "potion"] },
   { minBadges: 1, items: ["greatball", "superpotion"] },
-  { minBadges: 3, items: ["ultraball", "hyperpotion", "revive", "charcoal", "mysticwater", "miracleseed", "magnet", "blackbelt", "lumberry", "firestone", "waterstone", "thunderstone", "leafstone", "sunstone", "moonstone", "duskstone", "shinystone"] },
+  { minBadges: 3, items: ["ultraball", "hyperpotion", "revive", "charcoal", "mysticwater", "miracleseed", "magnet", "blackbelt", "lumberry", "firestone", "waterstone", "thunderstone", "leafstone", "sunstone", "moonstone", "duskstone", "shinystone", "dawnstone"] },
   // Mega Stones are never sold — each is found, earned or story-given
   // (MEGA.md has the source of every one).
   { minBadges: 5, items: ["maxpotion", "maxrevive", "leftovers", "linkingcord"] }

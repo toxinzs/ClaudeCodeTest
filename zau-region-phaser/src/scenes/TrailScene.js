@@ -11,6 +11,7 @@ import { preloadPlayerLayers, createPlayerSprite } from '../playerSprite.js';
 // Trainers are placed one per row up a straight corridor (x=2), closest
 // first; the corridor's far end (y=0) is Dario, then the league gate, once
 // each is cleared — ported from the DOM version's ui/trail.js.
+const WILD_ENCOUNTER_CHANCE = 0.12;
 const TRAIL_X = 2;
 const TRAINER_Y = [10, 8, 6, 4, 2];
 const END_Y = 0;
@@ -87,9 +88,21 @@ export default class TrailScene extends Phaser.Scene {
     );
   }
 
+  // The Trail is the Wild Zone: between the trainers it rolls wild
+  // encounters, from the Underpass table for the first three stages and the
+  // District table after. (Both tables were authored in the original DOM
+  // version and never wired to anything, which left ten species — Abra, the
+  // whole Alakazam line among them — uncatchable.)
+  rollWild() {
+    if (!state.party.length || Math.random() >= WILD_ENCOUNTER_CHANCE) return;
+    const zoneKey = state.trainerIndex <= 2 ? 'underpass' : 'district';
+    goToScene(this, 'Battle', { kind: 'wild', zoneKey, returnTo: 'Trail' });
+  }
+
   handleStep(nx, ny) {
     this.toastText.setText('');
-    if (nx !== TRAIL_X) return;
+    const special = nx === TRAIL_X && (TRAINER_Y.includes(ny) || ny === END_Y);
+    if (!special) { this.rollWild(); return; }
     const trainerIdx = TRAINER_Y.indexOf(ny);
     if (trainerIdx !== -1) {
       if (trainerIdx < state.trainerIndex) {

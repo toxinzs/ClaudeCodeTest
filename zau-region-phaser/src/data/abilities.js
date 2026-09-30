@@ -32,7 +32,8 @@ const ABILITIES = {
   magikarp: { name: 'Swift Swim', effect: null },
   geodude: { name: 'Sturdy', effect: 'sturdy' },
   gastly: { name: 'Levitate', effect: 'levitate' },
-  tarountula: { name: 'String Shot', effect: null },
+  // Real ability is Insomnia; 'String Shot' was a move name in the ability slot.
+  tarountula: { name: 'Insomnia', effect: 'insomnia' },
   abra: { name: 'Synchronize', effect: 'synchronize' },
   growlithe: { name: 'Flash Fire', effect: 'flash_fire' },
   psyduck: { name: 'Damp', effect: null },
@@ -146,6 +147,9 @@ const ABILITIES = {
   shuppet: { name: 'Insomnia', effect: 'insomnia' },
   banette: { name: 'Insomnia', effect: 'insomnia' },
   // The Terminus (Phase 28). Levitate is a mechanically wired full immunity.
+  scatterbug: { name: 'Shield Dust', effect: null },
+  spewpa: { name: 'Shed Skin', effect: 'shed_skin' },
+  arbok: { name: 'Intimidate', effect: null },
   duskull: { name: 'Levitate', effect: 'levitate' },
   dusclops: { name: 'Pressure', effect: null },
   mawile: { name: 'Hyper Cutter', effect: null },
