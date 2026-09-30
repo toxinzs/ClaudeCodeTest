@@ -3,7 +3,9 @@ import { state } from '../state.js';
 import { saveGame } from '../save.js';
 import { ITEMS, itemIcon, availableItems } from '../data/items.js';
 import { GAME_W } from '../config.js';
-import { drawModalBackdrop, addCloseButton, addRow } from '../uiHelpers.js';
+import { drawModalBackdrop, addCloseButton, addRow, addPager } from '../uiHelpers.js';
+
+const ROWS_PER_PAGE = 9;
 
 // Ported from the DOM version's ui/mart.js — stock tiers by League badge
 // count via data/items.js's availableItems(), unchanged from the DOM version.
@@ -13,6 +15,7 @@ export default class MartScene extends Phaser.Scene {
   }
 
   create() {
+    this.page = 0;
     this.renderList();
   }
 
@@ -24,7 +27,8 @@ export default class MartScene extends Phaser.Scene {
 
     const badgeCount = state.leagueBeaten.filter(Boolean).length;
     const keys = availableItems(badgeCount);
-    keys.forEach((key, i) => {
+    this.page = Math.min(this.page, Math.max(0, Math.ceil(keys.length / ROWS_PER_PAGE) - 1));
+    keys.slice(this.page * ROWS_PER_PAGE, (this.page + 1) * ROWS_PER_PAGE).forEach((key, i) => {
       const item = ITEMS[key];
       addRow(this, 68 + i * 36, {
         emoji: itemIcon(key),
@@ -34,6 +38,7 @@ export default class MartScene extends Phaser.Scene {
         onButton: () => this.buyItem(key, item.price)
       });
     });
+    addPager(this, this.page, keys.length, ROWS_PER_PAGE, (p) => { this.page = p; this.renderList(); });
   }
 
   buyItem(key, cost) {

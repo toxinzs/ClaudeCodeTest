@@ -1,4 +1,5 @@
 import { moveFor } from './moves.js';
+import { GEN_SPECIES, GEN_ZONE_TABLE } from './rosterGenerated.js';
 
 export const STARTER_CHAINS = {
   sprigatito: {
@@ -72,7 +73,7 @@ export const EVOLVE_LEVEL_1 = 16;
 export const EVOLVE_LEVEL_2 = 36;
 
 // Wild Pokémon roster (real Pokédex species, mixed gens)
-export const WILD_SPECIES = [
+const HAND_SPECIES = [
   { name: "Caterpie", emoji: "🐛", type: "Bug", baseLvl: [2,5],
     moves: [moveFor("Tackle"), moveFor("String Shot")] },
   { name: "Pidgey", emoji: "🐦", type: "Normal/Flying", baseLvl: [2,6],
@@ -269,7 +270,12 @@ export const WILD_SPECIES = [
     moves: [moveFor("Tackle"), moveFor("String Shot")] }
 ];
 
-// Wild encounter tables per zone (by index in WILD_SPECIES)
+// Wild encounter tables per zone, keyed by species NAME (resolved through
+// SPECIES_BY_NAME). They used to be positions in WILD_SPECIES, which is how
+// Murkrow/Grubbin got swapped in the Old Lines and a stray Shelgon got into
+// the Skyline — inserting or reordering a species silently re-pointed every
+// table after it. Names can't drift. A name listed twice is twice as
+// common; tools/audit-roster.mjs checks every name resolves.
 // A zone's own level band, where it has one. Several species appear in
 // more than one district (Bagon in the Outskirts and again on the Skyline,
 // Skarmory in Signal and again on the Skyline), and a species' own
@@ -289,33 +295,64 @@ export const WILD_ZONE_LEVELS = {
   undercity: [31, 36]
 };
 
-export const WILD_ZONE_TABLE = {
-  outskirts: [0,1,2,3,4,5,6,7,23,24,25],
-  // Ekans (17) was in no zone at all, so it could never be caught.
-  underpass: [8,9,10,13,17],
+const HAND_ZONE_TABLE = {
+  outskirts: ["Caterpie", "Pidgey", "Rattata", "Zigzagoon", "Bidoof", "Lechonk", "Starly", "Magikarp", "Riolu", "Gible", "Absol"],
+    underpass: ["Geodude", "Gastly", "Tarountula", "Psyduck", "Ekans"],
   // Wingull/Buizel common (listed twice), Pelipper the rare "you got lucky" spawn.
-  harbor: [26,26,27,28,29,30,31,31,7,32],
+  harbor: ["Wingull", "Wingull", "Tentacool", "Krabby", "Horsea", "Chinchou", "Buizel", "Buizel", "Magikarp", "Pelipper"],
   // Slugma/Rolycoly common, Torkoal uncommon, Houndour the rare spawn.
-  ember: [33,33,34,35,36,36,37,38,39,40],
-  // Oddish/Hoppip common, Cutiefly (21) shared with the Outskirts,
+  ember: ["Slugma", "Slugma", "Numel", "Aron", "Rolycoly", "Rolycoly", "Litwick", "Torkoal", "Magnemite", "Houndour"],
+  // Oddish/Hoppip common, Cutiefly shared with the Outskirts,
   // Heracross uncommon, Pinsir the rare spawn.
-  greenline: [41,41,42,42,43,44,45,46,21,47,48],
+  greenline: ["Oddish", "Oddish", "Hoppip", "Hoppip", "Sewaddle", "Combee", "Flabébé", "Ralts", "Cutiefly", "Heracross", "Pinsir"],
   // Boiler Tunnels: the Ember roster's cave-dwellers, no Numel/Magnemite/Houndour.
-  boiler: [33,33,36,36,35,37,38],
-  // Signal: Magnemite (39) shared with Ember; Electrike rare, Skarmory rarer.
-  signal: [49,50,51,52,53,53,39,39,54,55],
+  boiler: ["Slugma", "Slugma", "Rolycoly", "Rolycoly", "Aron", "Litwick", "Torkoal"],
+  // Signal: Magnemite shared with Ember; Electrike rare, Skarmory rarer.
+  signal: ["Elekid", "Joltik", "Klink", "Pawniard", "Mareep", "Mareep", "Magnemite", "Magnemite", "Electrike", "Skarmory"],
   // The Cable Risers: the data centre's shafts — Klink/Magnemite country.
-  risers: [51,51,39,39,50,52],
-  // The Old Lines (dungeon) and the Undercity hub: Gastly (9) and Murkrow
-  // (14) shared; Shuppet uncommon, Mawile rare.
-  oldlines: [56,56,57,58,59,9,15,60,61],
-  undercity: [56,57,59,9,60,61],
+  risers: ["Klink", "Klink", "Magnemite", "Magnemite", "Joltik", "Pawniard"],
+  // The Old Lines (dungeon) and the Undercity hub: Gastly and Murkrow
+  // shared; Shuppet uncommon, Mawile rare.
+  oldlines: ["Zubat", "Zubat", "Sableye", "Drilbur", "Koffing", "Gastly", "Murkrow", "Shuppet", "Mawile"],
+  undercity: ["Zubat", "Sableye", "Koffing", "Gastly", "Shuppet", "Mawile"],
   // The Sprawl: mostly a place, not a hunting ground — Kangaskhan rare.
-  sprawl: [62,62,63,63,64,65,67,67,66],
-  // The Skyline (postgame, band 48-60): Swablu common, Bagon (22) shared
-  // with the Outskirts, Skarmory (55) shared with Signal, Dratini rare.
-  skyline: [68,68,68,22,22,55,72,72,70,73],
-  // The Terminus: Gastly/Shuppet common, Duskull (76) the local specialty, Murkrow (15) rare.
-  terminus: [9,9,60,60,76,76,15],
-  district: [11,12,14,15,16,18,19,20,21,22,77]
+  sprawl: ["Eevee", "Eevee", "Meowth", "Meowth", "Snubbull", "Audino", "Clefairy", "Clefairy", "Kangaskhan"],
+  // The Skyline (postgame, band 48-60): Swablu common, Bagon shared
+  // with the Outskirts, Skarmory shared with Signal, Dratini rare.
+  skyline: ["Swablu", "Swablu", "Swablu", "Bagon", "Bagon", "Skarmory", "Rotom", "Rotom", "Dratini"],
+  // The Terminus: Gastly/Shuppet common, Duskull the local specialty, Murkrow rare.
+  terminus: ["Gastly", "Gastly", "Shuppet", "Shuppet", "Duskull", "Duskull", "Murkrow"],
+  district: ["Abra", "Growlithe", "Grubbin", "Murkrow", "Pikachu", "Sandshrew", "Snorunt", "Bronzor", "Cutiefly", "Bagon", "Scatterbug"]
+};
+
+// The hand-written species/zones plus the roster expansion's (rosterGenerated.js).
+export const WILD_SPECIES = [...HAND_SPECIES, ...GEN_SPECIES];
+export const WILD_ZONE_TABLE = Object.fromEntries(
+  [...new Set([...Object.keys(HAND_ZONE_TABLE), ...Object.keys(GEN_ZONE_TABLE)])]
+    .map(z => [z, [...(HAND_ZONE_TABLE[z] || []), ...(GEN_ZONE_TABLE[z] || [])]])
+);
+
+export const SPECIES_BY_NAME = Object.fromEntries(WILD_SPECIES.map(sp => [sp.name, sp]));
+
+// Every zone a species spawns in, for the Pokédex's "where found" line.
+export function zonesForSpecies(name) {
+  return Object.keys(WILD_ZONE_TABLE).filter(z => WILD_ZONE_TABLE[z].includes(name));
+}
+
+// Display names for the Pokédex's "where found" line.
+export const ZONE_LABELS = {
+  outskirts: 'Town Outskirts',
+  underpass: 'Wild Zone Trail (Underpass)',
+  district: 'Wild Zone Trail (District)',
+  harbor: 'Harbor District',
+  ember: 'Ember Quarter',
+  boiler: 'Boiler Tunnels',
+  greenline: 'Greenline Terraces',
+  signal: 'Signal District',
+  risers: 'Cable Risers',
+  oldlines: 'The Old Lines',
+  undercity: 'The Undercity',
+  terminus: 'The Terminus',
+  sprawl: 'The Sprawl',
+  skyline: 'The Skyline'
 };

@@ -8,7 +8,7 @@ import path from 'path';
 const BASE = 'https://raw.githubusercontent.com/PokeAPI/pokeapi/master/data/v2/csv/';
 const CACHE = path.join(os.tmpdir(), 'zau-pokeapi');
 fs.mkdirSync(CACHE, { recursive: true });
-async function csv(name) {
+export async function csv(name) {
   const file = path.join(CACHE, name);
   if (!fs.existsSync(file)) {
     const res = await fetch(BASE + name);

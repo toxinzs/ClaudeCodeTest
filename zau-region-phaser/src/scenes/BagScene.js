@@ -5,7 +5,9 @@ import { itemEvolutionsFor } from '../data/evolutions.js';
 import { saveGame } from '../save.js';
 import { ITEMS, itemIcon } from '../data/items.js';
 import { GAME_W, GAME_H } from '../config.js';
-import { drawModalBackdrop, addCloseButton, addRow } from '../uiHelpers.js';
+import { drawModalBackdrop, addCloseButton, addRow, addPager } from '../uiHelpers.js';
+
+const ROWS_PER_PAGE = 9;
 import { addMonIcon } from '../spriteLoader.js';
 
 // Ported from the DOM version's ui/bag.js. `engine` is only passed when
@@ -18,6 +20,7 @@ export default class BagScene extends Phaser.Scene {
 
   init(data) {
     this.engine = data?.engine || null;
+    this.page = 0;
   }
 
   create() {
@@ -35,7 +38,8 @@ export default class BagScene extends Phaser.Scene {
       this.add.text(GAME_W / 2, GAME_H / 2, 'Your bag is empty.', { fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#8a8aa0' }).setOrigin(0.5);
       return;
     }
-    owned.forEach((key, i) => {
+    this.page = Math.min(this.page, Math.max(0, Math.ceil(owned.length / ROWS_PER_PAGE) - 1));
+    owned.slice(this.page * ROWS_PER_PAGE, (this.page + 1) * ROWS_PER_PAGE).forEach((key, i) => {
       const item = ITEMS[key];
       const isBall = item.category === 'ball';
       const isHeld = item.category === 'held';
@@ -50,6 +54,7 @@ export default class BagScene extends Phaser.Scene {
         onButton: canUseHere ? () => this.useItem(key) : null
       });
     });
+    addPager(this, this.page, owned.length, ROWS_PER_PAGE, (p) => { this.page = p; this.renderList(); });
   }
 
   useItem(key) {

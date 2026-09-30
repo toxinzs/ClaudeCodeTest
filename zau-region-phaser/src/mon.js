@@ -1,8 +1,11 @@
-import { STARTER_CHAINS, WILD_ZONE_TABLE, WILD_SPECIES, EVOLVE_LEVEL_1, EVOLVE_LEVEL_2, WILD_ZONE_LEVELS } from './data/pokemon.js';
+import { STARTER_CHAINS, WILD_ZONE_TABLE, SPECIES_BY_NAME, EVOLVE_LEVEL_1, EVOLVE_LEVEL_2, WILD_ZONE_LEVELS } from './data/pokemon.js';
 import { baseStatsFor } from './data/baseStats.js';
 import { abilityFor } from './data/abilities.js';
 import { evolutionFor, itemEvolutionsFor } from './data/evolutions.js';
 import { megaFor } from './data/megas.js';
+import { movesAtLevel } from './data/learnsets.js';
+import { moveFor } from './data/moves.js';
+import { markCaught } from './dex.js';
 import { spriteUrlFor, spriteUrlForId } from './sprites.js';
 
 export function xpNeededForLevel(lvl) { return 20 + lvl * 12; }
@@ -62,6 +65,7 @@ export function computeStats(baseStats, level, ivs = ZERO_IVS) {
 // (optionally) a held item already equipped. Used by the Key Stone beat.
 export function makeGiftMon({ speciesName, emoji, type, level, moves, ivs = rollIVs(), heldItem = null }) {
   const stats = computeStats(baseStatsFor(speciesName), level, ivs);
+  markCaught(speciesName);
   return {
     speciesName, emoji, type, level, ivs,
     xp: 0, xpNext: xpNeededForLevel(level),
@@ -81,6 +85,7 @@ export function makeStarterMon(key) {
   const level = 5;
   const ivs = rollIVs();
   const stats = computeStats(baseStatsFor(chain.stages[0].name), level, ivs);
+  markCaught(chain.stages[0].name);
   return {
     key: key,
     stageIdx: 0,
@@ -100,6 +105,19 @@ export function makeStarterMon(key) {
   };
 }
 
+// A wild Pokémon's moves: its real learnset at that level (up to four), padded
+// from the species' hand-picked moves, else a bare Tackle (so nothing ever
+// spawns unable to act).
+export function wildMovesFor(species, lvl) {
+  if (species.fixed) return species.moves; // a named encounter (Verdanyx) keeps its authored moves
+  const moves = movesAtLevel(species.name, lvl).map(moveFor);
+  // Pad to at least two from the species' hand-picked moves, so a species whose
+  // real level-up list is thin at low level (Geodude starts with only Tackle)
+  // keeps the moveset it always had.
+  for (const m of species.moves || []) if (moves.length < 2 && !moves.some(x => x.name === m.name)) moves.push(m);
+  return moves.length ? moves : [moveFor('Tackle')];
+}
+
 export function buildWildMon(species, lvl) {
   const ivs = rollIVs();
   const stats = computeStats(baseStatsFor(species.name), lvl, ivs);
@@ -112,7 +130,7 @@ export function buildWildMon(species, lvl) {
     level: lvl,
     hp: stats.maxHp,
     ...stats,
-    moves: species.moves.map(m => ({...m})),
+    moves: wildMovesFor(species, lvl).map(m => ({...m})),
     caughtId: null,
     status: null,
     heldItem: null,
@@ -122,8 +140,7 @@ export function buildWildMon(species, lvl) {
 
 export function rollWildEncounter(zoneKey) {
   const table = WILD_ZONE_TABLE[zoneKey] || WILD_ZONE_TABLE.outskirts;
-  const speciesIdx = table[Math.floor(Math.random() * table.length)];
-  const species = WILD_SPECIES[speciesIdx];
+  const species = SPECIES_BY_NAME[table[Math.floor(Math.random() * table.length)]];
   const band = WILD_ZONE_LEVELS[zoneKey] || species.baseLvl;
   const lvl = band[0] + Math.floor(Math.random() * (band[1]-band[0]+1));
   return buildWildMon(species, lvl);
@@ -200,12 +217,14 @@ function applyEvolution(mon, evo) {
   mon.type = evo.type;
   mon.emoji = evo.emoji;
   mon.ability = abilityFor(evo.evolvesTo);
+  markCaught(evo.evolvesTo);
 }
 
 export function evolveIfReady(mon) {
   if (mon.key) {
     if (mon.stageIdx === 0 && mon.level >= EVOLVE_LEVEL_1) { mon.stageIdx = 1; }
     if (mon.stageIdx === 1 && mon.level >= EVOLVE_LEVEL_2) { mon.stageIdx = 2; }
+    markCaught(STARTER_CHAINS[mon.key].stages[mon.stageIdx].name);
     // Every starter line keeps the same ability across all 3 stages today,
     // but resolving it fresh off the current species (rather than assuming
     // that) is what actually keeps this correct if that ever changes.

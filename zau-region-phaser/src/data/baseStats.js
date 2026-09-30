@@ -3,6 +3,8 @@
 // sourced from official game data. Verdanyx is custom/fictional and gets a
 // hand-authored legendary-tier spread instead, same precedent as its sprite
 // and moveset already being hand-authored.
+import { GEN_BASE_STATS } from './rosterGenerated.js';
+
 const BASE_STATS = {
   // Starters — Sprigatito line
   sprigatito:   { hp: 40, atk: 61,  def: 54,  spAtk: 45,  spDef: 45,  spe: 65 },
@@ -182,7 +184,8 @@ const BASE_STATS = {
 };
 
 export function baseStatsFor(speciesName) {
-  const s = BASE_STATS[speciesName.toLowerCase()];
+  const k = speciesName.toLowerCase();
+  const s = BASE_STATS[k] ?? GEN_BASE_STATS[k];
   if (!s) throw new Error(`No base stats for "${speciesName}" — add it to data/baseStats.js`);
   return s;
 }

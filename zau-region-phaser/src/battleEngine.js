@@ -1,10 +1,13 @@
 import { state, activeMon, firstHealthyIdx, MAX_PARTY } from './state.js';
 import { trainerFor } from './data/trainers.js';
 import { setFlag, MAIN_BADGES } from './story.js';
+import { markSeen, markCaught } from './dex.js';
 import { currentMonDisplay, computeStats, statsForMon, evolveIfReady, rollWildEncounter, buildWildMon, xpNeededForLevel, applyMega, revertMega, rollIVs } from './mon.js';
 import { baseStatsFor } from './data/baseStats.js';
 import { abilityFor } from './data/abilities.js';
 import { ITEMS } from './data/items.js';
+import { learnedAtLevel } from './data/learnsets.js';
+import { moveFor } from './data/moves.js';
 import { STARTER_CHAINS } from './data/pokemon.js';
 import { TRAINER_LINEUP, RIVAL_DARIO, LEAGUE_LEADERS, DIRECTOR_VANCE, VERDANYX, moneyRewardFor } from './data/story.js';
 import { saveGame } from './save.js';
@@ -180,6 +183,7 @@ export class BattleEngine extends Emitter {
 
     const enemyMons = enemyTeam.map(t => buildBattleMon(t.speciesName, t.emoji, t.type, t.level, t.moves));
     state.battle = { ctx, trainerKey, enemyName, enemyMons, enemyIdx: 0, isWild: false, moneyReward: trainer ? trainer.reward : moneyRewardFor(ctx) };
+    markSeen(enemyMons[0].speciesName);
     this.emit('anim', { type: 'intro', wild: false, name: enemyName });
     this.render(`${enemyName} wants to battle!`);
     return true;
@@ -189,6 +193,7 @@ export class BattleEngine extends Emitter {
     if (firstHealthyIdx() === -1) return false;
     this.resetBattleFlags();
     const wild = rollWildEncounter(zoneKey);
+    markSeen(wild.speciesName);
     state.battle = { ctx: 'wild', enemyName: wild.speciesName, enemyMons: [wild], enemyIdx: 0, isWild: true, moneyReward: 0 };
     this.emit('anim', { type: 'intro', wild: true, name: wild.speciesName });
     this.render(`A wild ${wild.speciesName} appeared!`);
@@ -204,7 +209,8 @@ export class BattleEngine extends Emitter {
   startFixedEncounter({ speciesName, emoji, type, level, moves, wildKey }) {
     if (firstHealthyIdx() === -1) return false;
     this.resetBattleFlags();
-    const wild = buildWildMon({ name: speciesName, emoji, type, moves }, level);
+    const wild = buildWildMon({ name: speciesName, emoji, type, moves, fixed: true }, level);
+    markSeen(speciesName);
     state.battle = { ctx: 'wild', wildKey, enemyName: speciesName, enemyMons: [wild], enemyIdx: 0, isWild: true, moneyReward: 0 };
     this.emit('anim', { type: 'intro', wild: true, name: speciesName });
     this.render(`${speciesName} is here.`);
@@ -476,6 +482,7 @@ export class BattleEngine extends Emitter {
 
     state.battle.enemyIdx++;
     if (state.battle.enemyIdx < state.battle.enemyMons.length) {
+      markSeen(this.currentEnemy().speciesName);
       setTimeout(() => this.render(`${state.battle.enemyName} sends out ${this.currentEnemy().speciesName}!`), 1000);
     } else {
       setTimeout(() => this.winBattle(), 1200);
@@ -511,20 +518,19 @@ export class BattleEngine extends Emitter {
     mon.spe = newStats.spe;
     mon.xpNext = xpNeededForLevel(mon.level);
 
+    // New moves at this level: a starter's hand-authored learnset, or a
+    // caught Pokémon's real learnset for whatever species it is now.
+    const learnedNow = [];
     if (mon.key) {
-      const chain = STARTER_CHAINS[mon.key];
-      const learned = chain.learnset.find(e => e.lvl === mon.level);
-      if (learned) {
-        const { lvl, ...moveData } = learned;
-        const already = mon.moves.some(m => m.name === moveData.name);
-        if (!already) {
-          if (mon.moves.length < 4) {
-            mon.moves.push(moveData);
-          } else {
-            this.emit('moveLearnPrompt', { mon, newMove: moveData });
-          }
-        }
-      }
+      const learned = STARTER_CHAINS[mon.key].learnset.find(e => e.lvl === mon.level);
+      if (learned) { const { lvl, ...moveData } = learned; learnedNow.push(moveData); }
+    } else {
+      for (const name of learnedAtLevel(mon.speciesName, mon.level)) learnedNow.push(moveFor(name));
+    }
+    for (const moveData of learnedNow) {
+      if (mon.moves.some(m => m.name === moveData.name)) continue;
+      if (mon.moves.length < 4) mon.moves.push({ ...moveData });
+      else this.emit('moveLearnPrompt', { mon, newMove: moveData });
     }
   }
 
@@ -555,6 +561,7 @@ export class BattleEngine extends Emitter {
           isWild: false, status: e.status || null, sleepTurns: e.sleepTurns,
           heldItem: null, ability: e.ability
         };
+        markCaught(e.speciesName);
         // Real games keep a full party at 6 and send anything caught past
         // that straight to the PC — the player picks it up from the Box
         // overlay rather than losing the catch or being forced to swap.

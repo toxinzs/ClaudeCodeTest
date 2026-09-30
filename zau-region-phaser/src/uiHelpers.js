@@ -46,6 +46,20 @@ export function addRow(scene, y, opts) {
   }
 }
 
+// A "< Prev  Page n/m  Next >" strip pinned near the bottom of a modal, for
+// lists longer than the modal is tall (the Mart and Bag outgrew it once the
+// evolution stones arrived, and items past the ninth row were simply
+// invisible). Does nothing for a list that fits on one page.
+export function addPager(scene, page, total, perPage, onChange) {
+  const maxPage = Math.max(0, Math.ceil(total / perPage) - 1);
+  if (maxPage === 0) return;
+  const y = GAME_H - 34;
+  const style = { fontFamily: 'Nunito, sans-serif', fontSize: '12px', color: '#8a8aff' };
+  if (page > 0) scene.add.text(GAME_W / 2 - 70, y, '< Prev', style).setOrigin(0.5).setInteractive({ useHandCursor: true }).on('pointerdown', () => onChange(page - 1));
+  scene.add.text(GAME_W / 2, y, `Page ${page + 1}/${maxPage + 1}`, { ...style, color: '#8a8aa0' }).setOrigin(0.5);
+  if (page < maxPage) scene.add.text(GAME_W / 2 + 70, y, 'Next >', style).setOrigin(0.5).setInteractive({ useHandCursor: true }).on('pointerdown', () => onChange(page + 1));
+}
+
 // The bottom action bar (Party/Mart/Bag/Center[/Dex], or Switch/Bag/Flee in
 // battle) — an evenly-split row of buttons pinned to the reserved 40px strip
 // at the bottom of the fixed canvas.

@@ -9,6 +9,8 @@
 // mechanically (e.g. Pickup, Sand Veil) — `effect: null` there. That's
 // honest breadth: real flavor everywhere, mechanical depth where it's
 // actually wired up.
+import { GEN_ABILITIES } from './rosterGenerated.js';
+
 const ABILITIES = {
   // Starters — the classic low-HP same-type-move boost, real for all three lines.
   sprigatito: { name: 'Overgrow', effect: 'low_hp_boost', boostType: 'Grass' },
@@ -189,7 +191,8 @@ const ABILITIES = {
 };
 
 export function abilityFor(speciesName) {
-  const a = ABILITIES[speciesName.toLowerCase()];
+  const k = speciesName.toLowerCase();
+  const a = ABILITIES[k] ?? GEN_ABILITIES[k];
   if (!a) throw new Error(`Unknown species "${speciesName}" — add it to data/abilities.js`);
   return a;
 }

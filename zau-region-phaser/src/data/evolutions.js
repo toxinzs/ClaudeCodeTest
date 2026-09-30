@@ -13,6 +13,8 @@
 //   and Scarlet/Violet introduced specifically to let trade-evolution
 //   species evolve via item instead. Real solution to a real constraint,
 //   not an invented shortcut.
+import { GEN_EVOLUTIONS } from './rosterGenerated.js';
+
 const EVOLUTIONS = {
   magikarp: { evolvesTo: 'Gyarados', type: 'Water/Flying', emoji: '🐲', method: 'level', level: 20 },
   abra: { evolvesTo: 'Kadabra', type: 'Psychic', emoji: '🥄', method: 'level', level: 16 },
@@ -106,18 +108,21 @@ const EVOLUTIONS = {
   murkrow: { evolvesTo: 'Honchkrow', type: 'Dark/Flying', emoji: '🐦‍⬛', method: 'item', item: 'duskstone' },
   clefairy: { evolvesTo: 'Clefable', type: 'Fairy', emoji: '🌙', method: 'item', item: 'moonstone' },
   // The Skyline (Phase 27) — real level-up lines.
-  swablu:    { evolvesTo: 'Altaria',    level: 35, type: 'Dragon/Flying', emoji: '☁️' },
-  bagon:     { evolvesTo: 'Shelgon',    level: 30, type: 'Dragon',        emoji: '🐲' },
-  shelgon:   { evolvesTo: 'Salamence',  level: 50, type: 'Dragon/Flying', emoji: '🐉' },
-  dratini:   { evolvesTo: 'Dragonair',  level: 30, type: 'Dragon',        emoji: '🐉' },
-  dragonair: { evolvesTo: 'Dragonite',  level: 55, type: 'Dragon/Flying', emoji: '🐲' }
+  swablu:    { evolvesTo: 'Altaria',    method: 'level', level: 35, type: 'Dragon/Flying', emoji: '☁️' },
+  bagon:     { evolvesTo: 'Shelgon',    method: 'level', level: 30, type: 'Dragon',        emoji: '🐲' },
+  shelgon:   { evolvesTo: 'Salamence',  method: 'level', level: 50, type: 'Dragon/Flying', emoji: '🐉' },
+  dratini:   { evolvesTo: 'Dragonair',  method: 'level', level: 30, type: 'Dragon',        emoji: '🐉' },
+  dragonair: { evolvesTo: 'Dragonite',  method: 'level', level: 55, type: 'Dragon/Flying', emoji: '🐲' }
 };
 
+// Hand-written entries plus the roster expansion's (rosterGenerated.js) for the
+// same species — Kirlia keeps its Gardevoir entry and gains Gallade's.
+const asList = e => (e ? (Array.isArray(e) ? e : [e]) : []);
 function entries(speciesName) {
-  const e = EVOLUTIONS[speciesName.toLowerCase()];
-  if (!e) return [];
-  return Array.isArray(e) ? e : [e];
+  const k = speciesName.toLowerCase();
+  return [...asList(EVOLUTIONS[k]), ...asList(GEN_EVOLUTIONS[k])];
 }
+const EVOLUTION_KEYS = [...new Set([...Object.keys(EVOLUTIONS), ...Object.keys(GEN_EVOLUTIONS)])];
 
 // The level-up evolution for a species (or, if it only has one item
 // evolution, that one — the Bag checks `method` before using it).
@@ -129,4 +134,11 @@ export function evolutionFor(speciesName) {
 // Every item-triggered evolution for a species (stones, the Linking Cord).
 export function itemEvolutionsFor(speciesName) {
   return entries(speciesName).filter(e => e.method === 'item');
+}
+
+// Every evolution as a flat list — for reverse lookups (the Pokédex's
+// "evolves from" line, the roster audit) that the species-keyed table
+// can't answer directly.
+export function allEvolutions() {
+  return EVOLUTION_KEYS.flatMap(from => entries(from).map(e => ({ ...e, from })));
 }

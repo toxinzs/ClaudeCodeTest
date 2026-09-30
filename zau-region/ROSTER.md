@@ -1,6 +1,8 @@
-# Zau — Roster Plan (draft for review)
+# Zau — Roster Plan
 
-Companion to [`WORLD.md`](WORLD.md) and [`MEGA.md`](MEGA.md). **This is a plan, not data: nothing here is in the game yet.** It exists so the Pokémon roster gets decided once, in one place, before it is built. Approve it, change it, or cut it, and only then does it become code.
+Companion to [`WORLD.md`](WORLD.md) and [`MEGA.md`](MEGA.md). **Approved and being built (Phase 30).** It exists so the Pokémon roster is decided once, in one place. The two decisions that gated the build were answered: wave 1 stays as drawn (Gen 1–5-heavy) with **wave 2 tilting toward Generations 6–9**, and the **evolution rules in section 6 are approved**. Decisions 3–6 in section 10 are still open and default to the plan as drawn.
+
+**Build status.** Built (into `src/data/rosterGenerated.js` by `tools/roster/build.mjs`): the 34 completions and every wave-1 zone that has a scene — Outskirts, Underpass, District, Harbor, Ember, Greenline, Signal, Undercity, Sprawl, Skyline — **284 real species in the game (was 145)**. Not built: the Underlight, Long Shoal and Drowned Archive batches (33 species), because those zones have no wild-encounter scenes yet; they go in with their scenes. Two deviations from the tables below, both deliberate: generated spawns use each zone's *shipped* level band (`SHIPPED_BANDS` in `tools/roster/plan-data.mjs`) rather than the bible's target bands, which is a one-line switch (`USE_PLAN_BANDS`) once the earlier tiers are rebalanced; and a line whose "Enters as" stage skips earlier stages also spawns those earlier stages rarely in the same zone, so every stage stays obtainable and the Pokédex can be completed (an over-leveled Shinx simply evolves on its next level-ups).
 
 The tables in sections 5 to 7 are generated from PokeAPI's own data by `zau-region-phaser/tools/roster/plan-report.mjs`, so every evolution level, stone and trade in them is real, not typed from memory. To regenerate after editing the plan, run `node tools/roster/plan-report.mjs` from `zau-region-phaser/`.
 
@@ -316,6 +318,7 @@ Wave 1 brings in fourteen species that have real Mega forms: Beedrill, Pidgeot, 
 
 Adding species is the easy part. These are the real dependencies:
 
+- **Built (Phase 30):** the Pokédex, name-keyed zone tables, the permanent audit (`tools/audit-roster.mjs`), real learnsets and the move registry. What follows is the original problem statement.
 - **The Pokédex is not a Pokédex.** `DexScene` lists the Pokémon you currently own and nothing else: no per-species seen and caught record, no paging. At 300 species it needs a real species dex, with seen and caught flags, dex numbers, paging, and a "where found" line drawn from this plan. That needs a new `state.dex`, with a migration that seeds it from an old save's party and box.
 - **Zone tables are position-based.** They index into one flat species array, which caused Phase 28's Grubbin and Murkrow mix-up. They should be keyed by species name before 137 species go in.
 - **Moves.** Each species spawns with two real moves from `data/moves.js`, which has about 60. Real learnsets mean growing that registry. PokeAPI has the move data, so the same tool approach works, but the engine only models four status conditions, so moves with other effects would be plain damage moves for now.
@@ -323,10 +326,10 @@ Adding species is the easy part. These are the real dependencies:
 
 Proposed order once approved: the foundation first (name-keyed zones, the real Pokédex, a permanent roster audit check), then the 34 completions, then one zone at a time in story order, each with a spawn test. Each batch is generated with `tools/pokeapi-species.mjs` and verified against PokeAPI.
 
-## 10. Decisions for you
+## 10. Decisions
 
-1. **Wave 1 as drawn**, or rebalance toward Generations 6 to 9 now?
-2. **The evolution rules in section 6**, especially trades all using the Linking Cord and Eevee evolving by stones.
+1. **Wave 1 as drawn**, or rebalance toward Generations 6 to 9 now? — *Answered: wave 1 as drawn; wave 2 tilts toward Generations 6–9.*
+2. **The evolution rules in section 6**, especially trades all using the Linking Cord and Eevee evolving by stones. — *Answered: approved.*
 3. **Which Mega seeds** to actually build beyond Sharpedo, Metagross and Latios.
 4. **Fossils as wild spawns** at the Drowned Archive. The game has no revival mechanic, so this is the simple version.
 5. **"Enters as"**: keep the mechanical rule, or keep every stage of a line obtainable somewhere?

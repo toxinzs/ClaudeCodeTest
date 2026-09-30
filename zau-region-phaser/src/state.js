@@ -17,6 +17,7 @@ export const state = {
   vanceBeaten: false,
   verdanyxBeaten: false,
   cutsceneIdx: 0,
+  dex: { seen: {}, caught: {}, migrated: false }, // species Pokédex (see dex.js)
   story: {},      // story beat flags (see story.js) — dialogue keys on these
   quests: {},     // per-quest status
   battle: null // active battle context object

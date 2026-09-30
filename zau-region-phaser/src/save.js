@@ -1,4 +1,5 @@
 import { state } from './state.js';
+import { ensureDexState } from './dex.js';
 
 const SAVE_KEY = 'zauRegionSave';
 const SAVE_VERSION = 1;
@@ -28,6 +29,7 @@ export function loadGame() {
       return false;
     }
     Object.assign(state, parsed.state);
+    ensureDexState();
     return true;
   } catch (e) {
     console.error('Failed to load save', e);
