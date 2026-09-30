@@ -36,7 +36,7 @@ export const EXCLUDE = {
 // Batches whose species are generated into src/data/rosterGenerated.js
 // (tools/roster/build.mjs). 'completions' finishes the lines already in the game;
 // each zone key adds that zone's wave-1 lines. Build in story order.
-export const BUILT = ['completions'];
+export const BUILT = ['completions', 'outskirts', 'underpass', 'district', 'harbor', 'ember', 'greenline', 'signal', 'undercity', 'sprawl', 'skyline'];
 
 // Which wild-table keys a plan zone feeds. A plain string is the zone itself;
 // { zone, types } adds only species with one of those types (the dungeon and
@@ -52,4 +52,14 @@ export const ZONE_TABLES = {
   undercity: ['undercity', 'oldlines', { zone: 'terminus', filter: true, types: ['Ghost'] }],
   sprawl: ['sprawl'],
   skyline: ['skyline']
+};
+
+// The level band each zone ACTUALLY runs at today (its shipped species and trainers),
+// which is what generated spawns use. ZONES[].band is the bible's target; the two
+// converge when the earlier tiers are rebalanced upward, and that is a one-line
+// switch in build.mjs (USE_PLAN_BANDS). Until then a Lv.45 Medicham in a Sprawl
+// whose trainers are Lv.36 would just be a bug.
+export const SHIPPED_BANDS = {
+  outskirts: [2, 18], underpass: [5, 13], district: [9, 18], harbor: [14, 22], ember: [16, 25],
+  greenline: [21, 28], signal: [28, 34], undercity: [31, 36], sprawl: [34, 38], skyline: [48, 60]
 };

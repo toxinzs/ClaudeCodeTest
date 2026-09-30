@@ -13,7 +13,11 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { S, byKey, membersOf, norm, method, typeStr, csv } from './pokeapi-data.mjs';
-import { ZONES, EXCLUDE, BUILT, ZONE_TABLES } from './plan-data.mjs';
+import { ZONES, EXCLUDE, BUILT, ZONE_TABLES, SHIPPED_BANDS } from './plan-data.mjs';
+
+// false: spawn at the levels each zone really runs at today; true: the bible's target bands.
+const USE_PLAN_BANDS = false;
+const bandOf = z => (USE_PLAN_BANDS ? z.band : SHIPPED_BANDS[z.key] || z.band);
 
 const DATA = path.join(path.dirname(fileURLToPath(import.meta.url)), '../../src/data/');
 const read = f => fs.readFileSync(DATA + f, 'utf8');
@@ -108,7 +112,8 @@ const windowFor = (band, i, n, minLvl, nextLvl) => {
   const staggered = n > 1 ? zlo + Math.round(i * Math.max(0, zhi - zlo - 4) / (n - 1)) : zlo;
   let lo = Math.min(Math.max(staggered, minLvl), zhi - 2); if (lo < zlo) lo = zlo;
   let hi = Math.min(zhi, lo + 5);
-  if (nextLvl !== Infinity) hi = Math.min(hi, Math.max(lo, nextLvl - 1));
+  // A stage that evolves at level L never spawns at or above L.
+  if (nextLvl !== Infinity) { hi = Math.min(hi, nextLvl - 1); lo = Math.min(lo, hi); if (hi - lo < 2) lo = Math.max(zlo, hi - 3); }
   return [lo, Math.max(lo, hi)];
 };
 for (const z of ZONES) {
@@ -116,13 +121,14 @@ for (const z of ZONES) {
   const lines = z.w1.map(b => mainPath(byKey[b])).filter(p => p.some(sp => placed.get(sp.key) === z.key));
   const n = lines.length;
   lines.forEach((p, i) => {
-    let pick = 0; for (let k = 1; k < p.length; k++) { if (levelOf(p[k].id) <= z.band[0]) pick = k; else break; }
+    const band = bandOf(z);
+    let pick = 0; for (let k = 1; k < p.length; k++) { if (levelOf(p[k].id) <= band[0]) pick = k; else break; }
     const rows = [];
     // the entry stage spawns normally; any earlier stages spawn rarely so every stage stays obtainable
     const minLvl = pick > 0 ? levelOf(p[pick].id) : 1;
     const next = p[pick + 1] ? levelOf(p[pick + 1].id) : Infinity;
-    rows.push({ s: p[pick], band: windowFor(z.band, i, n, minLvl, next), copies: 2 });
-    for (let k = 0; k < pick; k++) rows.push({ s: p[k], band: [z.band[0], Math.min(z.band[1], z.band[0] + 5)], copies: 1, early: true });
+    rows.push({ s: p[pick], band: windowFor(band, i, n, minLvl, next), copies: 2 });
+    for (let k = 0; k < pick; k++) rows.push({ s: p[k], band: [band[0], Math.min(band[1], band[0] + 5)], copies: 1, early: true });
     for (const r of rows) {
       if (!inGame.has(r.s.key)) continue;
       const t = typeOf[r.s.key] ?? typeStr(r.s.id);
