@@ -46,6 +46,14 @@ export const LEAGUE_LEADERS = [
   { name: "Leader Obsidian", locationName: "Undercity Vault", emoji: "🌑", type: "Dark", team: [
     { speciesName: "Honchkrow", emoji: "🐦‍⬛", type: "Dark/Flying", level: 32, moves: [moveFor("Bite"), moveFor("Peck")] },
     { speciesName: "Haunter", emoji: "👻", type: "Ghost/Poison", level: 33, moves: [moveFor("Lick"), moveFor("Hypnosis")] }
+  ]},
+  // Badge 6 (Phase 28, STORY.md U2b) — the Terminus, past Obsidian's Vault.
+  // Levels sit a step above Obsidian's shipped team; WORLD.md's wider band
+  // (40-43) is the target once the earlier tiers are rebalanced upward.
+  { name: "Leader Halcyon", locationName: "The Terminus", emoji: "🚉", type: "Ghost", team: [
+    { speciesName: "Dusclops", emoji: "👁️", type: "Ghost", level: 37, moves: [moveFor("Shadow Sneak"), moveFor("Lick")] },
+    { speciesName: "Gengar", emoji: "👻", type: "Ghost/Poison", level: 38, moves: [moveFor("Shadow Ball"), moveFor("Lick")] },
+    { speciesName: "Banette", emoji: "🎭", type: "Ghost", level: 40, moves: [moveFor("Shadow Claw"), moveFor("Shadow Sneak")] }
   ]}
 ];
 

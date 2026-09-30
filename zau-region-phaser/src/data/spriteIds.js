@@ -137,6 +137,8 @@ export const SPRITE_IDS = {
   weezing: 110,
   shuppet: 353,
   banette: 354,
+  duskull: 355,
+  dusclops: 356,
   mawile: 303,
 
   // The Sprawl roster + evolutions

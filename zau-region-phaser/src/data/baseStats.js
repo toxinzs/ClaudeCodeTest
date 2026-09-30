@@ -139,6 +139,9 @@ const BASE_STATS = {
   weezing:      { hp: 65, atk: 90,  def: 120, spAtk: 85,  spDef: 70,  spe: 60 },
   shuppet:      { hp: 44, atk: 75,  def: 35,  spAtk: 63,  spDef: 33,  spe: 45 },
   banette:      { hp: 64, atk: 115, def: 65,  spAtk: 83,  spDef: 63,  spe: 65 },
+  // The Terminus (Phase 28) — real Gen 3 Ghost line.
+  duskull:      { hp: 20, atk: 40,  def: 90,  spAtk: 30,  spDef: 90,  spe: 25 },
+  dusclops:     { hp: 40, atk: 70,  def: 130, spAtk: 60,  spDef: 130, spe: 25 },
   mawile:       { hp: 50, atk: 85,  def: 85,  spAtk: 55,  spDef: 55,  spe: 50 },
 
   // The Sprawl roster + evolutions

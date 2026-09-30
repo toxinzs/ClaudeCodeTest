@@ -168,3 +168,21 @@ export function trainerFor(key) {
   if (!t) throw new Error(`Unknown trainer "${key}" — add it to data/trainers.js`);
   return t;
 }
+
+// STORY.md U2b — regulars on Halcyon's line, riding out of habit.
+TRAINERS.terminusAnsel = {
+  name: 'Regular Ansel', emoji: '🎫', reward: 150, winFlag: 'terminusAnsel',
+  winMsg: 'Ansel tips an imaginary cap. "Mind the gap. Halcyon likes to start on time — the platform\'s just ahead."',
+  team: [
+    { speciesName: 'Shuppet', emoji: '🎭', type: 'Ghost', level: 36, moves: [moveFor('Shadow Sneak'), moveFor('Astonish')] },
+    { speciesName: 'Duskull', emoji: '👁️', type: 'Ghost', level: 37, moves: [moveFor('Lick'), moveFor('Astonish')] }
+  ]
+};
+TRAINERS.terminusMireille = {
+  name: 'Regular Mireille', emoji: '🎫', reward: 160, winFlag: 'terminusMireille',
+  winMsg: 'Mireille laughs, breathless. "I\'ve been riding this line nine years. You\'re the first to make me miss my stop."',
+  team: [
+    { speciesName: 'Gastly', emoji: '☁️', type: 'Ghost/Poison', level: 37, moves: [moveFor('Lick'), moveFor('Smog')] },
+    { speciesName: 'Haunter', emoji: '👻', type: 'Ghost/Poison', level: 38, moves: [moveFor('Shadow Sneak'), moveFor('Lick')] }
+  ]
+};

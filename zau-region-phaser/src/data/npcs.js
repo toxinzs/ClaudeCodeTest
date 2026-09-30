@@ -2,6 +2,7 @@ import { TOWN_MAP } from './maps.js';
 import { goToScene } from '../transitions.js';
 import { grantKeyStone } from '../keystone.js';
 import { moveFor } from './moves.js';
+import { state } from '../state.js';
 
 // Every placed character in the game, per map, straight from
 // zau-region/CHARACTERS.md. An NPC is { id, name, x, y, facing, appearance,
@@ -631,6 +632,7 @@ export const UNDERCITY_NPCS = [
     appearance: { skin: 'light', hair: 'long', hairColor: 'white', outfit: 'formal' },
     script: (s) => [
       { say: ['Halvard', "Station master. Was. The lines ran through here — Harbor to the Tower in eleven minutes. Then they built over us and forgot.", "I mark the years in chalk. Someone should."] },
+      { set: 'halvardKnown' },
       { if: (st) => st.story.houndoominiteFound, then: [
         { say: ['Halvard', "You found one of her shrines. The Warden's. She leaves them where she's slept. Eighteen years of them, all the way down."] }
       ] }
@@ -647,7 +649,8 @@ export const UNDERCITY_NPCS = [
   // STORY.md U3 — the Warden. Present only once Obsidian has sent word.
   {
     id: 'elena', name: 'The Warden', x: 7, y: 5, facing: 'up',
-    when: (s) => s.leagueBeaten[4] && !s.story.act2Close,
+    // Badge 6 (Halcyon), not Obsidian: the Warden is past the Terminus.
+    when: (s) => s.leagueBeaten[5] && !s.story.act2Close,
     appearance: { skin: 'light', hair: 'long', hairColor: 'gray', outfit: 'explorer' },
     script: (s) => WARDEN_BEAT
   }
@@ -659,7 +662,7 @@ export const OBSIDIAN_AFTER = [
   { say: ['Obsidian', "Five badges. Fine. You'll want this — you'll need it down there.", "It came up from below, years ago, in a kettle. I didn't ask."] },
   { give: { item: 'gengarite' } },
   { say: ['', "Received the Gengarite!"] },
-  { say: ['Obsidian', "There's someone past the Vault. Been down here longer than the lines have been dark. We call her the Warden. She keeps the deep tunnels *quiet* — you've noticed they're quiet?", "She's asked for you. By name. I'd go."] },
+  { say: ['Obsidian', "There's someone past the Vault. Been down here longer than the lines have been dark. We call her the Warden. She keeps the deep tunnels *quiet* — you've noticed they're quiet?", "She's asked for you. By name. But you'll not get to her without the Terminus — the platform past my vault door. Halcyon keeps it. Be polite; they're the one who decides who gets to ride."] },
   { set: 'gengariteGiven' }
 ];
 
@@ -939,4 +942,66 @@ export const SKYLINE_NPCS = [
       ];
     }
   }
+];
+
+// ================== THE TERMINUS (STORY.md U2b) ==================
+// A dead-end transit platform past Obsidian's Vault that nobody sealed, because
+// nobody who runs Zau remembers it. Halcyon keeps the line like it never
+// closed. The two Regulars are chokepoints; Halcyon stands on the platform.
+export const TERMINUS_NPCS = [
+  {
+    id: 'mireille', name: 'Mireille', x: 2, y: 7, facing: 'down',
+    when: (s) => !s.story.terminusMireille,
+    appearance: { skin: 'olive', hair: 'ponytail', hairColor: 'dark_brown', outfit: 'casual' },
+    script: () => [
+      { say: ['Mireille', "Next stop, nowhere in particular! Ticket?", "…No ticket. Fine. Nobody's had a ticket since the Incident. Show me your team instead."] },
+      { battle: { trainerKey: 'terminusMireille', returnTo: 'Terminus' } }
+    ]
+  },
+  {
+    id: 'ansel', name: 'Ansel', x: 2, y: 4, facing: 'down',
+    when: (s) => !s.story.terminusAnsel,
+    appearance: { skin: 'bronze', hair: 'buzzcut', hairColor: 'gray', outfit: 'formal' },
+    script: () => [
+      { say: ['Ansel', "Mind the gap. Mind the years. …Oh — you're not a regular. Halcyon said someone might come down the long way.", "Platform's closed to anyone who can't hold a line. Hold this one."] },
+      { battle: { trainerKey: 'terminusAnsel', returnTo: 'Terminus' } }
+    ]
+  },
+  {
+    id: 'halcyon', name: 'Halcyon', x: 2, y: 1, facing: 'down',
+    appearance: { skin: 'taupe', hair: 'pixie', hairColor: 'white', outfit: 'formal' },
+    script: (s) => {
+      if (s.leagueBeaten[5]) {
+        if (!s.story.banettiteGiven) return HALCYON_AFTER;
+        return [
+          { say: ['Halcyon', "Line's still running. You caught this one. The next leaves whenever you do.", "Mind the gap. Mind the years."] },
+          { if: (st) => !st.story.act2Close, then: [
+            { say: ['Halcyon', "She's close now. Go careful."] }
+          ] }
+        ];
+      }
+      return [
+        { say: ['Halcyon', "Welcome aboard. Platform one, terminus — all stops behind us. Please mind the gap.", "Oh. You're not a passenger. You came to *ride the line*. That's a different fare."] },
+        { if: (st) => st.story.halvardKnown, then: [
+          { say: ['Halcyon', "Halvard sent you? The man who still marks the platform. He's been chalking our years up there since before I took the clock."] }
+        ] },
+        { say: ['Halcyon', "Line's still running. You'll catch the next one. Win or lose, that's true — but I'd like to see how you hold a schedule."] },
+        { if: (st) => !st.party.length,
+          then: [{ say: ['Halcyon', "…Bring a team. Nobody boards empty."] }],
+          else: [
+            { call: (scene) => { state.currentLeagueIdx = 5; } },
+            { battle: { kind: 'league', returnTo: 'Terminus' } }
+          ] }
+      ];
+    }
+  }
+];
+
+// Post-badge: Halcyon breaks cadence exactly once. The stone goes with it.
+export const HALCYON_AFTER = [
+  { say: ['Halcyon', "Stop announced: *you*. Arrival, on time. The clock approves.", "Here — a punch for your ticket. It was Banette's, on the night shift. Keeps better company than I do."] },
+  { give: { item: 'banettite' } },
+  { say: ['', 'Received the Banettite!'] },
+  { say: ['Halcyon', "…She's close now. The Warden. Go careful. She's been waiting longer than this line's been dark."] },
+  { set: 'banettiteGiven' }
 ];

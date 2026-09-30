@@ -309,6 +309,39 @@ export const UNDERCITY_MAP = {
   ]
 };
 
+// The Terminus (STORY.md U2b) — a dead-end transit platform past Obsidian's
+// Vault. Same 5x12 corridor shape as the Old Lines: two Regulars at the
+// one-tile chokepoints (rows 7 and 4), Halcyon on the platform at the top.
+export const TERMINUS_MAP = {
+  w: 5, h: 12,
+  bg: "#060510",
+  layout: [
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,1,0,1,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,1,0,1,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1],
+    [1,0,0,0,1]
+  ],
+  platformX: 2, platformY: 0,
+  exitX: 2, exitY: 11,
+  boardX: 3, boardY: 9,
+  shrineX: 1, shrineY: 5,
+  decor: [
+    {x:2,y:0,emoji:"🚉"},   // the platform — Halcyon's
+    {x:1,y:1,emoji:"🚋"},   // a parked car, doors open
+    {x:3,y:9,emoji:"🪧"},   // a destination board, still lit
+    {x:1,y:5,emoji:"🕯️"},   // a shrine: a kettle, a blanket
+    {x:2,y:11,emoji:"🚇"}   // back up to the Vault
+  ]
+};
+
 // The Sprawl (stratum 7, zau-region/districts/sprawl.md) — where Meridian
 // is ordinary: apartments, the Concourse, Halloran's community office,
 // the rooftops, and the Tower's lobby elevator. No gym. Same block shape
