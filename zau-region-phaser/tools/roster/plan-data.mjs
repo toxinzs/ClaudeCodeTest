@@ -32,3 +32,24 @@ export const ZONES = [
 export const EXCLUDE = {
   regional: ['obstagoon','perrserker','cursola','sirfetchd','mrrime','runerigus','overqwil','sneasler','wyrdeer','kleavor','ursaluna','basculegion','annihilape','dudunsparce','clodsire','farigiraf','kingambit']
 };
+
+// Batches whose species are generated into src/data/rosterGenerated.js
+// (tools/roster/build.mjs). 'completions' finishes the lines already in the game;
+// each zone key adds that zone's wave-1 lines. Build in story order.
+export const BUILT = ['completions'];
+
+// Which wild-table keys a plan zone feeds. A plain string is the zone itself;
+// { zone, types } adds only species with one of those types (the dungeon and
+// corridor tables hold a themed subset of their district's roster).
+export const ZONE_TABLES = {
+  outskirts: ['outskirts'],
+  underpass: ['underpass'],
+  district: ['district'],
+  harbor: ['harbor'],
+  ember: ['ember', { zone: 'boiler', filter: true, types: ['Rock', 'Ground', 'Steel', 'Fire'] }],
+  greenline: ['greenline'],
+  signal: ['signal', { zone: 'risers', filter: true, types: ['Electric', 'Steel'] }],
+  undercity: ['undercity', 'oldlines', { zone: 'terminus', filter: true, types: ['Ghost'] }],
+  sprawl: ['sprawl'],
+  skyline: ['skyline']
+};

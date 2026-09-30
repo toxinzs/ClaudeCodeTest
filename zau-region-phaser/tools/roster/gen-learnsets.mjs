@@ -17,6 +17,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { csv, norm } from './pokeapi-data.mjs';
+import { SPRITE_IDS } from '../../src/data/spriteIds.js';
 
 const DATA = path.join(path.dirname(fileURLToPath(import.meta.url)), '../../src/data/');
 const title = s => s.split('-').filter(Boolean).map(w => w[0].toUpperCase() + w.slice(1)).join(' ');
@@ -43,7 +44,7 @@ const TYPE = { 1: 'Normal', 2: 'Fighting', 3: 'Flying', 4: 'Poison', 5: 'Ground'
 const CLASS = { 1: 'Status', 2: 'Physical', 3: 'Special' };
 
 const [pokemon, moves, meta, pm] = await Promise.all(['pokemon.csv', 'moves.csv', 'move_meta.csv', 'pokemon_moves.csv'].map(csv));
-const idOf = {}; for (const r of pokemon) if (r[7] === '1') idOf[norm(r[1])] = +r[0];
+const pidOfSpecies = {}; for (const r of pokemon) if (r[7] === '1') pidOfSpecies[+r[2]] = +r[0];   // dex number -> default-form pokemon row
 const metaOf = {}; for (const r of meta) metaOf[+r[0]] = { ailment: +r[2], chance: +r[10] || 0 };
 
 // usable moves: id -> registry entry
@@ -70,14 +71,18 @@ const rows = {};
 for (const r of pm) if (r[3] === '1') (rows[+r[0]] ??= []).push([+r[1], +r[2], +r[4], +r[5]]);
 
 const baseSrc = fs.readFileSync(DATA + 'baseStats.js', 'utf8');
-const species = [...baseSrc.matchAll(/^\s{2}"?([^":\s]+)"?:\s*\{\s*hp:/gm)].map(m => m[1]);
+const genSrc = fs.readFileSync(DATA + 'rosterGenerated.js', 'utf8');
+// hand-written species, then the roster expansion's (keys are JSON-quoted there)
+const species = [...baseSrc.matchAll(/^\s{2}"?([^":\s]+)"?:\s*\{\s*hp:/gm)].map(m => m[1]),
+  genSpecies = [...genSrc.matchAll(/^\s{2}("[^"]+"):\s*\{\s*hp:/gm)].map(m => JSON.parse(m[1]));
+species.push(...genSpecies);
 const starters = new Set(['sprigatito', 'floragato', 'meowscarada', 'fuecoco', 'crocalor', 'skeledirge', 'quaxly', 'quaxwell', 'quaquaval', 'verdanyx']);
 
 const learnsets = {}; const needed = {};
 let noData = [];
 for (const sp of species) {
   if (starters.has(sp)) continue;
-  const pid = idOf[norm(sp)];
+  const pid = pidOfSpecies[SPRITE_IDS[sp]];
   if (!pid || !rows[pid]) { noData.push(sp); continue; }
   const groups = [...new Set(rows[pid].map(x => x[0]))].filter(g => !SKIP_GROUPS.has(g)).sort((a, b) => b - a);
   const g = groups[0];

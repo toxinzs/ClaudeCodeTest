@@ -2,7 +2,9 @@
 // (starter chains + all evolution stages, wild roster, trainer/leader/rival/Vance teams).
 // Used to build PokeAPI official-artwork sprite URLs. Verdanyx is a custom/fictional
 // legendary and is deliberately absent — sprite lookups fall back to its emoji.
-export const SPRITE_IDS = {
+import { GEN_SPRITE_IDS } from './rosterGenerated.js';
+
+const HAND_SPRITE_IDS = {
   // Starters — Sprigatito line
   sprigatito: 906,
   floragato: 907,
@@ -172,6 +174,9 @@ export const SPRITE_IDS = {
   dragonair: 148,
   dragonite: 149,
 };
+
+// The roster expansion's IDs (rosterGenerated.js) sit beside the hand-written ones.
+export const SPRITE_IDS = { ...HAND_SPRITE_IDS, ...GEN_SPRITE_IDS };
 
 export function spriteIdFor(speciesName) {
   return SPRITE_IDS[speciesName.toLowerCase()] ?? null;

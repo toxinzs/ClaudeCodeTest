@@ -93,6 +93,7 @@ const hasEvoIn = new Set(), hasEvoOut = new Set();
 for (const e of allEvolutions()) {
   hasEvoOut.add(e.from); hasEvoIn.add(e.evolvesTo.toLowerCase());
   addSource(e.evolvesTo, `evolves from ${e.from}`);
+  if (e.method !== 'level' && e.method !== 'item') err(`${e.from}→${e.evolvesTo}: method is "${e.method}" (must be 'level' or 'item' — evolveIfReady ignores anything else)`);
   if (e.method === 'level' && !(e.level > 0)) err(`${e.from}→${e.evolvesTo}: level evolution without a level`);
   if (e.method === 'item' && !ITEMS[e.item]) err(`${e.from}→${e.evolvesTo}: unknown item "${e.item}"`);
   if (!e.type || !e.emoji) err(`${e.from}→${e.evolvesTo}: missing type/emoji`);
@@ -129,15 +130,17 @@ if (process.argv.includes('--pokeapi')) {
     return fs.readFileSync(f, 'utf8').trim().split('\n').slice(1).map(l => l.split(','));
   };
   const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]/g, '');
-  const [pokemon, stats] = await Promise.all([csv('pokemon.csv'), csv('pokemon_stats.csv')]);
-  const idOf = {}; for (const r of pokemon) if (r[7] === '1') idOf[norm(r[1])] = +r[0];
+  const [pokemon, stats, speciesRows] = await Promise.all([csv('pokemon.csv'), csv('pokemon_stats.csv'), csv('pokemon_species.csv')]);
+  const dexOf = {}; for (const r of speciesRows) dexOf[norm(r[1])] = +r[0];            // species identifier -> national dex number
+  const pokemonOfDex = {}; for (const r of pokemon) if (r[7] === '1') pokemonOfDex[+r[2]] = +r[0]; // dex number -> default-form row (Oinkologne is 'oinkologne-male')
   const st = {}; for (const r of stats) (st[+r[0]] ??= {})[+r[1]] = +r[2];
   let checked = 0;
   for (const k of known) {
     if (k === 'verdanyx') continue;
-    const id = idOf[norm(k)];
-    if (!id) { err(`${k}: not found in PokeAPI`); continue; }
-    if (SPRITE_IDS[k] !== id) err(`${k}: dex ID ${SPRITE_IDS[k]} ≠ PokeAPI ${id}`);
+    const dex = dexOf[norm(k)];
+    if (!dex) { err(`${k}: not found in PokeAPI`); continue; }
+    if (SPRITE_IDS[k] !== dex) err(`${k}: dex ID ${SPRITE_IDS[k]} ≠ PokeAPI ${dex}`);
+    const id = pokemonOfDex[dex];
     const b = baseStatsFor(k), p = st[id];
     const want = { hp: p[1], atk: p[2], def: p[3], spAtk: p[4], spDef: p[5], spe: p[6] };
     for (const key of Object.keys(want)) if (b[key] !== want[key]) err(`${k}: ${key} ${b[key]} ≠ PokeAPI ${want[key]}`);

@@ -1,4 +1,5 @@
 import { moveFor } from './moves.js';
+import { GEN_SPECIES, GEN_ZONE_TABLE } from './rosterGenerated.js';
 
 export const STARTER_CHAINS = {
   sprigatito: {
@@ -72,7 +73,7 @@ export const EVOLVE_LEVEL_1 = 16;
 export const EVOLVE_LEVEL_2 = 36;
 
 // Wild Pokémon roster (real Pokédex species, mixed gens)
-export const WILD_SPECIES = [
+const HAND_SPECIES = [
   { name: "Caterpie", emoji: "🐛", type: "Bug", baseLvl: [2,5],
     moves: [moveFor("Tackle"), moveFor("String Shot")] },
   { name: "Pidgey", emoji: "🐦", type: "Normal/Flying", baseLvl: [2,6],
@@ -294,7 +295,7 @@ export const WILD_ZONE_LEVELS = {
   undercity: [31, 36]
 };
 
-export const WILD_ZONE_TABLE = {
+const HAND_ZONE_TABLE = {
   outskirts: ["Caterpie", "Pidgey", "Rattata", "Zigzagoon", "Bidoof", "Lechonk", "Starly", "Magikarp", "Riolu", "Gible", "Absol"],
     underpass: ["Geodude", "Gastly", "Tarountula", "Psyduck", "Ekans"],
   // Wingull/Buizel common (listed twice), Pelipper the rare "you got lucky" spawn.
@@ -323,6 +324,13 @@ export const WILD_ZONE_TABLE = {
   terminus: ["Gastly", "Gastly", "Shuppet", "Shuppet", "Duskull", "Duskull", "Murkrow"],
   district: ["Abra", "Growlithe", "Grubbin", "Murkrow", "Pikachu", "Sandshrew", "Snorunt", "Bronzor", "Cutiefly", "Bagon", "Scatterbug"]
 };
+
+// The hand-written species/zones plus the roster expansion's (rosterGenerated.js).
+export const WILD_SPECIES = [...HAND_SPECIES, ...GEN_SPECIES];
+export const WILD_ZONE_TABLE = Object.fromEntries(
+  [...new Set([...Object.keys(HAND_ZONE_TABLE), ...Object.keys(GEN_ZONE_TABLE)])]
+    .map(z => [z, [...(HAND_ZONE_TABLE[z] || []), ...(GEN_ZONE_TABLE[z] || [])]])
+);
 
 export const SPECIES_BY_NAME = Object.fromEntries(WILD_SPECIES.map(sp => [sp.name, sp]));
 
