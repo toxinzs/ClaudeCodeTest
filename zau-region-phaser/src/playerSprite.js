@@ -37,7 +37,11 @@ export function preloadPlayerLayers(scene, appearance) {
   if (a.hair !== 'none') want.push([`char_hair_${a.hair}_${a.hairColor}`, hairPath(a.hair, a.hairColor)]);
 
   for (const [key, path] of want) {
-    if (!scene.textures.exists(key)) scene.load.spritesheet(key, path, sheetOpts);
+    // textures.exists is false until the load finishes, so also skip a key
+    // already queued in this batch (preloadAllCharacterLayers repeats the
+    // default outfit/body across every combination).
+    const queued = scene.load.list.getArray().some(f => f.key === key);
+    if (!scene.textures.exists(key) && !queued) scene.load.spritesheet(key, path, sheetOpts);
   }
 }
 
