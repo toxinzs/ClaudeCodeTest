@@ -29,14 +29,25 @@ export default class CutsceneScene extends Phaser.Scene {
 
     const skipBg = this.add.rectangle(90, GAME_H - 40, 120, 34, 0x232640).setStrokeStyle(1, 0x3a3d5c).setInteractive({ useHandCursor: true });
     this.add.text(90, GAME_H - 40, 'Skip', { fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#e8e8f0' }).setOrigin(0.5);
-    skipBg.on('pointerdown', () => goToScene(this, 'CharCreate'));
+    skipBg.on('pointerdown', () => this.skip());
 
     this.nextText = this.add.text(GAME_W - 90, GAME_H - 40, 'Next', { fontFamily: 'Nunito, sans-serif', fontSize: '13px', color: '#e8e8f0' }).setOrigin(0.5);
     const nextBg = this.add.rectangle(GAME_W - 90, GAME_H - 40, 120, 34, 0x2d6a4f).setStrokeStyle(1, 0x3fa373).setInteractive({ useHandCursor: true });
     this.children.bringToTop(this.nextText);
     nextBg.on('pointerdown', () => this.nextSlide());
 
+    // Keyboard: Space/Enter/Z/Right advance (like the dialogue box), Escape skips.
+    const kb = this.input.keyboard;
+    for (const key of ['SPACE', 'ENTER', 'Z', 'RIGHT']) kb?.on(`keydown-${key}`, () => this.nextSlide());
+    kb?.on('keydown-ESC', () => this.skip());
+
     this.renderSlide();
+  }
+
+  skip() {
+    if (this.leaving) return;
+    this.leaving = true;
+    goToScene(this, 'CharCreate');
   }
 
   renderSlide() {
@@ -46,11 +57,12 @@ export default class CutsceneScene extends Phaser.Scene {
   }
 
   nextSlide() {
+    if (this.leaving) return;
     if (state.cutsceneIdx < CUTSCENE_SLIDES.length - 1) {
       state.cutsceneIdx++;
       this.renderSlide();
     } else {
-      goToScene(this, 'CharCreate');
+      this.skip();
     }
   }
 }
