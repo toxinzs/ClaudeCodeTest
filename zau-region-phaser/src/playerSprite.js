@@ -1,6 +1,7 @@
 import { TILE } from './config.js';
 import {
   FRAME_SIZE, SHEET_COLS, WALK_ROW, WALK_FRAMES,
+  SKIN_TONES, HAIR_STYLES, HAIR_COLORS, OUTFITS, DEFAULT_APPEARANCE,
   normalizeAppearance, bodyPath, hairPath, outfitTorsoPath, outfitLegsPath,
 } from './data/appearance.js';
 
@@ -36,8 +37,24 @@ export function preloadPlayerLayers(scene, appearance) {
   if (a.hair !== 'none') want.push([`char_hair_${a.hair}_${a.hairColor}`, hairPath(a.hair, a.hairColor)]);
 
   for (const [key, path] of want) {
-    if (!scene.textures.exists(key)) scene.load.spritesheet(key, path, sheetOpts);
+    // textures.exists is false until the load finishes, so also skip a key
+    // already queued in this batch (preloadAllCharacterLayers repeats the
+    // default outfit/body across every combination).
+    const queued = scene.load.list.getArray().some(f => f.key === key);
+    if (!scene.textures.exists(key) && !queued) scene.load.spritesheet(key, path, sheetOpts);
   }
+}
+
+// Queues every skin / hairstyle×color / outfit layer the character picker can
+// show (not just one appearance), so switching options never waits on a load.
+// Called from BootScene so the cost sits behind the loading bar.
+export function preloadAllCharacterLayers(scene) {
+  for (const skin of SKIN_TONES) preloadPlayerLayers(scene, { ...DEFAULT_APPEARANCE, skin: skin.id, hair: 'none' });
+  for (const style of HAIR_STYLES) {
+    if (style.id === 'none') continue;
+    for (const color of HAIR_COLORS) preloadPlayerLayers(scene, { ...DEFAULT_APPEARANCE, hair: style.id, hairColor: color.id });
+  }
+  for (const outfit of OUTFITS) preloadPlayerLayers(scene, { ...DEFAULT_APPEARANCE, outfit: outfit.id, hair: 'none' });
 }
 
 function frameFor(direction, col) {
