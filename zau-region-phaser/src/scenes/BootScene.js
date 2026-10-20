@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { preloadTiles } from '../tiles.js';
 import { GAME_W, GAME_H } from '../config.js';
 import { loadFonts } from '../fonts.js';
+import { preloadAllCharacterLayers } from '../playerSprite.js';
 
 // Loads shared assets once, before any gameplay scene needs them — Phaser's
 // texture cache is shared across the whole Game instance, so this only
@@ -34,6 +35,7 @@ export default class BootScene extends Phaser.Scene {
     });
 
     preloadTiles(this);
+    preloadAllCharacterLayers(this);
   }
 
   create() {

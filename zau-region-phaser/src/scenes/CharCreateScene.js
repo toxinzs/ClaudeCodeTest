@@ -2,8 +2,8 @@ import Phaser from 'phaser';
 import { state } from '../state.js';
 import { GAME_W, GAME_H } from '../config.js';
 import { goToScene, fadeIn } from '../transitions.js';
-import { preloadPlayerLayers, createPlayerSprite } from '../playerSprite.js';
-import { SKIN_TONES, HAIR_STYLES, HAIR_COLORS, OUTFITS, DEFAULT_APPEARANCE, normalizeAppearance } from '../data/appearance.js';
+import { createPlayerSprite } from '../playerSprite.js';
+import { SKIN_TONES, HAIR_STYLES, HAIR_COLORS, OUTFITS, normalizeAppearance } from '../data/appearance.js';
 
 const CATEGORIES = [
   { key: 'skin', label: 'Skin', options: SKIN_TONES },
@@ -30,16 +30,10 @@ export default class CharCreateScene extends Phaser.Scene {
     super('CharCreate');
   }
 
-  preload() {
-    // Preload every option's layer up front (not just the current pick) so
-    // switching categories/values never has to wait mid-session on a load.
-    for (const skin of SKIN_TONES) preloadPlayerLayers(this, { ...DEFAULT_APPEARANCE, skin: skin.id, hair: 'none' });
-    for (const style of HAIR_STYLES) {
-      if (style.id === 'none') continue;
-      for (const color of HAIR_COLORS) preloadPlayerLayers(this, { ...DEFAULT_APPEARANCE, hair: style.id, hairColor: color.id });
-    }
-    for (const outfit of OUTFITS) preloadPlayerLayers(this, { ...DEFAULT_APPEARANCE, outfit: outfit.id, hair: 'none' });
-  }
+  // Every option's sprite layer is loaded by BootScene (preloadAllCharacterLayers),
+  // behind its progress bar. This scene used to load ~73 sheets itself in
+  // preload() with nothing on screen, which read as a black screen after
+  // Skip Intro / the opening text — several seconds on a real connection.
 
   create() {
     fadeIn(this);
