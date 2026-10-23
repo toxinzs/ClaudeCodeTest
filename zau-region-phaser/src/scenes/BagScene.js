@@ -43,6 +43,7 @@ export default class BagScene extends Phaser.Scene {
       const item = ITEMS[key];
       const isBall = item.category === 'ball';
       const isHeld = item.category === 'held';
+      const isKey = item.category === 'key';
       const canUseBall = isBall && inBattle && state.battle.isWild;
       const canUseHere = isBall ? canUseBall : true;
       const note = isBall && inBattle && !state.battle.isWild ? ' (wild only)' : '';
@@ -50,7 +51,7 @@ export default class BagScene extends Phaser.Scene {
         emoji: itemIcon(key),
         title: item.name + note,
         subtitle: `Have: ${state.items[key]}`,
-        buttonLabel: canUseHere ? (isHeld ? 'Give' : 'Use') : null,
+        buttonLabel: canUseHere ? (isKey ? 'Set up' : isHeld ? 'Give' : 'Use') : null,
         onButton: canUseHere ? () => this.useItem(key) : null
       });
     });
@@ -62,6 +63,12 @@ export default class BagScene extends Phaser.Scene {
     if (item.category === 'ball') {
       this.scene.stop();
       this.engine.throwPokeBall(key);
+      return;
+    }
+    if (item.category === 'key') {
+      // Exp. All is configured on the Party screen (global switch + per-Pokémon toggles).
+      this.scene.stop();
+      this.scene.launch('Party');
       return;
     }
     if (item.category === 'held') {
