@@ -6,23 +6,23 @@ export const TRAINER_LINEUP = [
     { speciesName: "Rattata", emoji: "🐀", type: "Normal", level: 4, moves: [moveFor("Tackle"), moveFor("Quick Attack")] }
   ]},
   { name: "Cyclist Dana", locationName: "Underpass Loop", emoji: "🚲", team: [
-    { speciesName: "Pikachu", emoji: "🐿️", type: "Electric", level: 7, moves: [moveFor("Thunder Shock"), moveFor("Quick Attack")] }
+    { speciesName: "Pikachu", emoji: "🐿️", type: "Electric", level: 5, moves: [moveFor("Thunder Shock"), moveFor("Quick Attack")] }
   ]},
   { name: "Skater Milo", locationName: "Harbor Steps", emoji: "🛹", team: [
-    { speciesName: "Psyduck", emoji: "🦆", type: "Water", level: 9, moves: [moveFor("Water Gun"), moveFor("Scratch")] }
+    { speciesName: "Psyduck", emoji: "🦆", type: "Water", level: 7, moves: [moveFor("Water Gun"), moveFor("Scratch")] }
   ]},
   { name: "Busker Talia", locationName: "Midblock Plaza", emoji: "🎸", team: [
-    { speciesName: "Kadabra", emoji: "🥄", type: "Psychic", level: 11, moves: [moveFor("Confusion"), moveFor("Teleport")] }
+    { speciesName: "Kadabra", emoji: "🥄", type: "Psychic", level: 9, moves: [moveFor("Confusion"), moveFor("Teleport")] }
   ]},
   { name: "Courier Zeke", locationName: "Rooftop District", emoji: "📦", team: [
-    { speciesName: "Charjabug", emoji: "🪲", type: "Bug/Electric", level: 13, moves: [moveFor("Bug Bite"), moveFor("Thunder Shock")] }
+    { speciesName: "Charjabug", emoji: "🪲", type: "Bug/Electric", level: 11, moves: [moveFor("Bug Bite"), moveFor("Thunder Shock")] }
   ]}
 ];
 
 // ================== RIVAL ==================
 export const RIVAL_DARIO = { name: "Dario Voss", emoji: "😎", locationName: "Rival Battle", team: [
-  { speciesName: "Murkrow", emoji: "🐦‍⬛", type: "Dark/Flying", level: 16, moves: [moveFor("Bite"), moveFor("Peck")] },
-  { speciesName: "Raichu", emoji: "🐿️", type: "Electric", level: 16, moves: [moveFor("Thunder Shock"), moveFor("Quick Attack")] }
+  { speciesName: "Murkrow", emoji: "🐦‍⬛", type: "Dark/Flying", level: 13, moves: [moveFor("Bite"), moveFor("Peck")] },
+  { speciesName: "Raichu", emoji: "🐿️", type: "Electric", level: 14, moves: [moveFor("Thunder Shock"), moveFor("Quick Attack")] }
 ]};
 
 // ================== ACT 2: ZAU LEAGUE ==================

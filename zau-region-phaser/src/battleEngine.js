@@ -2,7 +2,7 @@ import { state, activeMon, firstHealthyIdx, MAX_PARTY } from './state.js';
 import { trainerFor } from './data/trainers.js';
 import { setFlag, MAIN_BADGES } from './story.js';
 import { markSeen, markCaught } from './dex.js';
-import { currentMonDisplay, computeStats, statsForMon, evolveIfReady, rollWildEncounter, buildWildMon, xpNeededForLevel, applyMega, revertMega, rollIVs } from './mon.js';
+import { currentMonDisplay, computeStats, statsForMon, evolveIfReady, rollWildEncounter, buildWildMon, xpNeededForLevel, applyMega, revertMega, rollIVs, xpForKO } from './mon.js';
 import { baseStatsFor } from './data/baseStats.js';
 import { abilityFor } from './data/abilities.js';
 import { ITEMS } from './data/items.js';
@@ -476,7 +476,7 @@ export class BattleEngine extends Emitter {
   handleEnemyFainted() {
     const p = activeMon();
     const e = this.currentEnemy();
-    const xpGain = 12 + e.level * 4;
+    const xpGain = xpForKO(e, p, { trainer: !state.battle.isWild });
     this.render(`${e.speciesName} fainted! ${currentMonDisplay(p).name} gained ${xpGain} XP.`);
     this.gainXp(p, xpGain);
 

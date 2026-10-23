@@ -11,6 +11,23 @@ import { spriteUrlFor, spriteUrlForId } from './sprites.js';
 
 export function xpNeededForLevel(lvl) { return 20 + lvl * 12; }
 
+// Early-game catch-up: a Lv.5 starter needs 80 XP per level but a KO paid ~28,
+// so the first area took ~3 fights per level while its trainers climbed 2 levels
+// per stop. XP is doubled up to Lv.10 and tapers to normal by Lv.25, so it
+// smooths the opening without touching the mid/late-game curve (which is meant
+// to be earned by content, not by a faster rate).
+export function earlyXpBoost(level) {
+  if (level <= 10) return 2;
+  if (level >= 25) return 1;
+  return 2 - (level - 10) / 15;
+}
+
+// XP for knocking out `enemy`: the usual level-scaled payout, x1.5 for a trainer's
+// Pokémon (as in the real games), times the early-game boost for the earner.
+export function xpForKO(enemy, earner, { trainer = false } = {}) {
+  return Math.round((12 + enemy.level * 4) * (trainer ? 1.5 : 1) * earlyXpBoost(earner.level));
+}
+
 // Individual Values — the real games' hidden 0–31 per-stat roll that makes
 // two Pokémon of the same species differ. Rolled once when a Pokémon is
 // created (wild, starter, trainer, gift) and kept for life; a caught
