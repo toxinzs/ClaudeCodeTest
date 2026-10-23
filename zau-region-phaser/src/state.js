@@ -17,6 +17,7 @@ export const state = {
   vanceBeaten: false,
   verdanyxBeaten: false,
   cutsceneIdx: 0,
+  expAll: { on: true, given: false }, // Exp. All key item (see expall.js)
   dex: { seen: {}, caught: {}, migrated: false }, // species Pokédex (see dex.js)
   story: {},      // story beat flags (see story.js) — dialogue keys on these
   quests: {},     // per-quest status

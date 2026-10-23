@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { state } from '../state.js';
 import { saveGame } from '../save.js';
 import { makeStarterMon } from '../mon.js';
+import { ensureExpAll } from '../expall.js';
 import { STARTER_CHAINS } from '../data/pokemon.js';
 import { GAME_W, GAME_H } from '../config.js';
 import { goToScene, fadeIn } from '../transitions.js';
@@ -57,6 +58,7 @@ export default class LabScene extends Phaser.Scene {
   chooseStarter(key) {
     const mon = makeStarterMon(key);
     state.party.push(mon);
+    ensureExpAll();
     state.activeIdx = 0;
     state.starterKey = key;
     saveGame();

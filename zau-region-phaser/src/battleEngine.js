@@ -2,6 +2,7 @@ import { state, activeMon, firstHealthyIdx, MAX_PARTY } from './state.js';
 import { trainerFor } from './data/trainers.js';
 import { setFlag, MAIN_BADGES } from './story.js';
 import { markSeen, markCaught } from './dex.js';
+import { expShareRecipients, EXP_ALL_SHARE } from './expall.js';
 import { currentMonDisplay, computeStats, statsForMon, evolveIfReady, rollWildEncounter, buildWildMon, xpNeededForLevel, applyMega, revertMega, rollIVs, xpForKO } from './mon.js';
 import { baseStatsFor } from './data/baseStats.js';
 import { abilityFor } from './data/abilities.js';
@@ -477,8 +478,10 @@ export class BattleEngine extends Emitter {
     const p = activeMon();
     const e = this.currentEnemy();
     const xpGain = xpForKO(e, p, { trainer: !state.battle.isWild });
-    this.render(`${e.speciesName} fainted! ${currentMonDisplay(p).name} gained ${xpGain} XP.`);
+    const sharers = expShareRecipients(p);
+    this.render(`${e.speciesName} fainted! ${currentMonDisplay(p).name} gained ${xpGain} XP.${sharers.length ? ' The rest of your team shared it.' : ''}`);
     this.gainXp(p, xpGain);
+    for (const m of sharers) this.gainXp(m, Math.max(1, Math.round(xpForKO(e, m, { trainer: !state.battle.isWild }) * EXP_ALL_SHARE)));
 
     state.battle.enemyIdx++;
     if (state.battle.enemyIdx < state.battle.enemyMons.length) {

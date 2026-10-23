@@ -57,6 +57,9 @@ export const ITEMS = {
   // Haunter->Gengar; see data/evolutions.js) evolve without an actual
   // trade partner. Used from the Bag, not equipped like a held item.
   linkingcord: { name: "Linking Cord", price: 3000, category: "evolution" },
+  // Key item: given once with the starter, never sold. Shares XP with the party (expall.js).
+  expall:       { name: "Exp. All",     price: 0,    category: "key" },
+
   // Evolution stones — real items for real stone evolutions (data/evolutions.js).
   firestone:    { name: "Fire Stone",    price: 3000, category: "evolution" },
   waterstone:   { name: "Water Stone",   price: 3000, category: "evolution" },
@@ -90,6 +93,7 @@ export function availableItems(badgeCount) {
 export function itemIcon(key) {
   const item = ITEMS[key];
   if (item.category === 'ball') return '🔴';
+  if (item.category === 'key') return '📘';
   if (item.category === 'held') return item.effect === 'cure_status' ? '🍒' : item.effect === 'mega_stone' ? '🔮' : '💠';
   if (item.category === 'evolution') return key === 'linkingcord' ? '🔗' : '💠';
   if (item.revive) return '✨';

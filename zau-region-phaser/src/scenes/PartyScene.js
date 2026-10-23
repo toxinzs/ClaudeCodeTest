@@ -6,6 +6,7 @@ import { GAME_W, GAME_H } from '../config.js';
 import { drawModalBackdrop, addCloseButton } from '../uiHelpers.js';
 import { addMonIcon } from '../spriteLoader.js';
 import { ITEMS } from '../data/items.js';
+import { expAllActive } from '../expall.js';
 
 const STATUS_LABEL = { burn: 'BRN', poison: 'PSN', paralyze: 'PAR', sleep: 'SLP' };
 const ROWS_PER_PAGE = 6;
@@ -57,6 +58,16 @@ export default class PartyScene extends Phaser.Scene {
     });
 
     if (list.length > ROWS_PER_PAGE) this.drawPager(list.length);
+    if (this.tab === 'party' && !this.switchMode && (state.items.expall || 0) > 0) this.drawExpAllSwitch();
+  }
+
+  // Exp. All's master switch, pinned under the list.
+  drawExpAllSwitch() {
+    const on = !!state.expAll?.on;
+    const y = GAME_H - 34;
+    const bg = this.add.rectangle(GAME_W / 2, y, 300, 26, 0x232640).setStrokeStyle(1, on ? 0x3fa373 : 0x3a3d5c).setInteractive({ useHandCursor: true });
+    this.add.text(GAME_W / 2, y, `📘 Exp. All: ${on ? 'ON — team shares XP' : 'OFF — only the fighter earns XP'}`, { fontFamily: 'Nunito, sans-serif', fontSize: '11px', color: on ? '#a8e6c4' : '#8a8aa0' }).setOrigin(0.5);
+    bg.on('pointerdown', () => { state.expAll.on = !on; saveGame(); this.render(); });
   }
 
   drawTabs() {
@@ -94,11 +105,22 @@ export default class PartyScene extends Phaser.Scene {
     }
 
     if (this.tab === 'party') {
+      if ((state.items.expall || 0) > 0) this.drawExpToggle(m, y);
       if (state.party.length > 1) this.drawRowButton(y - 12, 'Box', () => this.depositToBox(idx));
       if (m.heldItem) this.drawRowButton(y + 12, 'Take', () => this.takeItem(idx));
     } else if (this.tab === 'box' && state.party.length < MAX_PARTY) {
       this.drawRowButton(y, 'Withdraw', () => this.withdrawFromBox(idx));
     }
+  }
+
+  // Per-Pokémon opt-out for Exp. All (shown dim while the master switch is off).
+  drawExpToggle(m, y) {
+    const off = !!m.noExp;
+    const live = expAllActive();
+    const bx = 352, bw = 52, bh = 22;
+    const bg = this.add.rectangle(bx, y, bw, bh, 0x232640).setStrokeStyle(1, !off && live ? 0x3fa373 : 0x3a3d5c).setInteractive({ useHandCursor: true });
+    this.add.text(bx, y, off ? 'EXP ✗' : 'EXP ✓', { fontFamily: 'Nunito, sans-serif', fontSize: '11px', color: off ? '#e57373' : (live ? '#a8e6c4' : '#6a6a80') }).setOrigin(0.5);
+    bg.on('pointerdown', () => { m.noExp = !off; saveGame(); this.render(); });
   }
 
   drawRowButton(y, label, onClick) {
