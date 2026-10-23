@@ -15,6 +15,8 @@ carry the same attribution.
 | Asset | Authors | License(s) |
 |---|---|---|
 | Body / skin tones (`body/`) | bluecarrot16, Benjamin K. Smith (BenCreating), Evert, Eliza Wyatt (ElizaWy), TheraHedwig, MuffinElZangano, Durrani, Johannes Sjölund (wulax), Stephen Challener (Redshrike) | CC-BY-SA 3.0, GPL 3.0 |
+| Head (`head/`) | bluecarrot16, Benjamin K. Smith (BenCreating), Stephen Challener (Redshrike) | OGA-BY 3.0, CC-BY-SA 3.0, GPL 3.0 |
+| Eyes (`eyes/`) | Mark Weyer, Johannes Sjölund (wulax), Matthew Krohn (makrohn), Stephen Challener (Redshrike) | OGA-BY 3.0, CC-BY-SA 3.0, GPL 3.0 |
 | Hair: Afro | bluecarrot16 | CC0 |
 | Hair: Bob | ElizaWy, bluecarrot16 | CC0 |
 | Hair: Braid | Nila122, ElizaWy | OGA-BY 3.0, CC-BY-SA 3.0, GPL 3.0, GPL 2.0 |

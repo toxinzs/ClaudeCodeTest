@@ -44,7 +44,7 @@ export function drawDecor(scene, decor, { offsetX, offsetY }) {
 // same shared/save-relevant position every scene and the save system
 // read from.
 export function createWalker(scene, { mapDef, posRef, sprite, playerCtrl, offsetX, offsetY, onStep, isBlocked }) {
-  const MOVE_MS = 140;
+  const MOVE_MS = 200; // one tile; 140 read as sprinting
   // facing: the direction the player last tried to move — what "the tile in
   // front of the player" means for NPC interaction. isBlocked: extra
   // dynamic blockers (NPCs) on top of the static layout.

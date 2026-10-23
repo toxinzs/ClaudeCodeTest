@@ -6,6 +6,7 @@ import { megaFor } from './data/megas.js';
 import { movesAtLevel } from './data/learnsets.js';
 import { moveFor } from './data/moves.js';
 import { markCaught } from './dex.js';
+import { state } from './state.js';
 import { spriteUrlFor, spriteUrlForId } from './sprites.js';
 
 export function xpNeededForLevel(lvl) { return 20 + lvl * 12; }
@@ -138,11 +139,29 @@ export function buildWildMon(species, lvl) {
   };
 }
 
-export function rollWildEncounter(zoneKey) {
-  const table = WILD_ZONE_TABLE[zoneKey] || WILD_ZONE_TABLE.outskirts;
+// The Town Outskirts is the first place a new trainer walks, but it also holds
+// the later-game species (Riolu, Gible, Absol, and the roster expansion's
+// Lillipup/Fletchling). Its spawns grow with badges so a Lv.5 starter meets
+// Lv.2-7 Pokémon, not Lv.14-25 ones it can't hit or catch.
+export function outskirtsLevelCap() {
+  const badges = (state.leagueBeaten || []).filter(Boolean).length;
+  return 7 + 3 * badges;
+}
+
+// `band` (optional) overrides the zone's level range for this roll — the Wild
+// Zone Trail passes one that tracks the next trainer's level.
+export function rollWildEncounter(zoneKey, band = null) {
+  let table = WILD_ZONE_TABLE[zoneKey] || WILD_ZONE_TABLE.outskirts;
+  const cap = zoneKey === 'outskirts' ? outskirtsLevelCap() : Infinity;
+  if (cap !== Infinity) {
+    const ok = table.filter(n => SPECIES_BY_NAME[n].baseLvl[0] <= cap);
+    if (ok.length) table = ok;
+  }
   const species = SPECIES_BY_NAME[table[Math.floor(Math.random() * table.length)]];
-  const band = WILD_ZONE_LEVELS[zoneKey] || species.baseLvl;
-  const lvl = band[0] + Math.floor(Math.random() * (band[1]-band[0]+1));
+  let [lo, hi] = band || WILD_ZONE_LEVELS[zoneKey] || species.baseLvl;
+  hi = Math.min(hi, cap);
+  lo = Math.min(lo, hi);
+  const lvl = lo + Math.floor(Math.random() * (hi - lo + 1));
   return buildWildMon(species, lvl);
 }
 

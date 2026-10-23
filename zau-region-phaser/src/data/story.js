@@ -3,7 +3,7 @@ import { moveFor } from './moves.js';
 // ================== ACT 1: WILD ZONE TRAINERS ==================
 export const TRAINER_LINEUP = [
   { name: "Camper Reyes", locationName: "Zau Outskirts", emoji: "🧢", team: [
-    { speciesName: "Rattata", emoji: "🐀", type: "Normal", level: 5, moves: [moveFor("Tackle"), moveFor("Quick Attack")] }
+    { speciesName: "Rattata", emoji: "🐀", type: "Normal", level: 4, moves: [moveFor("Tackle"), moveFor("Quick Attack")] }
   ]},
   { name: "Cyclist Dana", locationName: "Underpass Loop", emoji: "🚲", team: [
     { speciesName: "Pikachu", emoji: "🐿️", type: "Electric", level: 7, moves: [moveFor("Thunder Shock"), moveFor("Quick Attack")] }

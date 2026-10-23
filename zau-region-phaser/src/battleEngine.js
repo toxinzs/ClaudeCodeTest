@@ -189,10 +189,10 @@ export class BattleEngine extends Emitter {
     return true;
   }
 
-  startWildEncounter(zoneKey) {
+  startWildEncounter(zoneKey, band = null) {
     if (firstHealthyIdx() === -1) return false;
     this.resetBattleFlags();
-    const wild = rollWildEncounter(zoneKey);
+    const wild = rollWildEncounter(zoneKey, band);
     markSeen(wild.speciesName);
     state.battle = { ctx: 'wild', enemyName: wild.speciesName, enemyMons: [wild], enemyIdx: 0, isWild: true, moneyReward: 0 };
     this.emit('anim', { type: 'intro', wild: true, name: wild.speciesName });

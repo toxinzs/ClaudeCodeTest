@@ -16,7 +16,12 @@ export const WALK_FRAMES = 8;
 // zPos mirrors the source generator's own layer-ordering convention —
 // lower draws first (further back). Keeps body/legs/torso/hair stacking
 // correct regardless of which options a player picks.
-export const LAYER_ORDER = ['body', 'legs', 'torso', 'hair'];
+export const LAYER_ORDER = ['body', 'legs', 'torso', 'head', 'eyes', 'hair'];
+
+// The body sheet has no head at all (a neck stump); the head is its own layer
+// per skin tone, and the eyes another. Without them every character was a
+// faceless torso under floating hair.
+export const EYE_COLOR = 'brown';
 
 export const SKIN_TONES = [
   { id: 'light', label: 'Light' },
@@ -73,6 +78,14 @@ export function normalizeAppearance(appearance) {
 
 export function bodyPath(skin) {
   return `character/body/${skin}.png`;
+}
+
+export function headPath(skin) {
+  return `character/head/${skin}.png`;
+}
+
+export function eyesPath(color) {
+  return `character/eyes/${color}.png`;
 }
 
 export function hairPath(style, color) {

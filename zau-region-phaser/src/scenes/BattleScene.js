@@ -80,6 +80,7 @@ export default class BattleScene extends Phaser.Scene {
   init(data) {
     this.battleKind = data.kind;        // 'wild' | trainer ctx string
     this.zoneKey = data.zoneKey;
+    this.band = data.band || null;      // optional level range override for a wild roll
     this.trainerKey = data.trainerKey;  // for kind 'trainer' (data/trainers.js)
     this.fixed = data.fixed;            // for kind 'fixed' — one named wild Pokémon
     this.returnTo = data.returnTo || 'Home';
@@ -126,7 +127,7 @@ export default class BattleScene extends Phaser.Scene {
     });
 
     const started =
-      this.battleKind === 'wild' ? this.engine.startWildEncounter(this.zoneKey)
+      this.battleKind === 'wild' ? this.engine.startWildEncounter(this.zoneKey, this.band)
       : this.battleKind === 'fixed' ? this.engine.startFixedEncounter(this.fixed)
       : this.engine.startTrainerBattle(this.battleKind, this.trainerKey);
 
