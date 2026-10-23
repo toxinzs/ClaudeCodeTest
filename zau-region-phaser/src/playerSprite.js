@@ -2,7 +2,7 @@ import { TILE } from './config.js';
 import {
   FRAME_SIZE, SHEET_COLS, WALK_ROW, WALK_FRAMES,
   SKIN_TONES, HAIR_STYLES, HAIR_COLORS, OUTFITS, DEFAULT_APPEARANCE,
-  normalizeAppearance, bodyPath, hairPath, outfitTorsoPath, outfitLegsPath,
+  normalizeAppearance, bodyPath, hairPath, headPath, eyesPath, EYE_COLOR, outfitTorsoPath, outfitLegsPath,
 } from './data/appearance.js';
 
 // The 64px LPC frame vs. our 52px tile — scaled down so the character
@@ -21,7 +21,7 @@ const CHAR_SCALE = TILE / FRAME_SIZE;
 
 function layerKeys(appearance) {
   const a = normalizeAppearance(appearance);
-  const keys = { body: `char_body_${a.skin}`, torso: `char_torso_${a.outfit}`, legs: `char_legs_${a.outfit}` };
+  const keys = { body: `char_body_${a.skin}`, torso: `char_torso_${a.outfit}`, legs: `char_legs_${a.outfit}`, head: `char_head_${a.skin}`, eyes: `char_eyes_${EYE_COLOR}` };
   if (a.hair !== 'none') keys.hair = `char_hair_${a.hair}_${a.hairColor}`;
   return keys;
 }
@@ -33,6 +33,8 @@ export function preloadPlayerLayers(scene, appearance) {
     [`char_body_${a.skin}`, bodyPath(a.skin)],
     [`char_torso_${a.outfit}`, outfitTorsoPath(a.outfit)],
     [`char_legs_${a.outfit}`, outfitLegsPath(a.outfit)],
+    [`char_head_${a.skin}`, headPath(a.skin)],
+    [`char_eyes_${EYE_COLOR}`, eyesPath(EYE_COLOR)],
   ];
   if (a.hair !== 'none') want.push([`char_hair_${a.hair}_${a.hairColor}`, hairPath(a.hair, a.hairColor)]);
 
@@ -62,7 +64,7 @@ function frameFor(direction, col) {
 }
 
 // Returns a controller wrapping a Phaser Container of stacked layer
-// sprites (body < legs < torso < hair, back to front). x/y tween the
+// sprites (body < legs < torso < head < eyes < hair, back to front). x/y tween the
 // container for tile movement; setDirection/startWalk/stopWalk drive the
 // walk-cycle frame stepping independent of that tween.
 export function createPlayerSprite(scene, x, y, appearance) {
@@ -70,7 +72,7 @@ export function createPlayerSprite(scene, x, y, appearance) {
   const container = scene.add.container(x, y);
   container.setScale(CHAR_SCALE);
   const sprites = {};
-  for (const layer of ['body', 'legs', 'torso', 'hair']) {
+  for (const layer of ['body', 'legs', 'torso', 'head', 'eyes', 'hair']) {
     if (!keys[layer]) continue;
     const spr = scene.add.sprite(0, 0, keys[layer], frameFor('down', 0));
     container.add(spr);

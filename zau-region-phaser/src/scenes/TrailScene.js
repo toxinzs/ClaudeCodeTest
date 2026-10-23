@@ -96,7 +96,11 @@ export default class TrailScene extends Phaser.Scene {
   rollWild() {
     if (!state.party.length || Math.random() >= WILD_ENCOUNTER_CHANCE) return;
     const zoneKey = state.trainerIndex <= 2 ? 'underpass' : 'district';
-    goToScene(this, 'Battle', { kind: 'wild', zoneKey, returnTo: 'Trail' });
+    // Wild levels track the next trainer's level (5, 7, 9, 11, 13) so the Trail
+    // gets steadily harder instead of opening with Lv.13 wilds against a Lv.5 team.
+    const next = TRAINER_LINEUP[Math.min(state.trainerIndex, TRAINER_LINEUP.length - 1)].team[0].level;
+    const band = [Math.max(2, next - 3), next + 1];
+    goToScene(this, 'Battle', { kind: 'wild', zoneKey, band, returnTo: 'Trail' });
   }
 
   handleStep(nx, ny) {

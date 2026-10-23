@@ -14,8 +14,9 @@ export const STARTER_CHAINS = {
     ],
     learnset: [
       { lvl: 1, ...moveFor("Tackle") },
-      { lvl: 1, ...moveFor("Growl") },
-      { lvl: 6, ...moveFor("Leafage") },
+      // Growl is a stat-drop move and the engine has no stat stages, so it was a
+      // dead slot; Leafage (a real attack) comes at level 1 instead of 6.
+      { lvl: 1, ...moveFor("Leafage") },
       { lvl: 11, ...moveFor("Bite") },
       { lvl: 16, ...moveFor("Leaf Blade") },
       { lvl: 22, ...moveFor("Slash") },
