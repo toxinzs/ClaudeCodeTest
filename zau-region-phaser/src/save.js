@@ -12,15 +12,18 @@ export function saveGame() {
   }
 }
 
+// Browser storage can throw (blocked site data, a sandboxed frame), so every
+// access is guarded: without it the game still runs, it just can't save.
 export function hasSave() {
-  return localStorage.getItem(SAVE_KEY) !== null;
+  try { return localStorage.getItem(SAVE_KEY) !== null; } catch { return false; }
 }
 
 // Mutates the existing `state` object in place (never reassigns it) — other
 // modules hold a live binding to that exact object, so replacing it here
 // would leave them pointing at the stale pre-load state.
 export function loadGame() {
-  const raw = localStorage.getItem(SAVE_KEY);
+  let raw = null;
+  try { raw = localStorage.getItem(SAVE_KEY); } catch { return false; }
   if (!raw) return false;
   try {
     const parsed = JSON.parse(raw);
@@ -38,5 +41,5 @@ export function loadGame() {
 }
 
 export function clearSave() {
-  localStorage.removeItem(SAVE_KEY);
+  try { localStorage.removeItem(SAVE_KEY); } catch { /* storage unavailable */ }
 }
